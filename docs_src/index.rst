@@ -1,5 +1,5 @@
-clean_code
-============
+Clean Code in Python
+====================
 
 ..  toctree::
     :maxdepth: 2
