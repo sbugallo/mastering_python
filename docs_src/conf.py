@@ -106,7 +106,7 @@ html_logo = './_static/logo-white.png'
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #
-html_favicon = './_static/favicon.png'
+html_favicon = './_static/favicon.ico'
 
 html_title = 'Clean Code Python'
 
@@ -132,40 +132,23 @@ htmlhelp_basename = 'clean_codedoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
+    'papersize': 'a4paper',
+    'pointsize': '10pt',
+    'preamble': r'\usepackage{float}',
+    'figure_align': 'H'
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'clean_codetex', 'clean_code Documentation',
-     'Sergio Bugallo', 'manual'),
-]
+latex_documents = [(master_doc, "clean_code.tex", "Clean Code in Python", "Sergio Bugallo", "manual")]
 
 
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'clean_code', 'clean_code Documentation',
-     [author], 1)
-]
+man_pages = [(master_doc, "clean_code", "Clean Code in Python", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -174,7 +157,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'clean_code', 'clean_code Documentation',
+    (master_doc, 'clean_code', 'Clean Code in Python',
      author, 'clean_code', 'One line description of project.',
      'Miscellaneous'),
 ]
