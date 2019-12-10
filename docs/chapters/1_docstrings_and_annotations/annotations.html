@@ -8,37 +8,36 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Docstrings and annotations &mdash; Clean Code Python</title>
+  <title>2. Annotations &mdash; Clean Code Python</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
     
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="clean_code" href="../index.html" /> 
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -52,12 +51,12 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Clean Code in Python
+            <a href="../../index.html" class="icon icon-home"> Clean Code in Python
           
 
           
             
-            <img src="../_static/logo-white.png" class="logo" alt="Logo"/>
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -72,7 +71,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -89,15 +88,17 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Docstrings and annotations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#docstrings">1. Docstrings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#annotations">2. Annotations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#do-annotations-replace-docstrings">2.1. Do annotations replace docstrings?</a></li>
-</ul>
-</li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../2_pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3_general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">The SOLID principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Using decorators to improve our code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Getting more out of our objects with descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../7_generators/index.html">Using generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../8_unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Common design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../10_clean_architecture/index.html">Clean architecture</a></li>
 </ul>
 
             
@@ -112,7 +113,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Clean Code in Python</a>
+          <a href="../../index.html">Clean Code in Python</a>
         
       </nav>
 
@@ -141,15 +142,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>Docstrings and annotations</li>
+      <li>2. Annotations</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/chapters/1_docstrings_and_annotations.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/chapters/1_docstrings_and_annotations/annotations.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -157,56 +158,13 @@
   </ul>
 
   
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-      
-        <a href="../index.html" class="btn btn-neutral float-left" title="clean_code" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-  </div>
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="docstrings-and-annotations">
-<h1>Docstrings and annotations<a class="headerlink" href="#docstrings-and-annotations" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="docstrings">
-<h2>1. Docstrings<a class="headerlink" href="#docstrings" title="Permalink to this headline">¶</a></h2>
-<p>Docstrings are basically documentation embedded in the source code. A <strong>docstring</strong> is basically a literal
-string, placed somewhere in the code, with the intention of documenting that part of the logic. This
-information it’s meant to represent explanation, not justification.</p>
-<p>Having comments in the code is a bad practice for multiple reasons. First, they represent our failure to
-express our ideas in the code. Second, it can be misleading. Worst than having to spend some time reading a
-complicated section is to read a comment on how it is supposed to work and figuring out that the code
-actually does something different.</p>
-<p>Sometimes, we cannot avoid having comments (maybe there is an error on a third-party library). In those cases,
-placing a small but descriptive comment might be acceptable.</p>
-<p>The reason why docstrings are a good thing to have in the code is that Python is dynamically typed. Python
-will not enforce, nor check, anything like the value for any function’s input parameters. Documenting the
-expected input and output of a function is a good practice that will help the readers of that function
-understand how it is supposed to work.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Add</span> <span class="n">some</span> <span class="n">example</span>
-</pre></div>
-</div>
-<p>This information is crucial for someone that hats to learn and understand how a new code works, and how they
-can take advantage of it.</p>
-<p>The docstring is not something separated or isolated from the code. It becomes part of the code, and you can
-access it. When an object has a docstring defined, this becomes part of it via its <code class="docutils literal notranslate"><span class="pre">__doc__</span></code> attribute:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Sample docstring&quot;&quot;&quot;</span>
-    <span class="k">return</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">sample</span><span class="o">.</span><span class="vm">__doc__</span>
-<span class="s1">&#39;Sample docstring&#39;</span>
-</pre></div>
-</div>
-<p>There is, unfortunately, one downside to docstrings, and it is that, as it happens with all documentation, it
-requires manual and constant maintenance. As the code changes, it will have to be updated. Another problem is
-that for docstrings to be really useful, they have to be detailed, which requires multiple lines.</p>
-</div>
-<div class="section" id="annotations">
-<h2>2. Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="annotations">
+<h1>2. Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h1>
 <p>The basic idea is to hint to the readres of the code about what to expect as values of arguments in functions.
 Annotations enable type hinting.</p>
 <p>Annotations let you specify the expected type of some variables that have been defined. It is actually not
@@ -253,7 +211,7 @@ the types of some variables defined without necessarily assigning a value to the
 </pre></div>
 </div>
 <div class="section" id="do-annotations-replace-docstrings">
-<h3>2.1. Do annotations replace docstrings?<a class="headerlink" href="#do-annotations-replace-docstrings" title="Permalink to this headline">¶</a></h3>
+<h2>2.1. Do annotations replace docstrings?<a class="headerlink" href="#do-annotations-replace-docstrings" title="Permalink to this headline">¶</a></h2>
 <p>The short answer is no, and this is because they complement each other. It is true that a part of the
 information previously contained on the docstring can now be moved to the annotations. But this should only
 leave more room for a better documentation on the docstring. In particular, for dynamic and nested data types,
@@ -296,20 +254,12 @@ a more concrete interpretation of what the data looks like. The cost is that, as
 takes up a lot of lines and it needs to be verbose and detailed to be effective.</p>
 </div>
 </div>
-</div>
 
 
            </div>
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="../index.html" class="btn btn-neutral float-left" title="clean_code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
