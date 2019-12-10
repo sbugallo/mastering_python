@@ -1,0 +1,9 @@
+name: clean_code
+channels:
+  - anaconda
+dependencies:
+  - python=3.7
+  - pip
+  - pip:
+      - loguru
+      - fire

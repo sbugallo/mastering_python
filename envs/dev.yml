@@ -1,0 +1,18 @@
+name: clean_code
+channels:
+  - anaconda
+dependencies:
+  - python=3.7
+  - coverage
+  - pytest
+  - pytest-cov
+  - pylint
+  - autopep8
+  - flake8
+  - sphinx
+  - pip
+  - pip:
+      - loguru
+      - fire
+      - sphinx_rtd_theme
+      - pytest-mock
