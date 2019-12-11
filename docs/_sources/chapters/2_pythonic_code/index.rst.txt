@@ -1,7 +1,7 @@
 Pythonic code
 =============
 
-.. include:: indexes_and_slice.rst
+.. include:: indexes_and_slices.rst
 .. include:: context_managers.rst
 .. include:: properties_attributes_and_methods.rst
 .. include:: iterable_objects.rst
