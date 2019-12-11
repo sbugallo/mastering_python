@@ -278,10 +278,7 @@ class.</p>
 one that is going to be called when <code class="docutils literal notranslate"><span class="pre">&lt;user&gt;.email</span> <span class="pre">=</span> <span class="pre">&lt;new_email&gt;</span></code> runs from the caller code, and <code class="docutils literal notranslate"><span class="pre">&lt;new_email&gt;</span></code> will
 become the parameter of this method. Here, we explicitly defined a validation that will fail if the value that is trying
 to be set is not an actual email address. If it is, it will then update the attribute with the new value as follows:</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>python</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="s2">&quot;jsmith&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="s2">&quot;jsmith&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;jsmith@&quot;</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
@@ -290,7 +287,6 @@ to be set is not an actual email address. If it is, it will then update the attr
 <span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span><span class="o">.</span><span class="n">email</span>
 <span class="go">&#39;jsmith@g.co&#39;</span>
 </pre></div>
-</div>
 </div>
 <p>This approach is much more compact than having custom methods prefixed with <code class="docutils literal notranslate"><span class="pre">get_</span></code> or <code class="docutils literal notranslate"><span class="pre">set_</span></code>. It’s clear what is
 expected because it’s just email.</p>

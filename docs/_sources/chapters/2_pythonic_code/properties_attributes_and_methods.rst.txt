@@ -133,7 +133,7 @@ one that is going to be called when ``<user>.email = <new_email>`` runs from the
 become the parameter of this method. Here, we explicitly defined a validation that will fail if the value that is trying
 to be set is not an actual email address. If it is, it will then update the attribute with the new value as follows:
 
-.. note:: python
+.. code-block:: python
 
     >>> u1 = User("jsmith")
     >>> u1.email = "jsmith@"
