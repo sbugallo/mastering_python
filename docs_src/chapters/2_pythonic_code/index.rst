@@ -8,5 +8,4 @@ Pythonic code
 .. include:: container_objects.rst
 .. include:: dynamic_attributes.rst
 .. include:: callable_objects.rst
-.. include:: magic_methods.rst
 .. include:: caveats.rst

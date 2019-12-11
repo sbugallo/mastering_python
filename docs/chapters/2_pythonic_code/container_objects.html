@@ -165,6 +165,52 @@
             
   <div class="section" id="container-objects">
 <h1>5. Container objects<a class="headerlink" href="#container-objects" title="Permalink to this headline">¶</a></h1>
+<p>Containers are objects that implement a <code class="docutils literal notranslate"><span class="pre">__contains__</span></code> method (that usually returns a Boolean value). This method is
+called in the presence of the <code class="docutils literal notranslate"><span class="pre">in</span></code> keyword of Python. Something like <code class="docutils literal notranslate"><span class="pre">element</span> <span class="pre">in</span> <span class="pre">container</span></code> becomes
+<code class="docutils literal notranslate"><span class="pre">container.__contains__(element)</span></code>.</p>
+<p>You can imagine how much more readable and Pythonic the code can be when this method is properly implemented.</p>
+<p>Let’s say we have to mark some points on a map of a game that has two-dimensional coordinates. We might expect to find a
+function like the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mark_coordinate</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">coord</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">grid</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">coord</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">grid</span><span class="o">.</span><span class="n">height</span><span class="p">:</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span> <span class="o">=</span> <span class="n">MARKED</span>
+</pre></div>
+</div>
+<p>Now, the part that checks the condition of the first if statement seems convoluted; it doesn’t reveal the intention of
+the code, it’s not expressive, and worst of all it calls for code duplication (every part of the code where we need to
+check the boundaries before proceeding will have to repeat that if statement).</p>
+<p>What if the map itself (called grid on the code) could answer this question? Even better, what if the map could delegate
+this action to an even smaller (and hence more cohesive) object? Therefore, we can ask the map if it contains a
+coordinate, and the map itself can have information about its limit, and ask this object the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Boundaries</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">coord</span>
+        <span class="k">return</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+
+<span class="k">class</span> <span class="nc">Grid</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limits</span> <span class="o">=</span> <span class="n">Boundaries</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">coord</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span>
+</pre></div>
+</div>
+<p>This code alone is a much better implementation. First, it is doing a simple composition and it’s using delegation to
+solve the problem. Both objects are really cohesive, having the minimal possible logic; the methods are short, and the
+logic speaks for itself: <code class="docutils literal notranslate"><span class="pre">coord</span> <span class="pre">in</span> <span class="pre">self.limits</span></code> is pretty much a declaration of the problem to solve, expressing the
+intention of the code.</p>
+<p>From the outside, we can also see the benefits. It’s almost as if Python is solving the problem for us:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mark_coordinate</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span> <span class="o">=</span> <span class="n">MARKED</span>
+</pre></div>
+</div>
 </div>
 
 

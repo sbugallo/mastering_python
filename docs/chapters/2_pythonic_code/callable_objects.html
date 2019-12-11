@@ -165,6 +165,41 @@
             
   <div class="section" id="callable-objects">
 <h1>7. Callable objects<a class="headerlink" href="#callable-objects" title="Permalink to this headline">¶</a></h1>
+<p>It is possible (and often convenient) to define objects that can act as functions. One of the most common applications
+for this is to create better decorators, but it’s not limited to that.</p>
+<p>The magic method <code class="docutils literal notranslate"><span class="pre">__call__</span></code> will be called when we try to execute our object as if it were a regular function. Every
+argument passed to it will be passed along to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method. The main advantage of implementing functions this way, through objects, is that objects have states, so we can save and
+maintain information across calls.</p>
+<p>When we have an object, a statement like this <code class="docutils literal notranslate"><span class="pre">object(*args,</span> <span class="pre">**kwargs)</span></code> is translated in Python to
+<code class="docutils literal notranslate"><span class="pre">object.__call__(*args,</span> <span class="pre">**kwargs)</span></code>. This method is useful when we want to create callable objects that will work as
+parametrized functions, or in some cases functions with memory.</p>
+<p>The following listing uses this method to construct an object that when called with a parameter returns the number of
+times it has been called with the very same value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">class</span> <span class="nc">CallCount</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counts</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argument</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counts</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counts</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Some examples of this class in action are as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span> <span class="o">=</span> <span class="n">CallCount</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span><span class="p">(</span><span class="s2">&quot;something&quot;</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
 </div>
 
 
