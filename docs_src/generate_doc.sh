@@ -1,2 +1,2 @@
 make html
-# make latexpdf
+make latexpdf

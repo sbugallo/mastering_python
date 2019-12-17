@@ -165,6 +165,275 @@
             
   <div class="section" id="arguments-in-functions-and-methods">
 <h1>6. Arguments in functions and methods<a class="headerlink" href="#arguments-in-functions-and-methods" title="Permalink to this headline">¶</a></h1>
+<p>In Python, functions can be defined to receive arguments in several different ways, and these arguments can
+also be provided by callers in multiple ways.</p>
+<p>There is also an industry-wide set of practices for defining interfaces in software engineering that closely
+relates to the definition of arguments in functions.</p>
+<div class="section" id="how-function-arguments-work-in-python">
+<h2>6.1. How function arguments work in Python<a class="headerlink" href="#how-function-arguments-work-in-python" title="Permalink to this headline">¶</a></h2>
+<p>First, we will explore the particularities of how arguments are passed to functions in Python, and then we
+will review the general theory of good software engineering practices that relate to these concepts.</p>
+<p>By first understanding the possibilities that Python offers for handling parameters, we will be able to
+assimilate general rules more easily, and the idea is that after having done so, we can easily draw
+conclusions on what good patterns or idioms are when handling arguments. Then, we can identify in which
+scenarios the Pythonic approach is the correct one, and in which cases we might be abusing the features of the
+language.</p>
+<div class="section" id="how-arguments-are-copied-to-functions">
+<h3>6.1.1. How arguments are copied to functions<a class="headerlink" href="#how-arguments-are-copied-to-functions" title="Permalink to this headline">¶</a></h3>
+<p>The first rule in Python is that all arguments are passed by a value. Always. This means that when passing
+values to functions, they are assigned to the variables on the signature definition of the function to be
+later used on it. You will notice that a function changing arguments might depend on the type arguments: if we
+are passing mutable objects, and the body of the function modifies this, then, of course, we have side-effect
+that they will have been changed by the time the function returns.</p>
+<p>In the following we can see the difference:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">argument</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">argument</span> <span class="o">+=</span> <span class="s2">&quot; in function&quot;</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">immutable</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">function</span><span class="p">(</span><span class="n">immutable</span><span class="p">)</span>
+<span class="go">hello in function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mutable</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">immutable</span>
+<span class="go">&#39;hello&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">function</span><span class="p">(</span><span class="n">mutable</span><span class="p">)</span>
+<span class="go">[&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;, &#39; &#39;, &#39;i&#39;, &#39;n&#39;, &#39; &#39;, &#39;f&#39;, &#39;u&#39;, &#39;n&#39;, &#39;c&#39;, &#39;t&#39;, &#39;i&#39;, &#39;o&#39;, &#39;n&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mutable</span>
+<span class="go">[&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;, &#39; &#39;, &#39;i&#39;, &#39;n&#39;, &#39; &#39;, &#39;f&#39;, &#39;u&#39;, &#39;n&#39;, &#39;c&#39;, &#39;t&#39;, &#39;i&#39;, &#39;o&#39;, &#39;n&#39;]</span>
+</pre></div>
+</div>
+<p>This might look like an inconsistency, but it’s not. When we pass the first argument, a string, this is
+assigned to the argument on the function. Since string objects are immutable, a statement like
+<code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+=</span> <span class="pre">&lt;expression&gt;</span></code> will in fact create the new object, <code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+</span> <span class="pre">&lt;expression&gt;</span></code> , and assign
+that back to the argument. At that point, an argument is just a local variable inside the scope of the
+function and has nothing to do with the original one in the caller.</p>
+<p>On the other hand, when we pass list, which is a mutable object, then that statement has a different meaning
+(it’s actually equivalent to calling <code class="docutils literal notranslate"><span class="pre">.extend()</span></code> on that list). This operator acts by modifying the list
+in-place over a variable that holds a reference to the original list object, hence modifying it.</p>
+<p>We have to be careful when dealing with these types of parameter because it can lead to unexpected
+side-effects. Unless you are absolutely sure that it is correct to manipulate mutable arguments in this way,
+we would recommend avoiding it and going for alternatives without these problems.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t mutate function arguments. In general, try to avoid side-effects in functions as much as possible.</p>
+</div>
+<p>Arguments in Python can be passed by position, as in many other programming languages, but also by keyword.
+This means that we can explicitly tell the function which values we want for which of its parameters. The only
+caveat is that after a parameter is passed by keyword, the rest that follow must also be passed this way,
+otherwise, SyntaxError will be raised.</p>
+</div>
+<div class="section" id="variable-number-of-arguments">
+<h3>6.1.2. Variable number of arguments<a class="headerlink" href="#variable-number-of-arguments" title="Permalink to this headline">¶</a></h3>
+<p>Python, as well as other languages, has built-in functions and constructions that can take a variable number
+of arguments. Consider for example string interpolation functions (whether it be by using the % operator or
+the format method for strings), which follow a similar structure to the printf function in C, a first
+positional parameter with the string format, followed by any number of arguments that will be placed on the
+markers of that formatting string.</p>
+<p>Besides taking advantage of these functions that are available in Python, we can also create our own, which
+will work in a similar fashion. In this section, we will cover the basic principles of functions with a
+variable number of arguments, along with some recommendations, so that in the next section, we can explore how
+to use these features to our advantage when dealing with common problems, issues, and constraints that
+functions might have if they have too many arguments.</p>
+<p>For a variable number of positional arguments, the star symbol (<code class="docutils literal notranslate"><span class="pre">*</span></code>) is used, preceding the name of the
+variable that is packing those arguments. This works through the packing mechanism of Python.</p>
+<p>Let’s say there is a function that takes three positional arguments. In one part of the code, we conveniently
+happen to have the arguments we want to pass to the function inside a list, in the same order as they are
+expected by the function. Instead of passing them one by one by the position (that is, <code class="docutils literal notranslate"><span class="pre">list[0]</span></code> to the
+first element, <code class="docutils literal notranslate"><span class="pre">list[1]</span></code> to the second, and so on), which would be really un-Pythonic, we can use the
+packing mechanism and pass them all together in a single instruction:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">third</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">third</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="go">2</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>The nice thing about the packing mechanism is that it also works the other way around. If we want to extract
+the values of a list to variables, by their respective position, we can assign them like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>Partial unpacking is also possible. Let’s say we are just interested in the first values of a sequence (this
+can be a list, tuple, or something else), and after some point we just want the rest to be kept together. We
+can assign the variables we need and leave the rest under a packaged list. The order in which we unpack is not
+limited. If there is nothing to place in one of the unpacked subsections, the result will be an empty list:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">rest</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Element: {0} - Rest: {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">rest</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">show</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+<span class="go">Element: 1 - Rest: [2, 3, 4, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">*</span><span class="n">rest</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">show</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+<span class="go">Element: 5 - Rest: [0, 1, 2, 3, 4]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">middle</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">middle</span>
+<span class="go">[1, 2, 3, 4]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">last</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="o">*</span><span class="n">empty</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">last</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">empty</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<p>One of the best uses for unpacking variables can be found in iteration. When we have to iterate over a
+sequence of elements, and each element is, in turn, a sequence, it is a good idea to unpack at the same time
+each element is being iterated over. To see an example of this in action, we are going to pretend that we have
+a function that receives a list of database rows, and that it is in charge of creating users out of that data.
+The first implementation takes the values to construct the user with from the position of each column in the
+row, which is not idiomatic at all. The second implementation uses unpacking while iterating:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">USERS</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;first_name_{i}&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name_{i}&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="n">_000</span><span class="p">)]</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">user_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">first_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">last_name</span>
+
+    <span class="k">def</span> <span class="nf">bad_users_from_rows</span><span class="p">(</span><span class="n">dbrows</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;A bad case (non-pythonic) of creating ``User``s from DB rows.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dbrows</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">users_from_rows</span><span class="p">(</span><span class="n">dbrows</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create ``User``s from DB rows.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dbrows</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Notice that the second version is much easier to read. In the first version of the function
+(<code class="docutils literal notranslate"><span class="pre">bad_users_from_rows</span></code>), we have data expressed in the form <code class="docutils literal notranslate"><span class="pre">row[0]</span></code> , <code class="docutils literal notranslate"><span class="pre">row[1]</span></code> , and <code class="docutils literal notranslate"><span class="pre">row[2]</span></code>, which
+doesn’t tell us anything about what they are. On the other hand, variables such as <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">first_name</span></code> ,
+and <code class="docutils literal notranslate"><span class="pre">last_name</span></code> speak for themselves.</p>
+<p>We can leverage this kind of functionality to our advantage when designing our own functions.</p>
+<p>An example of this that we can find in the standard library lies in the max function, which is defined as
+follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="nb">max</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="o">*</span><span class="p">[,</span> <span class="n">default</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">func</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">value</span>
+<span class="nb">max</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">*</span><span class="p">[,</span> <span class="n">key</span><span class="o">=</span><span class="n">func</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>With a single iterable argument, return its biggest item. The default keyword-only argument specifies an
+object to return if the provided iterable is empty.</p>
+<p>With two or more arguments, return the largest argument.</p>
+<p>There is a similar notation, with two stars ( ** ) for keyword arguments. If we have a dictionary and we pass
+it with a double star to a function, what it will do is pick the keys as the name for the parameter, and pass
+the value for that key as the value for that parameter in that function.</p>
+<p>For instance, check this out:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">function</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>It is the same as the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">function</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Conversely, if we define a function with a parameter starting with two-star symbols, the opposite will happen:
+keyword-provided parameters will be packed into a dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">function</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<span class="go">{&#39;key&#39;: &#39;value&#39;}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="the-number-of-arguments-in-functions">
+<h2>6.2. The number of arguments in functions<a class="headerlink" href="#the-number-of-arguments-in-functions" title="Permalink to this headline">¶</a></h2>
+<p>Having functions or methods that take too many arguments is a sign of bad design (a code smell). Then, we
+propose ways of dealing with this issue.</p>
+<p>The first alternative is a more general principle of software design: <strong>reification</strong> (creating a new object
+for all of those arguments that we are passing, which is probably the abstraction we are missing). Compacting
+multiple arguments into a new object is not a solution specific to Python, but rather something that we can
+apply in any programming language.</p>
+<p>Another option would be to use the Python-specific features we saw in the previous section, making use of
+variable positional and keyword arguments to create functions that have a dynamic signature. While this might
+be a Pythonic way of proceeding, we have to be careful not to abuse the feature, because we might be creating
+something that is so dynamic that it is hard to maintain. In this case, we should take a look at the body of
+the function. Regardless of the signature, and whether the parameters seem to be correct, if the function is
+doing too many different things responding to the values of the parameters, then it is a sign that it has to
+be broken down into multiple smaller functions (remember, functions should do one thing, and one thing only!).</p>
+<div class="section" id="function-arguments-and-coupling">
+<h3>6.2.1. Function arguments and coupling<a class="headerlink" href="#function-arguments-and-coupling" title="Permalink to this headline">¶</a></h3>
+<p>The more arguments a function signature has, the more likely this one is going to be tightly coupled with the
+caller function.</p>
+<p>Let’s say we have two functions, <code class="docutils literal notranslate"><span class="pre">f1</span></code>, and <code class="docutils literal notranslate"><span class="pre">f2</span></code>, and the latter takes five parameters. The more parameters
+<code class="docutils literal notranslate"><span class="pre">f2</span></code> takes, the more difficult it would be for anyone trying to call that function to gather all that
+information and pass it along so that it can work properly.</p>
+<p>Now, <code class="docutils literal notranslate"><span class="pre">f1</span></code> seems to have all of this information because it can call it correctly. From this, we can derive
+two conclusions: first, <code class="docutils literal notranslate"><span class="pre">f2</span></code> is probably a leaky abstraction, which means that since <code class="docutils literal notranslate"><span class="pre">f1</span></code> knows everything
+that <code class="docutils literal notranslate"><span class="pre">f2</span></code> requires, it can pretty much figure out what it is doing internally and will be able to do it by
+itself. So, all in all, <code class="docutils literal notranslate"><span class="pre">f2</span></code> is not abstracting that much. Second, it looks like <code class="docutils literal notranslate"><span class="pre">f2</span></code> is only useful to
+<code class="docutils literal notranslate"><span class="pre">f1</span></code>, and it is hard to imagine using this function in a different context, making it harder to reuse.</p>
+<p>When functions have a more general interface and are able to work with higher-level abstractions, they become
+more reusable.</p>
+<p>This applies to all sort of functions and object methods, including the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method for classes. The
+presence of a method like this could generally (but not always) mean that a new higher-level abstraction
+should be passed instead, or that there is a missing object.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a function needs too many parameters to work properly, consider it a code smell.</p>
+</div>
+<p>In fact, this is such a design problem that static analysis tools will, by default, raise a warning about
+when they encounter such a case. When this happens, don’t suppress the warning, refactor it instead.</p>
+</div>
+<div class="section" id="compact-function-signatures-that-take-too-many-arguments">
+<h3>6.2.2. Compact function signatures that take too many arguments<a class="headerlink" href="#compact-function-signatures-that-take-too-many-arguments" title="Permalink to this headline">¶</a></h3>
+<p>Suppose we find a function that requires too many parameters. We know that we cannot leave the code base like
+that, and a refactor is imperative. But, what are the options? Depending on the case, some of the following
+rules might apply. This is by no means extensive, but it does provide an idea of how to solve some scenarios
+that occur quite often.</p>
+<p>Sometimes, there is an easy way to change parameters if we can see that most of them belong to a common
+object. For example, consider a function call like this one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">track_request</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">ip_addr</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, the function might or might not take additional arguments, but something is really obvious here: all of
+the parameters depend upon <code class="docutils literal notranslate"><span class="pre">request</span></code>, so why not pass the request object instead? This is a simple change,
+but it significantly improves the code. The correct function call should be <code class="docutils literal notranslate"><span class="pre">track_request(request)</span></code>: not to
+mention that, semantically, it also makes much more sense.</p>
+<p>While passing around parameters like this is encouraged, in all cases where we pass mutable objects to
+functions, we must be really careful about side-effects. The function we are calling should not make any
+modifications to the object we are passing because that will mutate the object, creating an undesired
+side-effect. Unless this is actually the desired effect (in which case, it must be made explicit), this kind
+of behavior is discouraged. Even when we actually want to change something on the object we are dealing with,
+a better alternative would be to copy it and return a (new) modified version of it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Work with immutable objects, and avoid side-effects as much as possible.</p>
+</div>
+<p>This brings us to a similar topic: grouping parameters. In the previous example, the parameters were already
+grouped, but the group (in this case, the request object) was not being used. But other cases are not as
+obvious as that one, and we might want to group all the data in the parameters in a single object that acts
+as a container. Needless to say, this grouping has to make sense. The idea here is to reify: create the
+abstraction that was missing from our design.</p>
+<p>If the previous strategies don’t work, as a last resort we can change the signature of the function to accept
+a variable number of arguments. If the number of arguments is too big, using <code class="docutils literal notranslate"><span class="pre">*args</span></code> or <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> will
+make things harder to follow, so we have to make sure that the interface is properly documented and correctly
+used, but in some cases this is worth doing.</p>
+<p>It’s true that a function defined with <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> is really flexible and adaptable, but the
+disadvantage is that it loses its signature, and with that, part of its meaning, and almost all of its
+legibility. We have seen examples of how names for variables (including function arguments) make the code much
+easier to read. If a function will take any number of arguments (positional or keyword), we might find out
+that when we want to take a look at that function in the future, we probably won’t know exactly what it was
+supposed to do with its parameters, unless it has a very good docstring.</p>
+</div>
+</div>
 </div>
 
 
