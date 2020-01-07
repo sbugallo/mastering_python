@@ -165,6 +165,82 @@
             
   <div class="section" id="dependency-inversion">
 <h1>5. Dependency inversion<a class="headerlink" href="#dependency-inversion" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>dependency inversion principle (DIP)</strong> proposes an interesting design principle by
+which we protect our code by making it independent of things that are fragile, volatile, or
+out of our control. The idea of inverting dependencies is that our code should not adapt to
+details or concrete implementations, but rather the other way around: we want to force
+whatever implementation or detail to adapt to our code via a sort of API.</p>
+<p>Abstractions have to be organized in such a way that they do not depend on details, but
+rather the other way around: the details (concrete implementations) should depend on
+abstractions.</p>
+<p>Imagine that two objects in our design need to collaborate, A and B. A works with an
+instance of B, but as it turns out, our module doesn’t control B directly (it might be an
+external library, or a module maintained by another team, and so on). If our code heavily
+depends on B, when this changes the code will break. To prevent this, we have to invert the
+dependency: make B have to adapt to A. This is done by presenting an interface and forcing
+our code not to depend on the concrete implementation of B, but rather on the interface we
+have defined. It is then B’s responsibility to comply with that interface.</p>
+<p>In line with the concepts explored in previous sections, abstractions also come in the form
+of interfaces (or abstract base classes in Python).</p>
+<p>In general, we could expect concrete implementations to change much more frequently
+than abstract components. It is for this reason that we place abstractions (interfaces) as
+flexibility points where we expect our system to change, be modified, or extended without
+the abstraction itself having to be changed.</p>
+<div class="section" id="a-case-of-rigid-dependencies">
+<h2>5.1. A case of rigid dependencies<a class="headerlink" href="#a-case-of-rigid-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The last part of our event’s monitoring system is to deliver the identified events to a data
+collector to be further analyzed. A naive implementation of such an idea would consist of
+having an event streamer class that interacts with a data destination, for example, <code class="docutils literal notranslate"><span class="pre">Syslog</span></code>:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch4_dip_bad_diagram.png"><img alt="../../_images/ch4_dip_bad_diagram.png" src="../../_images/ch4_dip_bad_diagram.png" style="width: 30%;" /></a>
+</div>
+<p>However, this design is not very good, because we have a high-level class
+(<code class="docutils literal notranslate"><span class="pre">EventStreamer</span></code>) depending on a low-level one (<code class="docutils literal notranslate"><span class="pre">Syslog</span></code> is an implementation detail). If
+something changes in the way we want to send data to <code class="docutils literal notranslate"><span class="pre">Syslog</span></code>, <code class="docutils literal notranslate"><span class="pre">EventStreamer</span></code> will have
+to be modified. If we want to change the data destination for a different one or add new
+ones at runtime, we are also in trouble because we will find ourselves constantly modifying
+the <code class="docutils literal notranslate"><span class="pre">stream()</span></code> method to adapt it to these requirements.</p>
+</div>
+<div class="section" id="inverting-the-dependencies">
+<h2>5.2. Inverting the dependencies<a class="headerlink" href="#inverting-the-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The solution to these problems is to make <code class="docutils literal notranslate"><span class="pre">EventStreamer</span></code> work with an interface, rather
+than a concrete class. This way, implementing this interface is up to the low-level classes
+that contain the implementation details:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch4_dip_good_diagram.png"><img alt="../../_images/ch4_dip_good_diagram.png" src="../../_images/ch4_dip_good_diagram.png" style="width: 40%;" /></a>
+</div>
+<p>Now there is an interface that represents a generic data target where data is going to be sent
+to. Notice how the dependencies have now been inverted since <code class="docutils literal notranslate"><span class="pre">EventStreamer</span></code> does not
+depend on a concrete implementation of a particular data target, it does not have to change
+in line with changes on this one, and it is up to every particular data target; to implement
+the interface correctly and adapt to changes if necessary.</p>
+<p>In other words, the original <code class="docutils literal notranslate"><span class="pre">EventStreamer</span></code> of the first implementation only worked with
+objects of type Syslog , which was not very flexible. Then we realized that it could work
+with any object that could respond to a .send() message, and identified this method as the
+interface that it needed to comply with. Now, in this version, Syslog is actually extending
+the abstract base class named <code class="docutils literal notranslate"><span class="pre">DataTargetClient</span></code>, which defines the <code class="docutils literal notranslate"><span class="pre">send()</span></code> method.</p>
+<p>From now on, it is up to every new type of data target (email, for instance) to extend this
+abstract base class and implement the <code class="docutils literal notranslate"><span class="pre">send()</span></code> method.</p>
+<p>We can even modify this property at runtime for any other object that implements a
+<code class="docutils literal notranslate"><span class="pre">send()</span></code> method, and it will still work. This is the reason why it is often called dependency
+injection: because the dependency can be provided dynamically.</p>
+<p>The avid reader might be wondering why this is actually necessary. Python is flexible
+enough (sometimes too flexible), and will allow us to provide an object like
+<code class="docutils literal notranslate"><span class="pre">EventStreamer</span></code> with any particular data target object, without this one having to comply
+with any interface because it is dynamically typed. The question is this: why do we need to
+define the abstract base class (interface) at all when we can simply pass an object with a
+<code class="docutils literal notranslate"><span class="pre">send()</span></code> method to it?</p>
+<p>In all fairness, this is true; there is actually no need to do that, and the program will work
+just the same. After all, polymorphism does not mean (or require) inheritance to work.
+However, defining the abstract base class is a good practice that comes with some
+advantages, the first one being duck typing. Together with as duck typing, we can mention
+the fact that the models become more readable: remember that inheritance follows the rule
+of is a, so by declaring the abstract base class and extending from it, we are saying that, for
+instance, <code class="docutils literal notranslate"><span class="pre">Syslog</span></code> is <code class="docutils literal notranslate"><span class="pre">DataTargetClient</span></code>, which is something users of your code can read
+and understand (again, this is duck typing).</p>
+<p>All in all, it is not mandatory to define the abstract base class, but it is desirable in order to
+achieve a cleaner design.</p>
+</div>
 </div>
 
 

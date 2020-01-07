@@ -1,8 +1,8 @@
 1. Indexes and slices
 *********************
 
-In Python, some data structures or types support accsing it's elements by index. The first element is placed in the
-index number zero. How would you access the last element of a list?:
+In Python, some data structures or types support accesing it's elements by index. The first element is placed in the
+index number zero. How would you access the last element of a list?
 
 .. code-block:: python
 
