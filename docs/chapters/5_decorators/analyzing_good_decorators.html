@@ -165,6 +165,52 @@
             
   <div class="section" id="analyzing-good-decorators">
 <h1>5. Analyzing good decorators<a class="headerlink" href="#analyzing-good-decorators" title="Permalink to this headline">¶</a></h1>
+<p>As a closing note for this chapter, let’s review some examples of good decorators and how
+they are used both in Python itself, as well as in popular libraries. The idea is to get
+guidelines on how good decorators are created.</p>
+<p>Before jumping into examples, let’s first identify traits that good decorators should have:</p>
+<ul class="simple">
+<li><p><strong>Encapsulation, or separation of concerns</strong>: A good decorator should effectively separate different responsibilities between what it does and what it is decorating. It cannot be a leaky abstraction, meaning that a client of the decorator should only invoke it in black box mode, without knowing how it is actually implementing its logic.</p></li>
+<li><p><strong>Orthogonality</strong>: What the decorator does should be independent, and as decoupled as possible from the object it is decorating.</p></li>
+<li><p><strong>Reusability</strong>: It is desirable that the decorator can be applied to multiple types, and not that it just appears on one instance of one function, because that means that it could just have been a function instead. It has to be generic enough.</p></li>
+</ul>
+<p>A nice example of decorators can be found in the Celery project, where a task is defined by
+applying the decorator of the task from the application to a function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app.task</span>
+<span class="k">def</span> <span class="nf">mytask</span><span class="p">():</span>
+    <span class="o">....</span>
+</pre></div>
+</div>
+<p>One of the reasons why this is a good decorator is because it is very good at
+something: encapsulation. The user of the library only needs to define the function body
+and the decorator will convert that into a task automatically. The <code class="docutils literal notranslate"><span class="pre">&#64;app.task</span></code> decorator
+surely wraps a lot of logic and code, but none of that is relevant to the body of
+<code class="docutils literal notranslate"><span class="pre">mytask()</span></code> . It is complete encapsulation and separation of concerns—nobody will have to
+take a look at what that decorator does, so it is a correct abstraction that does not leak any
+details.</p>
+<p>Another common use of decorators is in web frameworks (Pyramid, Flask, and Sanic, just
+to name a few), on which the handlers for views are registered to the URLs through
+decorators:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">view_handler</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>These sorts of decorator have the same considerations as before; they also provide total
+encapsulation because a user of the web framework rarely (if ever) needs to know what
+the <code class="docutils literal notranslate"><span class="pre">&#64;route</span></code> decorator is doing. In this case, we know that the decorator is doing
+something more, such as registering these functions to a mapper to the URL, and also that it
+is changing the signature of the original function to provide us with a nicer interface that
+receives a request object with all the information already set.</p>
+<p>The previous two examples are enough to make us notice something else about this use of
+decorators. They conform to an API. These libraries of frameworks are exposing their
+functionality to users through decorators, and it turns out that decorators are an excellent
+way of defining a clean programming interface.</p>
+<p>This is probably the best way we should think about to decorators. Much like in the
+example of the class decorator that tells us how the attributes of the event are going to be
+handled, a good decorator should provide a clean interface so that users of the code know
+what to expect from the decorator, without needing to know how it works, or any of its
+details for that matter.</p>
 </div>
 
 

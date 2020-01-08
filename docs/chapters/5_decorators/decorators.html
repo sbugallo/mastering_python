@@ -165,6 +165,427 @@
             
   <div class="section" id="what-are-decorators">
 <h1>1. What are decorators?<a class="headerlink" href="#what-are-decorators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-are-decorators-in-python">
+<h2>1.1. What are decorators in Python?<a class="headerlink" href="#what-are-decorators-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Decorators were introduced in Python a long time ago as a mechanism to
+simplify the way functions and methods are defined when they have to be modified after
+their original definition.</p>
+<p>One of the original motivations for this was because functions such as <code class="docutils literal notranslate"><span class="pre">classmethod</span></code> and
+<code class="docutils literal notranslate"><span class="pre">staticmethod</span></code> were used to transform the original definition of the method, but they
+required an extra line, modifying the original definition of the function.</p>
+<p>More generally speaking, every time we had to apply a transformation to a function, we
+had to call it with the modifier function, and then reassign it to the same name the
+function was originally defined with.</p>
+<p>For instance, if we have a function called original , and then we have a function that
+changes the behavior of original on top of it, called modifier , we have to write
+something like the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">original</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+<span class="o">...</span>
+
+<span class="n">original</span> <span class="o">=</span> <span class="n">modifier</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice how we change the function and reassign it to the same name. This is confusing,
+error-prone (imagine that someone forgets to reassign the function, or does reassign that
+but not in the line immediately after the function definition, but much farther away), and
+cumbersome. For this reason, some syntax support was added to the language.</p>
+<p>The previous example could be rewritten like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@modifier</span>
+<span class="k">def</span> <span class="nf">original</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>This means that decorators are just syntax sugar for calling whatever is after the decorator
+as a first parameter of the decorator itself, and the result would be whatever the decorator
+returns.</p>
+<p>In line with the Python terminology, and our example, modifier is what we call
+the decorator, and original is the decorated function, often also called a <strong>wrapped object</strong>.</p>
+<p>While the functionality was originally thought for methods and functions, the actual syntax
+allows any kind of object to be decorated, so we are going to explore decorators applied to
+functions, methods, generators, and classes.</p>
+<p>One final note is that, while the name of a decorator is correct (after all, the decorator is in
+fact, making changes, extending, or working on top of the wrapped function), it is not to be
+confused with the decorator design pattern.</p>
+</div>
+<div class="section" id="decorate-functions">
+<h2>1.2. Decorate functions<a class="headerlink" href="#decorate-functions" title="Permalink to this headline">¶</a></h2>
+<p>Functions are probably the simplest representation of a Python object that can be decorated.
+We can use decorators on functions to apply all sorts of logic to them—we can validate
+parameters, check preconditions, change the behavior entirely, modify its signature, cache
+results (create a memorized version of the original function), and more.</p>
+<p>As an example, we will create a basic decorator that implements a retry mechanism,
+controlling a particular domain-level exception and retrying a certain number of times:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ControlledException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A generic exception on the program&#39;s domain.&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">last_raised</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">RETRIES_LIMIT</span> <span class="o">=</span> <span class="mi">3</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">RETRIES_LIMIT</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ControlledException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrying </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
+                <span class="n">last_raised</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="k">raise</span> <span class="n">last_raised</span>
+
+    <span class="k">return</span> <span class="n">wrapped</span>
+</pre></div>
+</div>
+<p>The use of <code class="docutils literal notranslate"><span class="pre">&#64;wraps</span></code> can be ignored for now. The use of <code class="docutils literal notranslate"><span class="pre">_</span></code> in the for loop, means that
+the number is assigned to a variable we are not interested in at the moment, because it’s not
+used inside the for loop (it’s a common idiom in Python to name <code class="docutils literal notranslate"><span class="pre">_</span></code> values that are ignored).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">retry</span></code> decorator doesn’t take any parameters, so it can be easily applied to any
+function, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@retry</span>
+<span class="k">def</span> <span class="nf">run_operation</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a particular task, simulating some failures on its execution.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>As explained at the beginning, the definition of <code class="docutils literal notranslate"><span class="pre">&#64;retry</span></code> on top of <code class="docutils literal notranslate"><span class="pre">run_operation</span></code> is just
+syntactic sugar that Python provides to actually execute <code class="docutils literal notranslate"><span class="pre">run_operation</span> <span class="pre">=</span> <span class="pre">retry(run_operation)</span></code>.</p>
+<p>In this limited example, we can see how decorators can be used to create a generic retry
+operation that, under certain conditions (in this case, represented as exceptions that could
+be related to timeouts, for example), will allow calling the decorated code multiple times.</p>
+</div>
+<div class="section" id="decorate-classes">
+<h2>1.2. Decorate classes<a class="headerlink" href="#decorate-classes" title="Permalink to this headline">¶</a></h2>
+<p>Classes can also be decorated with the same as can be applied to syntax
+functions. The only difference is that when writing the code for this decorator, we have to
+take into consideration that we are receiving a class, not a function.</p>
+<p>Some practitioners might argue that decorating a class is something rather convoluted and
+that such a scenario might jeopardize readability because we would be declaring some
+attributes and methods in the class, but behind the scenes, the decorator might be applying
+changes that would render a completely different class.</p>
+<p>This assessment is true, but only if this technique is heavily abused. Objectively, this is no
+different from decorating functions; after all, classes are just another type of object in the
+Python ecosystem, as functions are. For now, we’ll
+explore the benefits of decorators that apply particularly to classes:</p>
+<ul class="simple">
+<li><p>All the benefits of reusing code and the DRY principle. A valid case of a class decorator would be to enforce that multiple classes conform to a certain interface or criteria (by making this checks only once in the decorator that is going to be applied to those many classes).</p></li>
+<li><p>We could create smaller or simpler classes that will be enhanced later on by decorators</p></li>
+<li><p>The transformation logic we need to apply to a certain class will be much easier to maintain if we use a decorator, as opposed to more complicated (and often rightfully discouraged) approaches such as metaclasses</p></li>
+</ul>
+<p>Among all possible applications of decorators, we will explore a simple example to give an
+idea of the sorts of things they can be useful for. Keep in mind that this is not the only
+application type for class decorators, but also that the code we show you could have many
+other multiple solutions as well, all with their pros and cons, but we chose decorators with
+the purpose of illustrating their usefulness.</p>
+<p>Recalling our event systems for the monitoring platform, we now need to transform the
+data for each event and send it to an external system. However, each type of event might
+have its own particularities when selecting how to send its data.</p>
+<p>In particular, the <code class="docutils literal notranslate"><span class="pre">event</span></code> for a login might contain sensitive information such as credentials
+that we want to hide. Other fields such as <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> might also require some
+transformations since we want to show them in a particular format. A first attempt at
+complying with these requirements would be as simple as having a class that maps to each
+particular <code class="docutils literal notranslate"><span class="pre">event</span></code> and knows how to serialize it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LoginEventSerializer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">event</span>
+
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;**redacted**&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">LoginEvent</span><span class="p">:</span>
+    <span class="n">SERIALIZER</span> <span class="o">=</span> <span class="n">LoginEventSerializer</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">SERIALIZER</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here, we declare a class that is going to map directly with the login event, containing the
+logic for it: hide the password field, and format the timestamp as required.</p>
+<p>While this works and might look like a good option to start with, as time passes and we
+want to extend our system, we will find some issues:</p>
+<ul class="simple">
+<li><p><strong>Too many classes</strong>: As the number of events grows, the number of serialization classes will grow in the same order of magnitude, because they are mapped one to one.</p></li>
+<li><p><strong>The solution is not flexible enough</strong>: If we need to reuse parts of the components (for example, we need to hide the password in another type of event that also has it), we will have to extract this into a function, but also call it repeatedly from multiple classes, meaning that we are not reusing that much code after all.</p></li>
+<li><p><strong>Boilerplate</strong>: The <code class="docutils literal notranslate"><span class="pre">serialize()</span></code> method will have to be present in all event classes, calling the same code. Although we can extract this into another class (creating a mixin), it does not seem like a good use of inheritance.</p></li>
+</ul>
+<p>An alternative solution is to be able to dynamically construct an object that, given a set of
+filters (transformation functions) and an event instance, is able to serialize it by applying
+the filters to its fields. We then only need to define the functions to transform each type of
+field, and the serializer is created by composing many of these functions.</p>
+<p>Once we have this object, we can decorate the class in order to add the <code class="docutils literal notranslate"><span class="pre">serialize()</span></code>
+method, which will just call these Serialization objects with itself:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hide_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;**redacted**&quot;</span>
+
+<span class="k">def</span> <span class="nf">format_time</span><span class="p">(</span><span class="n">field_timestamp</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">field_timestamp</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">show_original</span><span class="p">(</span><span class="n">event_field</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">event_field</span>
+
+<span class="k">class</span> <span class="nc">EventSerializer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serialization_fields</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serialization_fields</span> <span class="o">=</span> <span class="n">serialization_fields</span>
+
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">transformation</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">transformation</span> <span class="ow">in</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serialization_fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+<span class="k">class</span> <span class="nc">Serialization</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">transformations</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">EventSerializer</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_class</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">serialize_method</span><span class="p">(</span><span class="n">event_instance</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">event_instance</span><span class="p">)</span>
+
+        <span class="n">event_class</span><span class="o">.</span><span class="n">serialize</span> <span class="o">=</span> <span class="n">serialize_method</span>
+    <span class="k">return</span> <span class="n">event_class</span>
+
+<span class="nd">@Serialization</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="n">show_original</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="n">hide_field</span><span class="p">,</span>
+    <span class="n">ip</span><span class="o">=</span><span class="n">show_original</span><span class="p">,</span>
+    <span class="n">timestamp</span><span class="o">=</span><span class="n">format_time</span>
+<span class="p">)</span>
+<span class="k">class</span> <span class="nc">LoginEvent</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+</pre></div>
+</div>
+<p>Notice how the decorator makes it easier for the user to know how each field is going to be
+treated without having to look into the code of another class. Just by reading the arguments
+passed to the class decorator, we know that the username and IP address will be left
+unmodified, the password will be hidden, and the timestamp will be formatted.</p>
+<p>Now, the code of the class does not need the <code class="docutils literal notranslate"><span class="pre">serialize()</span></code> method defined, nor does it
+need to extend from a mixin that implements it, since the decorator will add it. In fact, this
+is probably the only part that justifies the creation of the class decorator, because otherwise,
+the <code class="docutils literal notranslate"><span class="pre">Serialization</span></code> object could have been a class attribute of <code class="docutils literal notranslate"><span class="pre">LoginEvent</span></code>, but the fact
+that it is altering the class by adding a new method to it makes it impossible.</p>
+<p>Moreover, we could have another class decorator that, just by defining the attributes of the
+class, implements the logic of the init method, but this is beyond the scope of this
+example. This is what libraries such as <code class="docutils literal notranslate"><span class="pre">attrs</span></code> do, and a similar functionality is
+proposed in for the Standard library.</p>
+<p>By using this class decorator, the previous example could be
+rewritten in a more compact way, without the boilerplate code of the <code class="docutils literal notranslate"><span class="pre">init</span></code>, as shown here:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="nd">@Serialization</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="n">show_original</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="n">hide_field</span><span class="p">,</span>
+    <span class="n">ip</span><span class="o">=</span><span class="n">show_original</span><span class="p">,</span>
+    <span class="n">timestamp</span><span class="o">=</span><span class="n">format_time</span>
+<span class="p">)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LoginEvent</span><span class="p">:</span>
+    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">&#64;dataclass</span></code> is a decorator that is used to add generated special methods to classes.
+It examines the class to find fields. A field is defined as class variable that has a type annotation.
+Nothing in <code class="docutils literal notranslate"><span class="pre">dataclass()</span></code> examines the type specified in the variable annotation.</p>
+</div>
+<div class="section" id="other-types-of-decorator">
+<h2>1.3. Other types of decorator<a class="headerlink" href="#other-types-of-decorator" title="Permalink to this headline">¶</a></h2>
+<p>Now that we know what the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> syntax for decorators actually means, we can conclude that
+it isn’t just functions, methods, or classes that can be decorated; actually, anything that can
+be defined, such as generators, coroutines, and even objects that have already been
+decorated, can be decorated, meaning that decorators can be stacked.</p>
+<p>The previous example showed how decorators can be chained. We first defined the class,
+and then applied <code class="docutils literal notranslate"><span class="pre">&#64;dataclass</span></code> to it, which converted it into a data class, acting as a
+container for those attributes. After that, the <code class="docutils literal notranslate"><span class="pre">&#64;Serialization</span></code> will apply the logic to that
+class, resulting in a new class with the new <code class="docutils literal notranslate"><span class="pre">serialize()</span></code> method added to it.
+Another good use of decorators is for generators that are supposed to be used as
+coroutines. The main idea is that, before sending any data to a newly created generator,
+the latter has to be advanced up to their next <code class="docutils literal notranslate"><span class="pre">yield</span></code> statement by calling <code class="docutils literal notranslate"><span class="pre">next()</span></code> on it. This
+is a manual process that every user will have to remember and hence is error-prone. We
+could easily create a decorator that takes a generator as a parameter, calls <code class="docutils literal notranslate"><span class="pre">next()</span></code> to it, and
+then returns the generator.</p>
+</div>
+<div class="section" id="passing-arguments-to-decorators">
+<h2>1.4. Passing arguments to decorators<a class="headerlink" href="#passing-arguments-to-decorators" title="Permalink to this headline">¶</a></h2>
+<p>At this point, we already regard decorators as a powerful tool in Python. However, they
+could be even more powerful if we could just pass parameters to them so that their logic is
+abstracted even more.</p>
+<p>There are several ways of implementing decorators that can take arguments, but we will go
+over the most common ones. The first one is to create decorators as nested functions with a
+new level of indirection, making everything in the decorator fall one level deeper. The
+second approach is to use a class for the decorator.</p>
+<p>In general, the second approach favors readability more, because it is easier to think in
+terms of an object than three or more nested functions working with closures. However, for
+completeness, we will explore both, and the reader can decide what is best for the problem
+at hand.</p>
+<div class="section" id="decorators-with-nested-functions">
+<h3>1.4.1. Decorators with nested functions<a class="headerlink" href="#decorators-with-nested-functions" title="Permalink to this headline">¶</a></h3>
+<p>Roughly speaking, the general idea of a decorator is to create a function that returns a
+function (often called a higher-order function). The internal function defined in the body of
+the decorator is going to be the one actually being called.</p>
+<p>Now, if we wish to pass parameters to it, we then need another level of indirection. The
+first one will take the parameters, and inside that function, we will define a new function,
+which will be the decorator, which in turn will define yet another new function, namely the
+one to be returned as a result of the decoration process. This means that we will have at
+least three levels of nested functions.</p>
+<p>Don’t worry if this didn’t seem clear so far. After reviewing the examples that are about to
+come, everything will become clear.</p>
+<p>One of the first examples we saw of decorators implemented the retry functionality over
+some functions. This is a good idea, except it has a problem; our implementation did not
+allow us to specify the numbers of retries, and instead, this was a fixed number inside the
+decorator.</p>
+<p>Now, we want to be able to indicate how many retries each instance is going to have, and
+perhaps we could even add a default value to this parameter. In order to do this, we need
+another level of nested functions—first for the parameters, and then for the decorator itself.
+This is because we are now going to have something in the form of the following:
+<code class="docutils literal notranslate"><span class="pre">&#64;retry(arg1,</span> <span class="pre">arg2,...</span> <span class="pre">)</span></code>. And that has to return a decorator because the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> syntax will apply the result
+of that computation to the object to be decorated. Semantically, it would translate to something
+like the following: <code class="docutils literal notranslate"><span class="pre">&lt;original_function&gt;</span> <span class="pre">=</span> <span class="pre">retry(arg1,</span> <span class="pre">arg2,</span> <span class="pre">....)(&lt;original_function&gt;)</span></code></p>
+<p>Besides the number of desired retries, we can also indicate the types of exception we wish
+to control. The new version of the code supporting the new requirements might look like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RETRIES_LIMIT</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">def</span> <span class="nf">with_retry</span><span class="p">(</span><span class="n">retries_limit</span><span class="o">=</span><span class="n">RETRIES_LIMIT</span><span class="p">,</span> <span class="n">allowed_exceptions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">allowed_exceptions</span> <span class="o">=</span> <span class="n">allowed_exceptions</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ControlledException</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">last_raised</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retries_limit</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">allowed_exceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrying </span><span class="si">%s</span><span class="s2"> due to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="n">last_raised</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="k">raise</span> <span class="n">last_raised</span>
+        <span class="k">return</span> <span class="n">wrapped</span>
+    <span class="k">return</span> <span class="n">retry</span>
+</pre></div>
+</div>
+<p>Here are some examples of how this decorator can be applied to functions, showing the
+different options it accepts:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@with_retry</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">run_operation</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="nd">@with_retry</span><span class="p">(</span><span class="n">retries_limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">run_with_custom_retries_limit</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="nd">@with_retry</span><span class="p">(</span><span class="n">allowed_exceptions</span><span class="o">=</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">,))</span>
+<span class="k">def</span> <span class="nf">run_with_custom_exceptions</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="nd">@with_retry</span><span class="p">(</span>
+    <span class="n">retries_limit</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">allowed_exceptions</span><span class="o">=</span><span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">run_with_custom_parameters</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="decorator-objects">
+<h3>1.4.2. Decorator objects<a class="headerlink" href="#decorator-objects" title="Permalink to this headline">¶</a></h3>
+<p>The previous example requires three levels of nested functions. The first it is going to be a
+function that receives the parameters of the decorator we want to use. Inside this function,
+the rest of the functions are closures that use these parameters along with the logic of the
+decorator.</p>
+<p>A cleaner implementation of this would be to use a class to define the decorator. In this
+case, we can pass the parameters in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method, and then implement the logic of
+the decorator on the magic method named <code class="docutils literal notranslate"><span class="pre">__call__</span></code>.</p>
+<p>The code for the decorator will look like it does in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WithRetry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retries_limit</span><span class="o">=</span><span class="n">RETRIES_LIMIT</span><span class="p">,</span>
+        <span class="n">allowed_exceptions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retries_limit</span> <span class="o">=</span> <span class="n">retries_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_exceptions</span> <span class="o">=</span> <span class="n">allowed_exceptions</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ControlledException</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">last_raised</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retries_limit</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_exceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrying </span><span class="si">%s</span><span class="s2"> due to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="n">last_raised</span> <span class="o">=</span> <span class="n">e</span>
+
+            <span class="k">raise</span> <span class="n">last_raised</span>
+
+        <span class="k">return</span> <span class="n">wrapped</span>
+</pre></div>
+</div>
+<p>And this decorator can be applied pretty much like the previous one, like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@WithRetry</span><span class="p">(</span><span class="n">retries_limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">run_with_custom_retries_limit</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It is important to note how the Python syntax takes effect here. First, we create the object, so
+before the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operation is applied, the object is created with its parameters passed to it. This
+will create a new object and initialize it with these parameters, as defined in the <code class="docutils literal notranslate"><span class="pre">init</span></code>
+method. After this, the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operation is invoked, so this object will wrap the function named
+<code class="docutils literal notranslate"><span class="pre">run_with_custom_retries_limit</span></code>, meaning that it will be passed to the call magic
+method.</p>
+<p>Inside this <code class="docutils literal notranslate"><span class="pre">call</span></code> magic method, we defined the logic of the decorator as we normally
+do: we wrap the original function, returning a new one with the logic we want instead.</p>
+</div>
+</div>
+<div class="section" id="good-uses-for-decorators">
+<h2>1.5. Good uses for decorators<a class="headerlink" href="#good-uses-for-decorators" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will take a look at some common patterns that make good use of
+decorators. These are common situations for when decorators are a good choice.</p>
+<p>From all the countless applications decorators can be used for, we will enumerate a few, the
+most common or relevant:</p>
+<ul class="simple">
+<li><p><strong>Transforming parameters</strong>: Changing the signature of a function to expose a nicer API, while encapsulating details on how the parameters are treated and transformed underneath.</p></li>
+<li><p><strong>Tracing code</strong>: Logging the execution of a function with its parameters.</p></li>
+<li><p><strong>Validate parameters</strong>.</p></li>
+<li><p><strong>Implement retry operations</strong>.</p></li>
+<li><p><strong>Simplify classes by moving some (repetitive) logic into decorators</strong>.</p></li>
+</ul>
+<div class="section" id="transforming-parameters">
+<h3>1.5.1. Transforming parameters<a class="headerlink" href="#transforming-parameters" title="Permalink to this headline">¶</a></h3>
+<p>We have mentioned before that decorators can be used to validate parameters (and even
+enforce some preconditions or postconditions under the idea of DbC), so from this you
+probably have got the idea that it is somehow common to use decorators when dealing
+with or manipulating parameters.</p>
+<p>In particular, there are some cases on which we find ourselves repeatedly creating similar
+objects, or applying similar transformations that we would wish to abstract away. Most of
+the time, we can achieve this by simply using a decorator.</p>
+</div>
+<div class="section" id="tracing-code">
+<h3>1.5.2. Tracing code<a class="headerlink" href="#tracing-code" title="Permalink to this headline">¶</a></h3>
+<p>When talking about <strong>tracing</strong> in this section, we will refer to something more general that has
+to do with dealing with the execution of a function that we wish to monitor. This could
+refer to scenarios in which we want to:</p>
+<ul class="simple">
+<li><p>Actually trace the execution of a function (for example, by logging the lines it executes)</p></li>
+<li><p>Monitor some metrics over a function (such as CPU usage or memory footprint)</p></li>
+<li><p>Measure the running time of a function</p></li>
+<li><p>Log when a function was called, and the parameters that were passed to it</p></li>
+</ul>
+</div>
+</div>
 </div>
 
 
