@@ -165,6 +165,450 @@
             
   <div class="section" id="descriptors-in-action">
 <h1>3. Descriptors in action<a class="headerlink" href="#descriptors-in-action" title="Permalink to this headline">¶</a></h1>
+<p>Now that we have seen what descriptors are, how they work, and what the main ideas
+behind them are, we can see them in action. In this section, we will be exploring some
+situations that can be elegantly addressed through descriptors.</p>
+<p>Here, we will look at some examples of working with descriptors, and we will also cover
+implementation considerations for them (different ways of creating them, with their pros
+and cons), and finally we will discuss what are the most suitable scenarios for descriptors.</p>
+<div class="section" id="an-application-of-descriptors">
+<h2>3.1. An application of descriptors<a class="headerlink" href="#an-application-of-descriptors" title="Permalink to this headline">¶</a></h2>
+<p>We will start with a simple example that works, but that will lead to some code duplication.
+It is not very clear how this issue will be addressed. Later on, we will devise a way of
+abstracting the repeated logic into a descriptor, which will address the duplication
+problem, and we will notice that the code on our client classes will be reduced drastically.</p>
+<div class="section" id="a-first-attempt-without-using-descriptors">
+<h3>3.1.1. A first attempt without using descriptors<a class="headerlink" href="#a-first-attempt-without-using-descriptors" title="Permalink to this headline">¶</a></h3>
+<p>The problem we want to solve now is that we have a regular class with some attributes, but
+we wish to track all of the different values a particular attribute has over time, for example,
+in a list. The first solution that comes to our mind is to use a property, and every time a
+value is changed for that attribute in the setter method of the property, we add it to an
+internal list that will keep this trace as we want it.</p>
+<p>Imagine that our class represents a traveler in our application that has a current city, and
+we want to keep track of all the cities that user has visited throughout the running of the
+program. The following code is a possible implementation that addresses these
+requirements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Traveller</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">current_city</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_city</span> <span class="o">=</span> <span class="n">current_city</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cities_visited</span> <span class="o">=</span> <span class="p">[</span><span class="n">current_city</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">current_city</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_city</span>
+
+    <span class="nd">@current_city.setter</span>
+    <span class="k">def</span> <span class="nf">current_city</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_city</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_city</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_city</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cities_visited</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_city</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_city</span> <span class="o">=</span> <span class="n">new_city</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cities_visited</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cities_visited</span>
+</pre></div>
+</div>
+<p>We can easily check that this code works according to our requirements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">alice</span> <span class="o">=</span> <span class="n">Traveller</span><span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Barcelona&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alice</span><span class="o">.</span><span class="n">current_city</span> <span class="o">=</span> <span class="s2">&quot;Paris&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alice</span><span class="o">.</span><span class="n">current_city</span> <span class="o">=</span> <span class="s2">&quot;Brussels&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alice</span><span class="o">.</span><span class="n">current_city</span> <span class="o">=</span> <span class="s2">&quot;Amsterdam&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alice</span><span class="o">.</span><span class="n">cities_visited</span>
+<span class="go">[&#39;Barcelona&#39;, &#39;Paris&#39;, &#39;Brussels&#39;, &#39;Amsterdam&#39;]</span>
+</pre></div>
+</div>
+<p>So far, this is all we need and nothing else has to be implemented. For the purposes of this
+problem, the property would be more than enough. What happens if we need the exact
+same logic in multiple places of the application? This would mean that this is actually an
+instance of a more generic problem: tracing all the values of an attribute in another one.
+What would happen if we want to do the same with other attributes, such as keeping track
+of all tickets Alice bought, or all the countries she has been in? We would have to repeat the
+logic in all of these places.</p>
+<p>Moreover, what would happen if we need this same behavior in different classes? We
+would have to repeat the code or come up with a generic solution (maybe a decorator, a
+property builder, or a descriptor).</p>
+</div>
+<div class="section" id="the-idiomatic-implementation">
+<h3>3.1.2. The idiomatic implementation<a class="headerlink" href="#the-idiomatic-implementation" title="Permalink to this headline">¶</a></h3>
+<p>We will now look at how to address the questions of the previous section by using a
+descriptor that is generic enough as to be applied in any class. Again, this example is not
+really needed because the requirements do not specify such generic behavior (we haven’t
+even followed the rule of three instances of the similar pattern previously creating the
+abstraction), but it is shown with the goal of portraying descriptors in action.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not implement a descriptor unless there is actual evidence of the repetition we are trying to solve, and the complexity is proven to have paid off.</p>
+</div>
+<p>Now, we will create a generic descriptor that, given a name for the attribute to hold the
+traces of another one, will store the different values of the attribute in a list.</p>
+<p>As we mentioned previously, the code is more than what we need for the problem, but its
+intention is just to show how a descriptor would help us in this case. Given the generic
+nature of descriptors, the reader will notice that the logic on it (the name of their method,
+and attributes) does not relate to the domain problem at hand (a traveler object). This is
+because the idea of the descriptor is to be able to use it in any type of class, probably on
+different projects, with the same outcomes.</p>
+<p>In order to address this gap, some parts of the code are annotated, and the respective
+explanation for each section (what it does, and how it relates to the original problem) is
+described in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HistoryTracedAttribute</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace_attribute_name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_attribute_name</span> <span class="o">=</span> <span class="n">trace_attribute_name</span> <span class="c1"># [1]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_track_change_in_value_for_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_track_change_in_value_for_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_default</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span> <span class="c1"># [2]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_needs_to_track_change</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+            <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">trace_attribute_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_needs_to_track_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">current_value</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="c1"># [3]</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">current_value</span> <span class="c1"># [4]</span>
+
+    <span class="k">def</span> <span class="nf">_set_default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace_attribute_name</span><span class="p">,</span> <span class="p">[])</span> <span class="c1"># [6]</span>
+
+<span class="k">class</span> <span class="nc">Traveller</span><span class="p">:</span>
+    <span class="n">current_city</span> <span class="o">=</span> <span class="n">HistoryTracedAttribute</span><span class="p">(</span><span class="s2">&quot;cities_visited&quot;</span><span class="p">)</span> <span class="c1"># [1]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">current_city</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_city</span> <span class="o">=</span> <span class="n">current_city</span> <span class="c1"># [5]</span>
+</pre></div>
+</div>
+<p>Some annotations and comments on the code are as follows (numbers in the list correspond
+to the number annotations in the previous listing):</p>
+<ol class="arabic simple">
+<li><p>The name of the attribute is one of the variables assigned to the descriptor, in this case, <code class="docutils literal notranslate"><span class="pre">current_city</span></code>. We pass to the descriptor the name of the variable in which it will store the trace for the variable of the descriptor. In this example, we are telling our object to keep track of all the values that <code class="docutils literal notranslate"><span class="pre">current_city</span></code> has had in the attribute named <code class="docutils literal notranslate"><span class="pre">cities_visited</span></code>.</p></li>
+<li><p>The first time we call the descriptor, in the <code class="docutils literal notranslate"><span class="pre">init</span></code>, the attribute for tracing values will not exist, in which case we initialize it to an empty list to later append values to it.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">init</span></code> method, the name of the attribute <code class="docutils literal notranslate"><span class="pre">current_city</span></code> will not exist either, so we want to keep track of this change as well. This is the equivalent of initializing the list with the first value in the previous example.</p></li>
+<li><p>Only track changes when the new value is different from the one that is currently set.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">method</span></code>, the descriptor already exists, and this assignment instruction triggers the actions from step 2 (create the empty list to start tracking values for it), and step 3 (append the value to this list, and set it to the key in the object for retrieval later).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">setdefault</span></code> method in a dictionary is used to avoid a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>. In this case an empty list will be returned for those attributes that aren’t still available.</p></li>
+</ol>
+<p>It is true that the code in the descriptor is rather complex. On the other hand, the code in
+the client class is considerably simpler. Of course, this balance only pays off if we are
+going to use this descriptor multiple times, which is a concern we have already covered.</p>
+<p>What might not be so clear at this point is that the descriptor is indeed completely
+independent from the client class. Nothing in it suggests anything about the business
+logic. This makes it perfectly suitable to apply it in any other class; even if it does
+something completely different, the descriptor will take the same effect.</p>
+<p>This is the true Pythonic nature of descriptors. They are more appropriate for defining
+libraries, frameworks, or internal APIs, and not that much for business logic.</p>
+</div>
+</div>
+<div class="section" id="different-forms-of-implementing-descriptors">
+<h2>3.2. Different forms of implementing descriptors<a class="headerlink" href="#different-forms-of-implementing-descriptors" title="Permalink to this headline">¶</a></h2>
+<p>We have to first understand a common issue that’s specific to the nature of descriptors
+before thinking of ways of implementing them. First, we will discuss the problem of a
+global shared state, and afterward we will move on and look at different ways descriptors
+can be implemented while taking this into consideration.</p>
+</div>
+<div class="section" id="the-issue-of-global-shared-state">
+<h2>3.2.1. The issue of global shared state<a class="headerlink" href="#the-issue-of-global-shared-state" title="Permalink to this headline">¶</a></h2>
+<p>As we have already mentioned, descriptors need to be set as class attributes to work. This
+should not be a problem most of the time, but it does come with some warnings that need
+to be taken into consideration.</p>
+<p>The problem with class attributes is that they are shared across all instances of that class.
+Descriptors are not an exception here, so if we try to keep data in a descriptor object,
+keep in mind that all of them will have access to the same value.</p>
+<p>Let’s see what happens when we incorrectly define a descriptor that keeps the data itself,
+instead of storing it in each object:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SharedDataDescriptor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">initial_value</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">class</span> <span class="nc">ClientClass</span><span class="p">:</span>
+        <span class="n">descriptor</span> <span class="o">=</span> <span class="n">SharedDataDescriptor</span><span class="p">(</span><span class="s2">&quot;first value&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, the descriptor object stores the data itself. This carries with it the
+inconvenience that when we modify the value for an instance all other instances of the
+same classes are also modified with this value as well. The following code listing puts that
+theory in action:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client1</span> <span class="o">=</span> <span class="n">ClientClass</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client1</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">&#39;first value&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client2</span> <span class="o">=</span> <span class="n">ClientClass</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client2</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">&#39;first value&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client2</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="s2">&quot;value for client 2&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client2</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">&#39;value for client 2&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client1</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">&#39;value for client 2&#39;</span>
+</pre></div>
+</div>
+<p>Notice how we change one object, and suddenly all of them are from the same class, and
+we can see that this value is reflected. This is because <code class="docutils literal notranslate"><span class="pre">ClientClass.descriptor</span></code> is
+unique; it’s the same object for all of them.</p>
+<p>In some cases, this might be what we actually want (for instance, if we were to create a sort
+of Borg pattern implementation, on which we want to share state across all objects from a
+class), but in general, that is not the case, and we need to differentiate between objects.</p>
+<p>To achieve this, the descriptor needs to know the value for each instance and return it
+accordingly. That is the reason we have been operating with the dictionary (<code class="docutils literal notranslate"><span class="pre">__dict__</span></code>) of
+each instance and setting and retrieving the values from there.</p>
+<p>This is the most common approach. We have already covered why we cannot use
+<code class="docutils literal notranslate"><span class="pre">getattr()</span></code> and <code class="docutils literal notranslate"><span class="pre">setattr()</span></code> on those methods, so modifying the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute is the
+last standing option, and, in this case, is acceptable.</p>
+<div class="section" id="accessing-the-dictionary-of-the-object">
+<h3>3.2.2. Accessing the dictionary of the object<a class="headerlink" href="#accessing-the-dictionary-of-the-object" title="Permalink to this headline">¶</a></h3>
+<p>The way we implement descriptors throughout this book is making the descriptor object
+store the values in the dictionary of the object, <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>, and retrieve the parameters from
+there as well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Always store and return the data from the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute of the instance.</p>
+</div>
+</div>
+<div class="section" id="using-weak-references">
+<h3>3.2.3. Using weak references<a class="headerlink" href="#using-weak-references" title="Permalink to this headline">¶</a></h3>
+<p>Another alternative (if we don’t want to use <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>) is to make the descriptor object
+keep track of the values for each instance itself, in an internal mapping, and return values
+from this mapping as well.</p>
+<p>There is a caveat, though. This mapping cannot just be any dictionary. Since the client
+class has a reference to the descriptor, and now the descriptor will keep references to the
+objects that use it, this will create circular dependencies, and, as a result, these objects will
+never be garbage-collected because they are pointing at each other.</p>
+<p>In order to address this, the dictionary has to be a weak key one, as defined in the
+<code class="docutils literal notranslate"><span class="pre">weakref</span></code> module.</p>
+<p>In this case, the code for the descriptor might look like the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">WeakKeyDictionary</span>
+
+<span class="k">class</span> <span class="nc">DescriptorClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">initial_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">instance</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>This addresses the issues, but it does come with some considerations:</p>
+<ul class="simple">
+<li><p>The objects no longer hold their attributes: the descriptor does instead. This is somewhat controversial, and it might not be entirely accurate from a conceptual point of view. If we forget this detail, we might be asking the object by inspecting its dictionary, trying to find things that just aren’t there (calling <code class="docutils literal notranslate"><span class="pre">vars(client)</span></code> will not return the complete data, for example).</p></li>
+<li><p>It poses the requirement over the objects that they need to be hashable. If they aren’t, they can’t be part of the mapping. This might be too demanding a requirement for some applications.</p></li>
+</ul>
+<p>For these reasons, we prefer the implementation that has been shown so far in this book,
+which uses the dictionary of each instance. However, for completeness, we have shown this
+alternative as well.</p>
+</div>
+</div>
+<div class="section" id="more-considerations-about-descriptors">
+<h2>3.3. More considerations about descriptors<a class="headerlink" href="#more-considerations-about-descriptors" title="Permalink to this headline">¶</a></h2>
+<p>Here, we will discuss general considerations about descriptors in terms of what we can do
+with them when it is a good idea to use them, and also how things that we might have
+initially conceived as having been resolved by means of another approach can be improved
+through descriptors. We will then analyze the pros and cons of the original implementation
+versus the one after descriptors have been used.</p>
+<div class="section" id="reusing-code">
+<h3>3.3.1. Reusing code<a class="headerlink" href="#reusing-code" title="Permalink to this headline">¶</a></h3>
+<p>Descriptors are a generic tool and a powerful abstraction that we can use to avoid code
+duplication. The best way to decide when to use descriptors is to identify cases where we
+would be using a property (whether for its get logic, set logic, or both), but repeating its
+structure many times.</p>
+<p>Properties are just a particular case of descriptors (the &#64;property decorator is a descriptor
+that implements the full descriptor protocol to define their get , set , and delete actions),
+which means that we can use descriptors for far more complex tasks.</p>
+<p>Another powerful type we have seen for reusing code was decorators. Descriptors can help us create to better
+decorators by making sure that they will be able to work correctly for class methods as
+well.</p>
+<p>When it comes to decorators, we could say that it is safe to always implement the
+<code class="docutils literal notranslate"><span class="pre">__get__()</span></code> method on them, and also make it a descriptor. When trying to decide whether
+the decorator is worth creating, consider the problems but note that there are no extra considerations
+toward descriptors.</p>
+<p>As for generic descriptors, besides the aforementioned three instances rule that applies to
+decorators (and, in general, any reusable component), it is advisable to also keep in mind
+that you should use descriptors for cases when we want to define an internal API, which is
+some code that will have clients consuming it. This is a feature-oriented more toward
+designing libraries and frameworks, rather than one-time solutions.</p>
+<p>Unless there is a very good reason to, or that the code will look significantly better, we
+should avoid putting business logic in a descriptor. Instead, the code of a descriptor will
+contain more implementational code rather than business code. It is more similar to
+defining a new data structure or object that another part of our business logic will use as a
+tool.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In general, descriptors will contain implementation logic, and not so much business logic.</p>
+</div>
+</div>
+<div class="section" id="avoiding-class-decorators">
+<h3>3.3.2. Avoiding class decorators<a class="headerlink" href="#avoiding-class-decorators" title="Permalink to this headline">¶</a></h3>
+<p>If we recall the class decorator we used previously to determine how an event object is going to be
+serialized, we ended up with an implementation that (for Python 3.7+) relied on two class decorators:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@Serialization</span><span class="p">(</span>
+    <span class="n">username</span><span class="o">=</span><span class="n">show_original</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="n">hide_field</span><span class="p">,</span>
+    <span class="n">ip</span><span class="o">=</span><span class="n">show_original</span><span class="p">,</span>
+    <span class="n">timestamp</span><span class="o">=</span><span class="n">format_time</span>
+<span class="p">)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LoginEvent</span><span class="p">:</span>
+    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+</pre></div>
+</div>
+<p>The first one takes the attributes from the annotations to declare the variables, whereas the
+second one defines how to treat each file. Let’s see whether we can change these two
+decorators for descriptors instead.</p>
+<p>The idea is to create a descriptor that will apply the transformation over the values of each
+attribute, returning the modified version according to our requirements (for example,
+hiding sensitive information, and formatting dates correctly):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+
+<span class="k">class</span> <span class="nc">BaseFieldTransformation</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformation</span> <span class="o">=</span> <span class="n">transformation</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">raw_value</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformation</span><span class="p">(</span><span class="n">raw_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">ShowOriginal</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">BaseFieldTransformation</span><span class="p">,</span> <span class="n">transformation</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">HideField</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">BaseFieldTransformation</span><span class="p">,</span> <span class="n">transformation</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;**redacted**&quot;</span>
+        <span class="p">)</span>
+        <span class="n">FormatTime</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">BaseFieldTransformation</span><span class="p">,</span>
+            <span class="n">transformation</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ft</span><span class="p">:</span> <span class="n">ft</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>This descriptor is interesting. It was created with a function that takes one argument and
+returns one value. This function will be the transformation we want to apply to the field.
+From the base definition that defines generically how it is going to work, the rest of the
+descriptor classes are defined, simply by changing the particular function each one
+needs.</p>
+<p>The example uses <code class="docutils literal notranslate"><span class="pre">functools.partial</span></code> as a way of simulating sub-classes, by applying a
+partial application of the transformation function for that class, leaving a new callable that
+can be instantiated directly.</p>
+<p>In order to keep the example simple, we will implement the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">serialize()</span></code> methods, although they could be abstracted away as well. Under these
+considerations, the class for the event will now be defined as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LoginEvent</span><span class="p">:</span>
+
+    <span class="n">username</span> <span class="o">=</span> <span class="n">ShowOriginal</span><span class="p">()</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">HideField</span><span class="p">()</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">ShowOriginal</span><span class="p">()</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">FormatTime</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>We can see how the object behaves at runtime:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">le</span> <span class="o">=</span> <span class="n">LoginEvent</span><span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="s2">&quot;secret password&quot;</span><span class="p">,</span> <span class="s2">&quot;1.1.1.1&quot;</span><span class="p">,</span>
+<span class="go">datetime.utcnow())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">le</span><span class="p">)</span>
+<span class="go">{&#39;username&#39;: &#39;john&#39;, &#39;password&#39;: &#39;secret password&#39;, &#39;ip&#39;: &#39;1.1.1.1&#39;,</span>
+<span class="go">&#39;timestamp&#39;: ...}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">le</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+<span class="go">{&#39;username&#39;: &#39;john&#39;, &#39;password&#39;: &#39;**redacted**&#39;, &#39;ip&#39;: &#39;1.1.1.1&#39;,</span>
+<span class="go">&#39;timestamp&#39;: &#39;...&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">le</span><span class="o">.</span><span class="n">password</span>
+<span class="go">&#39;**redacted**&#39;</span>
+</pre></div>
+</div>
+<p>There are some differences with respect to the previous implementation that used a
+decorator. This example added the <code class="docutils literal notranslate"><span class="pre">serialize()</span></code> method and hid the fields before
+presenting them to its resulting dictionary, but if we asked for any of these attributes to an
+instance of the event in memory at any point, it would still give us the original value,
+without any transformation applied to it (we could have chosen to apply the
+transformation when setting the value, and return it directly on the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> , as well).</p>
+<p>Depending on the sensitivity of the application, this may or may not be acceptable, but in
+this case, when we ask the object for its public attributes, the descriptor will apply the
+transformation before presenting the results. It is still possible to access the original values
+by asking for the dictionary of the object (by accessing <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>), but when we ask for the
+value, by default, it will return it converted.</p>
+<p>In this example, all descriptors follow a common logic, which is defined in the base class.
+The descriptor should store the value in the object and then ask for it, applying the
+transformation it defines. We could create a hierarchy of classes, each one defining its own
+conversion function, in a way that the template method design pattern works. In this case,
+since the changes in the derived classes are relatively small (just one function), we opted for
+creating the derived classes as partial applications of the base class. Creating any new
+transformation field should be as simple as defining a new class that will be the base class,
+which is partially applied with the function we need. This can even be done ad hoc, so there
+might be no need to set a name for it.</p>
+<p>Regardless of this implementation, the point is that since descriptors are objects, we can
+create models, and apply all rules of object-oriented programming to them. Design patterns
+also apply to descriptors. We could define our hierarchy, set the custom behavior, and so
+on. This example follows the OCP, because adding a new type of conversion method would just be about creating a
+new class, derived from the base one with the function it needs, without having to modify
+the base class itself (to be fair, the previous implementation with decorators was also OCP-
+compliant, but there were no classes involved for each transformation mechanism).</p>
+<p>Let’s take an example where we create a base class that implements the <code class="docutils literal notranslate"><span class="pre">__init__()``and</span>
+<span class="pre">``serialize()</span></code> methods so that we can define the <code class="docutils literal notranslate"><span class="pre">LoginEvent</span></code> class simply by deriving
+from it, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LoginEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">ShowOriginal</span><span class="p">()</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">HideField</span><span class="p">()</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">ShowOriginal</span><span class="p">()</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">FormatTime</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Once we achieve this code, the class looks cleaner. It only defines the attributes it needs,
+and its logic can be quickly analyzed by looking at the class for each attribute. The base
+class will abstract only the common methods, and the class of each event will look simpler
+and more compact.</p>
+<p>Not only do the classes for each event look simple, but the descriptor itself is very compact
+and a lot simpler than the class decorators. The original implementation with class
+decorators was good, but descriptors made it even better.</p>
+</div>
+</div>
 </div>
 
 
