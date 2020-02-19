@@ -260,7 +260,7 @@ the <code class="docutils literal notranslate"><span class="pre">__enter__</span
 <p>The equivalent code of the previous example can be rewritten with the <code class="docutils literal notranslate"><span class="pre">contextmanager</span></code> decorator like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">contextlib</span>
 
-<span class="nd">@contextlib.contextmanager</span>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span> <span class="nf">db_handler</span><span class="p">():</span>
     <span class="n">stop_database</span><span class="p">()</span>
     <span class="k">yield</span>

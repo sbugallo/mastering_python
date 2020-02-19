@@ -248,7 +248,7 @@ be a <code class="docutils literal notranslate"><span class="pre">MyClass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{self.name}: {instance} called with {arg1} and {arg2}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.name}</span><span class="s2">: </span><span class="si">{instance}</span><span class="s2"> called with </span><span class="si">{arg1}</span><span class="s2"> and </span><span class="si">{arg2}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
     <span class="n">method</span> <span class="o">=</span> <span class="n">Method</span><span class="p">(</span><span class="s2">&quot;Internal call&quot;</span><span class="p">)</span>
@@ -282,10 +282,10 @@ parameter), and then proceed:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{self.name}: {instance} called with {arg1} and {arg2}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.name}</span><span class="s2">: </span><span class="si">{instance}</span><span class="s2"> called with </span><span class="si">{arg1}</span><span class="s2"> and </span><span class="si">{arg2}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
 
         <span class="k">return</span> <span class="n">MethodType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
@@ -338,7 +338,7 @@ code should be able to work:</p>
     <span class="nd">@classproperty</span>
     <span class="k">def</span> <span class="nf">topic</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">read_prefix_from_config</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{prefix}{cls.schema}.{cls.table}&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{prefix}{cls.schema}</span><span class="s2">.</span><span class="si">{cls.table}</span><span class="s2">&quot;</span>
 
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">TableEvent</span><span class="o">.</span><span class="n">topic</span>
@@ -365,7 +365,7 @@ value for retrieval later:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{self.__class__.__name__}({self.lat}, {self.lon})&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.lat}</span><span class="s2">, </span><span class="si">{self.lon}</span><span class="s2">)&quot;</span>
 </pre></div>
 </div>
 <p>While this is an interesting feature, it has to be used with caution because it is taking away

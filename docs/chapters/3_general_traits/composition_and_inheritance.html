@@ -350,7 +350,7 @@ to be the one for <code class="docutils literal notranslate"><span class="pre">C
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">module_name</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{self.module_name}:{self.name}&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.module_name}</span><span class="s2">:</span><span class="si">{self.name}</span><span class="s2">&quot;</span>
 
 <span class="k">class</span> <span class="nc">BaseModule1</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
     <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;module-1&quot;</span>

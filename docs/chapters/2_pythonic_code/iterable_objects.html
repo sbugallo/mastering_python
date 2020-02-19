@@ -195,7 +195,7 @@ round of the loop:</p>
  <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="bp">self</span>
 
- <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+ <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_present_day</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">StopIteration</span>
 
@@ -207,7 +207,7 @@ round of the loop:</p>
 <p>This object is designed to be created with a pair of dates, and when iterated, it will produce each day in the interval
 of specified dates, which is shown in the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">DateRangeIterable</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
 
 <span class="go">2018-01-01</span>
 <span class="go">2018-01-02</span>
@@ -308,7 +308,7 @@ constant time, O(1).</p>
 <p>Here is how the object behaves:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s1</span> <span class="o">=</span> <span class="n">DateRangeSequence</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">s1</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
 <span class="go">2018-01-01</span>
 <span class="go">2018-01-02</span>
 <span class="go">2018-01-03</span>

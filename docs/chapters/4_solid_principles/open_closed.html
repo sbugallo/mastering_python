@@ -277,7 +277,7 @@ have to change the logic to go through all events, finding the right one.</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">meets_condition</span><span class="p">(</span><span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
 <span class="k">class</span> <span class="nc">UnknownEvent</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A type of event that cannot be identified from its data&quot;&quot;&quot;</span>
@@ -335,7 +335,7 @@ transactions that the user executed on the monitored system.</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">meets_condition</span><span class="p">(</span><span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
 <span class="k">class</span> <span class="nc">UnknownEvent</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A type of event that cannot be identified from its data&quot;&quot;&quot;</span>
@@ -354,7 +354,7 @@ transactions that the user executed on the monitored system.</p>
     <span class="sd">&quot;&quot;&quot;Represents a transaction that has just occurred on the system.&quot;&quot;&quot;</span>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">meets_condition</span><span class="p">(</span><span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;after&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transaction&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;after&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transaction&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
 <span class="k">class</span> <span class="nc">SystemMonitor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Identify events that occurred in the system.&quot;&quot;&quot;</span>

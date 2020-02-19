@@ -198,7 +198,7 @@ a real code base:</p>
 
     <span class="c1"># more processing</span>
     <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="n">students_ranking</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Name: {student.name}, Score: {student.passed * 11 - student.failed * 5 - student.years * 2}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{student.name}</span><span class="s2">, Score: {student.passed * 11 - student.failed * 5 - student.years * 2}&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Notice how the lambda which is in the key of the sorted function represents some valid knowledge from the
@@ -215,7 +215,7 @@ suffer from duplication and will be easier to understand:</p>
     <span class="n">students_ranking</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">students</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">score_for_student</span><span class="p">)</span>
     <span class="c1"># more processing</span>
     <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="n">students_ranking</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Name: {student.name}, Score: {core_for_student(student)}&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{student.name}</span><span class="s2">, Score: {core_for_student(student)}&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>A fair disclaimer: this is just an analysis of one of the traits of code duplication. In reality, there are
@@ -326,7 +326,7 @@ implicit). This code would instead be rewritten like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="o">...</span>
-<span class="k">except</span> <span class="n">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>

@@ -165,6 +165,181 @@
             
   <div class="section" id="creating-generators">
 <h1>1. Creating generators<a class="headerlink" href="#creating-generators" title="Permalink to this headline">¶</a></h1>
+<p>Generators were introduced in Python a long time ago (PEP-255), with the idea of
+introducing iteration in Python while improving the performance of the program (by using
+less memory) at the same time.</p>
+<p>The idea of a generator is to create an object that is iterable, and, while it’s being iterated,
+will produce the elements it contains, one at a time. The main use of generators is to save
+memory: instead of having a very large list of elements in memory, holding everything at
+once, we have an object that knows how to produce each particular element, one at a time,
+as they are required.</p>
+<p>This feature enables lazy computations or heavyweight objects in memory, in a similar
+manner to what other functional programming languages (Haskell, for instance) provide. It
+would even be possible to work with infinite sequences because the lazy nature of
+generators allows for such an option.</p>
+<div class="section" id="a-first-look-at-generators">
+<h2>1.1. A first look at generators<a class="headerlink" href="#a-first-look-at-generators" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start with an example. The problem at hand now is that we want to process a large list
+of records and get some metrics and indicators over them. Given a large data set with
+information about purchases, we want to process it in order to get the lowest sale, highest
+sale, and the average price of a sale.</p>
+<p>For the simplicity of this example, we will assume a CSV with only two fields, in the
+following format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">purchase_date</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">price</span><span class="o">&gt;</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>We are going to create an object that receives all the purchases, and this will give us the
+necessary metrics. We could get some of these values out of the box by simply using the
+<code class="docutils literal notranslate"><span class="pre">min()</span></code> and <code class="docutils literal notranslate"><span class="pre">max()</span></code> built-in functions, but that would require iterating all of the purchases
+more than once, so instead, we are using our custom object, which will get these values in a
+single iteration.</p>
+<p>The code that will get the numbers for us looks rather simple. It’s just an object with a
+method that will process all prices in one go, and, at each step, will update the value of each
+particular metric we are interested in. First, we will show the first implementation in the
+following listing, and, later on (once we have seen more about iteration), we
+will revisit this implementation and get a much better (and compact) version of it. For now,
+we are settling on the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PurchasesStats</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">purchases</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">purchases</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">purchases</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">first_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">purchases</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no values provided&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span> <span class="o">=</span> <span class="n">first_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_avg</span><span class="p">(</span><span class="n">first_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">purchase_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">purchases</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_min</span><span class="p">(</span><span class="n">purchase_value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_max</span><span class="p">(</span><span class="n">purchase_value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_avg</span><span class="p">(</span><span class="n">purchase_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_update_min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span> <span class="o">=</span> <span class="n">new_value</span>
+
+    <span class="k">def</span> <span class="nf">_update_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span> <span class="o">=</span> <span class="n">new_value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">avg_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases_price</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases</span>
+
+    <span class="k">def</span> <span class="nf">_update_avg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases_price</span> <span class="o">+=</span> <span class="n">new_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.min_price}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.max_price}</span><span class="s2">, </span><span class="si">{self.avg_price}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>This object will receive all the totals for the <code class="docutils literal notranslate"><span class="pre">purchases</span></code> and process the required values.
+Now, we need a function that loads these numbers into something that this object can
+process. Here is the first version:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_load_purchases</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">purchases</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">price_raw</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">purchases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">price_raw</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">purchases</span>
+</pre></div>
+</div>
+<p>This code works; it loads all the numbers of the file into a list that, when passed to our
+custom object, will produce the numbers we want. It has a performance issue, though. If
+you run it with a rather large dataset, it will take a while to complete, and it might even fail
+if the dataset is large enough as to not fit into the main memory.</p>
+<p>If we take a look at our code that consumes this data, it is processing the <code class="docutils literal notranslate"><span class="pre">purchases</span></code>, one at
+a time, so we might be wondering why our producer fits everything in memory at once. It
+is creating a list where it puts all of the content of the file, but we know we can do better.</p>
+<p>The solution is to create a generator. Instead of loading the entire content of the file in a list,
+we will produce the results one at a time. The code will now look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_purchases</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">price_raw</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="nb">float</span><span class="p">(</span><span class="n">price_raw</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you measure the process this time, you will notice that the usage of memory has dropped
+significantly. We can also see how the code looks simpler: there is no need to define the
+list (therefore, there is no need to append to it), and that the return statement also
+disappeared.</p>
+<p>In this case, the <code class="docutils literal notranslate"><span class="pre">load_purchases</span></code> function is a generator function, or simply a generator.</p>
+<p>In Python, the mere presence of the keyword <code class="docutils literal notranslate"><span class="pre">yield</span></code> in any function makes it a generator,
+and, as a result, when calling it, nothing other than creating an instance of the generator
+will happen:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">load_purchases</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+<span class="go">&lt;generator object load_purchases at 0x...&gt;</span>
+</pre></div>
+</div>
+<p>A generator object is an iterable (we will revisit iterables in more detail later on), which
+means that it can work with for loops. Notice how we did not have to change anything on
+the consumer code: our statistics processor remained the same, with the for loop
+unmodified, after the new implementation.</p>
+<p>Working with iterables allows us to create these kinds of powerful abstractions that are
+polymorphic with respect to for loops. As long as we keep the iterable interface, we can
+iterate over that object transparently.</p>
+</div>
+<div class="section" id="generator-expressions">
+<h2>1.2. Generator expressions<a class="headerlink" href="#generator-expressions" title="Permalink to this headline">¶</a></h2>
+<p>Generators save a lot of memory, and since they are iterators, they are a convenient
+alternative to other iterables or containers that require more space in memory such as lists,
+tuples, or sets.</p>
+<p>Much like these data structures, they can also be defined by comprehension, only that it is
+called a generator expression (there is an ongoing argument about whether they should be
+called generator comprehensions).</p>
+<p>In the same way, we would define a list comprehension. If we replace the square brackets
+with parenthesis, we get a generator that results from the expression. Generator
+expressions can also be passed directly to functions that work with iterables, such as <code class="docutils literal notranslate"><span class="pre">sum()</span></code>,
+and, <code class="docutils literal notranslate"><span class="pre">max()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="go">[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="go">&lt;generator object &lt;genexpr&gt; at 0x...&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="go">285</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Always pass a generator expression, instead of a list comprehension, to functions that expect iterables, such as <code class="docutils literal notranslate"><span class="pre">min()</span></code>, <code class="docutils literal notranslate"><span class="pre">max()</span></code>, and <code class="docutils literal notranslate"><span class="pre">sum()</span></code>. This is more efficient and pythonic.</p>
+</div>
+<p>It is also worth mentioning, that we can only iterate 1 time over generators:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">&lt;generator object &lt;genexpr&gt; at 0x7f95ece4dad0&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">0</span>
+<span class="go">1</span>
+<span class="go">2</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">StopIteration</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
