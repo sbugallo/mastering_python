@@ -24,7 +24,7 @@ help:
     	touch ../docs/.nojekyll; \
     	rm -rf _build; \
     else \
-    	rm -rf ../dpt.pdf; \
-    	cp _build/latex/clean_code.pdf ../clean_code.pdf; \
+    	rm -rf ../python.pdf; \
+    	mv _build/latex/clean_code.pdf ../python.pdf; \
     	rm -rf _build; \
     fi

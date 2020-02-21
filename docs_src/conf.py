@@ -13,6 +13,7 @@
 
 import os
 import sys
+import datetime
 
 sys.path.insert(0, os.path.abspath('../'))
 
@@ -55,7 +56,7 @@ master_doc = 'index'
 # built documents.
 
 # The short X.Y version.
-version = VERSION
+version = f"{datetime.datetime.now():%d/%m/%Y}"
 
 # The full version, including alpha/beta/rc tags.
 release = ''
@@ -108,7 +109,7 @@ html_logo = './_static/logo-white.png'
 #
 html_favicon = './_static/favicon.ico'
 
-html_title = 'Clean Code Python'
+html_title = 'Mastering Python'
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -134,7 +135,13 @@ htmlhelp_basename = 'clean_codedoc'
 latex_elements = {
     'papersize': 'a4paper',
     'pointsize': '10pt',
-    'preamble': r'\usepackage{float}',
+    'preamble': r'''
+\usepackage{float}
+\usepackage[export]{adjustbox}% http://ctan.org/pkg/adjustbox
+\let\oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \oldincludegraphics[#1,min width=0.9\linewidth]{#2}}
+''',
     'figure_align': 'H'
 }
 
