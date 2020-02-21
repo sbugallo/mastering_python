@@ -165,359 +165,384 @@
             
   <div class="section" id="coroutines">
 <h1>3. Coroutines<a class="headerlink" href="#coroutines" title="Permalink to this headline">¶</a></h1>
-<p>As we already know, generator objects are iterables. They implement __iter__() and
-__next__() . This is provided by Python automatically so that when we create a generator
-object function, we get an object that can be iterated or advanced through the next()
-function.
-Besides this basic functionality, they have more methods so that they can work as
-coroutines (PEP-342). Here, we will explore how generators evolved into coroutines to
+<p>As we already know, generator objects are iterables. They implement <code class="docutils literal notranslate"><span class="pre">__iter__()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">__next__()</span></code>. This is provided by Python automatically so that when we create a generator
+object function, we get an object that can be iterated or advanced through the <code class="docutils literal notranslate"><span class="pre">next()</span></code>
+function.</p>
+<p>Besides this basic functionality, they have more methods so that they can work as
+coroutines. Here, we will explore how generators evolved into coroutines to
 support the basis of asynchronous programming before we go into more detail in the next
 section, where we explore the new features of Python and the syntax that covers
-programming asynchronously. The basic methods added in (PEP-342) to support
-coroutines are as follows:
-.close()
-.throw(ex_type[, ex_value[, ex_traceback]])
-.send(value)
-[ 203 ]Using Generators
-Chapter 7
-The methods of the generator interface
-In this section, we will explore what each of the aforementioned methods does, how it
+programming asynchronously. The basic methods added to support
+coroutines are as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.close()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.throw(ex_type[,</span> <span class="pre">ex_value[,</span> <span class="pre">ex_traceback]])</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.send(value)</span></code></p></li>
+</ul>
+<div class="section" id="the-methods-of-the-generator-interface">
+<h2>3.1. The methods of the generator interface<a class="headerlink" href="#the-methods-of-the-generator-interface" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will explore what each of the aforementioned methods does, how it
 works, and how it is expected to be used. By understanding how to use these methods, we
-will be able to make use of simple coroutines.
-Later on, we will explore more advanced uses of coroutines, and how to delegate to sub-
+will be able to make use of simple coroutines.</p>
+<p>Later on, we will explore more advanced uses of coroutines, and how to delegate to sub-
 generators (coroutines) in order to refactor code, and how to orchestrate different
-coroutines.
-close()
-When calling this method, the generator will receive the GeneratorExit exception. If it’s
+coroutines.</p>
+<div class="section" id="close">
+<h3>3.1.1. close()<a class="headerlink" href="#close" title="Permalink to this headline">¶</a></h3>
+<p>When calling this method, the generator will receive the <code class="docutils literal notranslate"><span class="pre">GeneratorExit</span></code> exception. If it’s
 not handled, then the generator will finish without producing any more values, and its
-iteration will stop.
-This exception can be used to handle a finishing status. In general, if our coroutine does
+iteration will stop.</p>
+<p>This exception can be used to handle a finishing status. In general, if our coroutine does
 some sort of resource management, we want to catch this exception and use that control
 block to release all resources being held by the coroutine. In general, it is similar to using a
 context manager or placing the code in the finally block of an exception control, but
-handling this exception specifically makes it more explicit.
-In the following example, we have a coroutine that makes use of a database handler object
+handling this exception specifically makes it more explicit.</p>
+<p>In the following example, we have a coroutine that makes use of a database handler object
 that holds a connection to a database, and runs queries over it, streaming data by pages of a
-fixed length (instead of reading everything that is available at once):
-def stream_db_records(db_handler):
-try:
-while True:
-yield db_handler.read_n_records(10)
-except GeneratorExit:
-db_handler.close()
-At each call to the generator, it will return 10 rows obtained from the database handler, but
-when we decide to explicitly finish the iteration and call close() , we also want to close the
-connection to the database:
-&gt;&gt;&gt; streamer = stream_db_records(DBHandler(“testdb”))
-&gt;&gt;&gt; next(streamer)
-[(0, ‘row 0’), (1, ‘row 1’), (2, ‘row 2’), (3, ‘row 3’), …]
-&gt;&gt;&gt; next(streamer)
-[(0, ‘row 0’), (1, ‘row 1’), (2, ‘row 2’), (3, ‘row 3’), …]
-&gt;&gt;&gt; streamer.close()
-<a class="reference external" href="INFO:...:closing">INFO:…:closing</a> connection to database ‘testdb’
-[ 204 ]Using Generators
-Chapter 7
-Use the close() method on generators to perform finishing-up tasks
-when needed.
-throw(ex_type[, ex_value[, ex_traceback]])
-This method will throw the exception at the line where the generator is currently
+fixed length (instead of reading everything that is available at once):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
+        <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>At each call to the generator, it will return 10 rows obtained from the database handler, but
+when we decide to explicitly finish the iteration and call <code class="docutils literal notranslate"><span class="pre">close()</span></code> , we also want to close the
+connection to the database:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">streamer</span> <span class="o">=</span> <span class="n">stream_db_records</span><span class="p">(</span><span class="n">DBHandler</span><span class="p">(</span><span class="s2">&quot;testdb&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">streamer</span><span class="p">)</span>
+<span class="go">[(0, &#39;row 0&#39;), (1, &#39;row 1&#39;), (2, &#39;row 2&#39;), (3, &#39;row 3&#39;), ...]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">streamer</span><span class="p">)</span>
+<span class="go">[(0, &#39;row 0&#39;), (1, &#39;row 1&#39;), (2, &#39;row 2&#39;), (3, &#39;row 3&#39;), ...]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">streamer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="go">INFO:...:closing connection to database &#39;testdb&#39;</span>
+</pre></div>
+</div>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">close()</span></code> method on generators to perform finishing-up tasks
+when needed.</p>
+</div>
+<div class="section" id="throw-ex-type-ex-value-ex-traceback">
+<h3>3.1.2. throw(ex_type[, ex_value[, ex_traceback]])<a class="headerlink" href="#throw-ex-type-ex-value-ex-traceback" title="Permalink to this headline">¶</a></h3>
+<p>This method will throw the exception at the line where the generator is currently
 suspended. If the generator handles the exception that was sent, the code in that
 particular except clause will be called, otherwise, the exception will propagate to the
-caller.
-Here, we are modifying the previous example slightly to show the difference when we use
-this method for an exception that is handled by the coroutine, and when it’s not:
-class CustomException(Exception):
-pass
-def stream_data(db_handler):
-while True:
-try:
-yield db_handler.read_n_records(10)
-except CustomException as e:
-logger.info(“controlled error %r, continuing”, e)
-except Exception as e:
-logger.info(“unhandled error %r, stopping”, e)
-db_handler.close()
-break
-Now, it is a part of the control flow to receive a CustomException , and, in such a case, the
+caller.</p>
+<p>Here, we are modifying the previous example slightly to show the difference when we use
+this method for an exception that is handled by the coroutine, and when it’s not:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CustomException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">stream_data</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CustomException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;controlled error </span><span class="si">{e}</span><span class="s2">, continuing&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unhandled error </span><span class="si">{e}</span><span class="s2">, stopping&quot;</span><span class="p">)</span>
+            <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+<p>Now, it is a part of the control flow to receive a <code class="docutils literal notranslate"><span class="pre">CustomException</span></code>, and, in such a case, the
 generator will log an informative message (of course, we can adapt this according to our
-business logic on each case), and move on to the next yield statement, which is the line
-where the coroutine reads from the database and returns that data.
-This particular example handles all exceptions, but if the last block ( except Exception: )
+business logic on each case), and move on to the next <code class="docutils literal notranslate"><span class="pre">yield</span></code> statement, which is the line
+where the coroutine reads from the database and returns that data.</p>
+<p>This particular example handles all exceptions, but if the last block (<code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">Exception:</span></code>)
 wasn’t there, the result would be that the generator is raised at the line where the generator
-is paused (again, the yield ), and it will propagate from there to the caller:
-&gt;&gt;&gt; streamer = stream_data(DBHandler(“testdb”))
-&gt;&gt;&gt; next(streamer)
-[(0, ‘row 0’), (1, ‘row 1’), (2, ‘row 2’), (3, ‘row 3’), (4, ‘row 4’), …]
-&gt;&gt;&gt; next(streamer)
-[(0, ‘row 0’), (1, ‘row 1’), (2, ‘row 2’), (3, ‘row 3’), (4, ‘row 4’), …]
-&gt;&gt;&gt; streamer.throw(CustomException)
-[ 205 ]Using Generators
-Chapter 7
-WARNING:controlled error CustomException(), continuing
-[(0, ‘row 0’), (1, ‘row 1’), (2, ‘row 2’), (3, ‘row 3’), (4, ‘row 4’), …]
-&gt;&gt;&gt; streamer.throw(RuntimeError)
-ERROR:unhandled error RuntimeError(), stopping
-INFO:closing connection to database ‘testdb’
-Traceback (most recent call last):
-…
-StopIteration
-When our exception from the domain was received, the generator continued. However,
+is paused (again, the <code class="docutils literal notranslate"><span class="pre">yield</span></code>), and it will propagate from there to the caller:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">streamer</span> <span class="o">=</span> <span class="n">stream_data</span><span class="p">(</span><span class="n">DBHandler</span><span class="p">(</span><span class="s2">&quot;testdb&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">streamer</span><span class="p">)</span>
+<span class="go">[(0, &#39;row 0&#39;), (1, &#39;row 1&#39;), (2, &#39;row 2&#39;), (3, &#39;row 3&#39;), (4, &#39;row 4&#39;), ...]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">streamer</span><span class="p">)</span>
+<span class="go">[(0, &#39;row 0&#39;), (1, &#39;row 1&#39;), (2, &#39;row 2&#39;), (3, &#39;row 3&#39;), (4, &#39;row 4&#39;), ...]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">streamer</span><span class="o">.</span><span class="n">throw</span><span class="p">(</span><span class="n">CustomException</span><span class="p">)</span>
+<span class="go">WARNING:controlled error CustomException(), continuing</span>
+<span class="go">[(0, &#39;row 0&#39;), (1, &#39;row 1&#39;), (2, &#39;row 2&#39;), (3, &#39;row 3&#39;), (4, &#39;row 4&#39;), ...]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">streamer</span><span class="o">.</span><span class="n">throw</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">)</span>
+<span class="go">ERROR:unhandled error RuntimeError(), stopping</span>
+<span class="go">INFO:closing connection to database &#39;testdb&#39;</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">StopIteration</span>
+</pre></div>
+</div>
+<p>When our exception from the domain was received, the generator continued. However,
 when it received another exception that was not expected, the default block caught where
 we closed the connection to the database and finished the iteration, which resulted in the
-generator being stopped. As we can see from the StopIteration that was raised, this
-generator can’t be iterated further.
-send(value)
-In the previous example, we created a simple generator that reads rows from a database,
+generator being stopped. As we can see from the <code class="docutils literal notranslate"><span class="pre">StopIteration</span></code> that was raised, this
+generator can’t be iterated further.</p>
+</div>
+<div class="section" id="send-value">
+<h3>3.1.3. send(value)<a class="headerlink" href="#send-value" title="Permalink to this headline">¶</a></h3>
+<p>In the previous example, we created a simple generator that reads rows from a database,
 and when we wished to finish its iteration, this generator released the resources linked to
 the database. This is a good example of using one of the methods that generators provide
-(close), but there is more we can do.
-An obvious of such a generator is that it was reading a fixed number of rows from the
-database.
-We would like to parametrize that number ( 10 ) so that we can change it throughout
-different calls. Unfortunately, the next() function does not provide us with options for
-that. But luckily, we have send() :
-def stream_db_records(db_handler):
-retrieved_data = None
-previous_page_size = 10
-try:
-while True:
-page_size = yield retrieved_data
-if page_size is None:
-page_size = previous_page_size
-previous_page_size = page_size
-retrieved_data = db_handler.read_n_records(page_size)
-except GeneratorExit:
-db_handler.close()
-[ 206 ]Using Generators
-Chapter 7
-The idea is that we have now made the coroutine able to receive values from the caller by
-means of the send() method. This method is the one that actually distinguishes a
-generator from a coroutine because when it’s used, it means that the yield keyword will
+(<code class="docutils literal notranslate"><span class="pre">close</span></code>), but there is more we can do.</p>
+<p>An obvious of such a generator is that it was reading a fixed number of rows from the
+database.</p>
+<p>We would like to parametrize that number so that we can change it throughout
+different calls. Unfortunately, the <code class="docutils literal notranslate"><span class="pre">next()</span></code> function does not provide us with options for
+that. But luckily, we have <code class="docutils literal notranslate"><span class="pre">send()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
+    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">previous_page_size</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">page_size</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">retrieved_data</span>
+            <span class="k">if</span> <span class="n">page_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">page_size</span> <span class="o">=</span> <span class="n">previous_page_size</span>
+
+            <span class="n">previous_page_size</span> <span class="o">=</span> <span class="n">page_size</span>
+            <span class="n">retrieved_data</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
+        <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The idea is that we have now made the coroutine able to receive values from the caller by
+means of the <code class="docutils literal notranslate"><span class="pre">send()</span></code> method. This method is the one that actually distinguishes a
+generator from a coroutine because when it’s used, it means that the <code class="docutils literal notranslate"><span class="pre">yield</span></code> keyword will
 appear on the right-hand side of the statement, and its return value will be assigned to
-something else.
-In coroutines, we generally find the yield keyword to be used in the following form:
-receive = yield produced
-The yield , in this case, will do two things. It will send produced back to the caller, which
-will pick it up on the next round of iteration (after calling next() , for example), and it will
+something else.</p>
+<p>In coroutines, we generally find the <code class="docutils literal notranslate"><span class="pre">yield</span></code> keyword to be used in the following form:
+<code class="docutils literal notranslate"><span class="pre">receive</span> <span class="pre">=</span> <span class="pre">yield</span> <span class="pre">produced</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">yield</span></code>, in this case, will do two things. It will send <code class="docutils literal notranslate"><span class="pre">produced</span></code> back to the caller, which
+will pick it up on the next round of iteration (after calling <code class="docutils literal notranslate"><span class="pre">next()</span></code>, for example), and it will
 suspend there. At a later point, the caller will want to send a value back to the coroutine by
-using the send() method. This value will become the result of the yield statement,
-assigned in this case to the variable named receive .
-Sending values to the coroutine only works when this one is suspended at a yield
+using the <code class="docutils literal notranslate"><span class="pre">send()</span></code> method. This value will become the result of the <code class="docutils literal notranslate"><span class="pre">yield</span></code> statement,
+assigned in this case to the variable named <code class="docutils literal notranslate"><span class="pre">receive</span></code>.</p>
+<p>Sending values to the coroutine only works when this one is suspended at a <code class="docutils literal notranslate"><span class="pre">yield</span></code>
 statement, waiting for something to produce. For this to happen, the coroutine will have to
-be advanced to that status. The only way to do this is by calling next() on it. This means
+be advanced to that status. The only way to do this is by calling <code class="docutils literal notranslate"><span class="pre">next()</span></code> on it. This means
 that before sending anything to the coroutine, this has to be advanced at least once via the
-next() method. Failure to do so will result in an exception:
-&gt;&gt;&gt; c = coro()
-&gt;&gt;&gt; c.send(1)
-Traceback (most recent call last):
-…
-TypeError: can’t send non-None value to a just-started generator
-Always remember to advance a coroutine by calling next() before
-sending any values to it.
-Back to our example. We are changing the way elements are produced or streamed to make
-it able to receive the length of the records it expects to read from the database.
-The first time we call next() , the generator will advance up to the line containing yield ; it
-will provide a value to the caller ( None , as set in the variable), and it will suspend there).
-From here, we have two options. If we choose to advance the generator by calling next() ,
+<code class="docutils literal notranslate"><span class="pre">next()</span></code> method. Failure to do so will result in an exception:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">coro</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">can&#39;t send non-None value to a just-started generator</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Always remember to advance a coroutine by calling <code class="docutils literal notranslate"><span class="pre">next()</span></code> before sending any values to it.</p>
+</div>
+<p>Back to our example. We are changing the way elements are produced or streamed to make
+it able to receive the length of the records it expects to read from the database.</p>
+<p>The first time we call <code class="docutils literal notranslate"><span class="pre">next()</span></code>, the generator will advance up to the line containing <code class="docutils literal notranslate"><span class="pre">yield</span></code>; it
+will provide a value to the caller (<code class="docutils literal notranslate"><span class="pre">None</span></code>, as set in the variable), and it will suspend there).</p>
+<p>From here, we have two options. If we choose to advance the generator by calling <code class="docutils literal notranslate"><span class="pre">next()</span></code>,
 the default value of 10 will be used, and it will go on with this as usual. This is because
-next() is technically the same as send(None) , but this is covered in the if statement that
-will handle the value that we previously set.
-[ 207 ]Using Generators
-Chapter 7
-If, on the other hand, we decide to provide an explicit value via send(&lt;value&gt;) , this one
-will become the result of the yield statement, which will be assigned to the variable
+<code class="docutils literal notranslate"><span class="pre">next()</span></code> is technically the same as <code class="docutils literal notranslate"><span class="pre">send(None)</span></code>, but this is covered in the if statement that
+will handle the value that we previously set.</p>
+<p>If, on the other hand, we decide to provide an explicit value via <code class="docutils literal notranslate"><span class="pre">send(&lt;value&gt;)</span></code>, this one
+will become the result of the <code class="docutils literal notranslate"><span class="pre">yield</span></code> statement, which will be assigned to the variable
 containing the length of the page to use, which, in turn, will be used to read from the
-database.
-Successive calls will have this logic, but the important point is that now we can
+database.</p>
+<p>Successive calls will have this logic, but the important point is that now we can
 dynamically change the length of the data to read in the middle of the iteration, at any
-point.
-Now that we understand how the previous code works, most Pythonistas would expect a
-simplified version of it (after all, Python is also about brevity and clean and compact code):
-def stream_db_records(db_handler):
-retrieved_data = None
-page_size = 10
-try:
-while True:
-page_size = (yield retrieved_data) or page_size
-retrieved_data = db_handler.read_n_records(page_size)
-except GeneratorExit:
-db_handler.close()
-This version is not only more compact, but it also illustrates the idea better. The parenthesis
-around the yield makes it clearer that it’s a statement (think of it as if it were a function
-call), and that we are using the result of it to compare it against the previous value.
-This works as we expect it does, but we always have to remember to advance the coroutine
-before sending any data to it. If we forget to call the first next() , we’ll get a TypeError .
-This call could be ignored for our purposes because it doesn’t return anything we’ll use.
-It would be good if we could use the coroutine directly, right after it is created without
-having to remember to call next() the first time, every time we are going to use it. Some
-authors (PYCOOK) devised an interesting decorator to achieve this. The idea of this
-decorator is to advance the coroutine, so the following definition works automatically:
-&#64;prepare_coroutine
-def stream_db_records(db_handler):
-retrieved_data = None
-page_size = 10
-try:
-while True:
-page_size = (yield retrieved_data) or page_size
-retrieved_data = db_handler.read_n_records(page_size)
-except GeneratorExit:
-db_handler.close()
-[ 208 ]Using Generators
-Chapter 7
-&gt;&gt;&gt; streamer = stream_db_records(DBHandler(“testdb”))
-&gt;&gt;&gt; len(streamer.send(5))
-5
-Let’s take an example we create the prepare_coroutine() , decorator.
-More advanced coroutines
-So far, we have a better understanding of coroutines, and we are able to create simple ones
+point.</p>
+<p>Now that we understand how the previous code works, most Pythonistas would expect a
+simplified version of it (after all, Python is also about brevity and clean and compact code):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
+    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">page_size</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">page_size</span> <span class="o">=</span> <span class="p">(</span><span class="k">yield</span> <span class="n">retrieved_data</span><span class="p">)</span> <span class="ow">or</span> <span class="n">page_size</span>
+            <span class="n">retrieved_data</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
+        <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This version is not only more compact, but it also illustrates the idea better. The parenthesis
+around the <code class="docutils literal notranslate"><span class="pre">yield</span></code> makes it clearer that it’s a statement (think of it as if it were a function
+call), and that we are using the result of it to compare it against the previous value.</p>
+<p>This works as we expect it does, but we always have to remember to advance the coroutine
+before sending any data to it. If we forget to call the first <code class="docutils literal notranslate"><span class="pre">next()</span></code>, we’ll get a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>.
+This call could be ignored for our purposes because it doesn’t return anything we’ll use.</p>
+<p>It would be good if we could use the coroutine directly, right after it is created without
+having to remember to call <code class="docutils literal notranslate"><span class="pre">next()</span></code> the first time, every time we are going to use it. Some
+authors devised an interesting decorator to achieve this. The idea of this
+decorator is to advance the coroutine, so the following definition works automatically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@prepare_coroutine</span>
+<span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
+    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">page_size</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">page_size</span> <span class="o">=</span> <span class="p">(</span><span class="k">yield</span> <span class="n">retrieved_data</span><span class="p">)</span> <span class="ow">or</span> <span class="n">page_size</span>
+            <span class="n">retrieved_data</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
+    <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">streamer</span> <span class="o">=</span> <span class="n">stream_db_records</span><span class="p">(</span><span class="n">DBHandler</span><span class="p">(</span><span class="s2">&quot;testdb&quot;</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">streamer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="more-advanced-coroutines">
+<h2>3.2. More advanced coroutines<a class="headerlink" href="#more-advanced-coroutines" title="Permalink to this headline">¶</a></h2>
+<p>So far, we have a better understanding of coroutines, and we are able to create simple ones
 to handle small tasks. We can say that these coroutines are, in fact, just more advanced
 generators (and that would be right, coroutines are just fancy generators), but, if we
 actually want to start supporting more complex scenarios, we usually have to go for a
-design that handles many coroutines concurrently, and that requires more features.
-When handling many coroutines, we find new problems. As the control flow of our
+design that handles many coroutines concurrently, and that requires more features.</p>
+<p>When handling many coroutines, we find new problems. As the control flow of our
 application becomes more complex, we want to pass values up and down the stack (as well
 as exceptions), be able to capture values from sub-coroutines we might call at any level, and
-finally schedule multiple coroutines to run toward a common goal.
-To make things simpler, generators had to be extended once again. This is what PEP-380
-addressed—by changing the semantic of generators so that they are able to return values,
-and introducing the new yield from construction.
-Returning values in coroutines
-As introduced at the beginning of this chapter, the iteration is a mechanism that calls
-next() on an iterable object many times until a StopIteration exception is raised.
-So far, we have been exploring the iterative nature of generators—we produce values one at
+finally schedule multiple coroutines to run toward a common goal.</p>
+<p>To make things simpler, generators had to be extended once again. This is addressed by changing the semantic
+of generators so that they are able to return values, and introducing the new yield from construction.</p>
+<div class="section" id="returning-values-in-coroutines">
+<h3>3.2.1. Returning values in coroutines<a class="headerlink" href="#returning-values-in-coroutines" title="Permalink to this headline">¶</a></h3>
+<p>As introduced at the beginning, the iteration is a mechanism that calls
+<code class="docutils literal notranslate"><span class="pre">next()</span></code> on an iterable object many times until a <code class="docutils literal notranslate"><span class="pre">StopIteration</span></code> exception is raised.</p>
+<p>So far, we have been exploring the iterative nature of generators: we produce values one at
 a time, and, in general, we only care about each value as it’s being produced at every step of
-the for loop. This is a very logical way of thinking about generators, but coroutines have a
+the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop. This is a very logical way of thinking about generators, but coroutines have a
 different idea; even though they are technically generators, they weren’t conceived with the
 idea of iteration in mind, but with the goal of suspending the execution of a code until it’s
-resumed later on.
-This is an interesting challenge; when we design a coroutine, we usually care more about
+resumed later on.</p>
+<p>This is an interesting challenge; when we design a coroutine, we usually care more about
 suspending the state rather than iterating (and iterating a coroutine would be an odd case).
 The challenge lies in that it is easy to mix them both. This is because of a technical
-implementation detail; the support for coroutines in Python was built upon generators.
-[ 209 ]Using Generators
-Chapter 7
-If we want to use coroutines to process some information and suspend its execution, it
+implementation detail; the support for coroutines in Python was built upon generators.</p>
+<p>If we want to use coroutines to process some information and suspend its execution, it
 would make sense to think of them as lightweight threads (or green threads, as they are
 called in other platforms). In such a case, it would make sense if they could return values,
-much like calling any other regular function.
-But let’s remember that generators are not regular functions, so in a generator, the
-construction value = generator() will do nothing other than create a generator object.
+much like calling any other regular function.</p>
+<p>But let’s remember that generators are not regular functions, so in a generator, the
+construction <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">generator()</span></code> will do nothing other than create a generator object.
 What would be the semantics for making a generator return a value? It will have to be after
-the iteration is done.
-When a generator returns a value, it iteration is immediately stopped (it can’t be iterated
-any further). To preserve the semantics, the StopIteration exception is still raised, and
+the iteration is done.</p>
+<p>When a generator returns a value, its iteration is immediately stopped (it can’t be iterated
+any further). To preserve the semantics, the <code class="docutils literal notranslate"><span class="pre">StopIteration</span></code> exception is still raised, and
 the value to be returned is stored inside the exception object. It’s the responsibility of the
-caller to catch it.
-In the following example, we are creating a simple generator that produces two values
+caller to catch it.</p>
+<p>In the following example, we are creating a simple generator that produces two values
 and then returns a third. Notice how we have to catch the exception in order to get this
-value , and how it’s stored precisely inside the exception under the attribute named value :
-&gt;&gt;&gt; def generator():
-…
-yield 1
-…
-yield 2
-…
-return 3
-…
-&gt;&gt;&gt; value = generator()
-&gt;&gt;&gt; next(value)
-1
-&gt;&gt;&gt; next(value)
-2
-&gt;&gt;&gt; try:
-…
-next(value)
-… except StopIteration as e:
-…
-print(“&gt;&gt;&gt;&gt;&gt;&gt; returned value “, e.value)
-…
-&gt;&gt;&gt;&gt;&gt;&gt; returned value 3
-Delegating into smaller coroutines – the yield from
-syntax
-The previous feature is interesting in the sense that it opens up a lot of new possibilities
+value , and how it’s stored precisely inside the exception under the attribute named <code class="docutils literal notranslate"><span class="pre">value</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">generator</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">yield</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="k">yield</span> <span class="mi">2</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="mi">3</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">value</span> <span class="o">=</span> <span class="n">generator</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">next</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt; returned value </span><span class="si">{e.value}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">&gt;&gt;&gt;&gt;&gt;&gt; returned value 3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delegating-into-smaller-coroutines-the-yield-from-syntax">
+<h3>3.2.2. Delegating into smaller coroutines: the yield from syntax<a class="headerlink" href="#delegating-into-smaller-coroutines-the-yield-from-syntax" title="Permalink to this headline">¶</a></h3>
+<p>The previous feature is interesting in the sense that it opens up a lot of new possibilities
 with coroutines (generators), now that they can return values. But this feature, by itself,
 would not be so useful without proper syntax support, because catching the returned value
-this way is a bit cumbersome.
-[ 210 ]Using Generators
-Chapter 7
-This is one of the main features of the yield from syntax. Among other things (that we’ll
+this way is a bit cumbersome.</p>
+<p>This is one of the main features of the yield from syntax. Among other things (that we’ll
 review in detail), it can collect the value returned by a sub-generator. Remember that we
 said that returning data in a generator was nice, but that, unfortunately, writing statements
-as value = generator() wouldn’t work? Well, writing it as value = yield from
-generator() would.
-The simplest use of yield from
-In its most basic form, the new yield from syntax can be used to chain generators from
+as <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">generator()</span></code> wouldn’t work. Well, writing it as <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">yield</span> <span class="pre">from</span>
+<span class="pre">generator()</span></code> would.</p>
+<div class="section" id="the-simplest-use-of-yield-from">
+<h4>3.2.2.1. The simplest use of yield from<a class="headerlink" href="#the-simplest-use-of-yield-from" title="Permalink to this headline">¶</a></h4>
+<p>In its most basic form, the new <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> syntax can be used to chain generators from
 nested for loops into a single one, which will end up with a single string of all the values in
-a continuous stream.
-The canonical example is about creating a function similar to itertools.chain() from
+a continuous stream.</p>
+<p>The canonical example is about creating a function similar to <code class="docutils literal notranslate"><span class="pre">itertools.chain()</span></code> from
 the standard library. This is a very nice function because it allows you to pass any number
-of iterables , and will return them all together in one stream.
-The naive implementation might look like this:
-def chain(<em>iterables):
-for it in iterables:
-for value in it:
-yield value
-It receives a variable number of iterables , traverses through all of them, and since each
-value is iterable , it supports a for… in.. construction, so we have another for loop
+of iterables and will return them all together in one stream.</p>
+<p>The naive implementation might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chain</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">iterables</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>It receives a variable number of iterables , traverses through all of them, and since each
+value is iterable, it supports a <code class="docutils literal notranslate"><span class="pre">for...</span> <span class="pre">in..</span></code> construction, so we have another for loop
 to get every value inside each particular iterable, which is produced by the caller function.
 This might be helpful in multiple cases, such as chaining generators together or trying to
 iterate things that it wouldn’t normally be possible to compare in one go (such as lists with
-tuples, and so on).
-However, the yield from syntax allows us to go further and avoid the nested loop
+tuples, and so on).</p>
+<p>However, the <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> syntax allows us to go further and avoid the nested loop
 because it’s able to produce the values from a sub-generator directly. In this case, we could
-simplify the code like this:
-def chain(*iterables):
-for it in iterables:
-yield from it
-Notice that for both implementations, the behavior of the generator is exactly the same:
-&gt;&gt;&gt; list(chain(“hello”, [“world”], (“tuple”, ” of “, “values.”)))
-[‘h’, ‘e’, ‘l’, ‘l’, ‘o’, ‘world’, ‘tuple’, ‘ of ‘, ‘values.’]
-[ 211 ]Using Generators
-Chapter 7
-This means that we can use yield from over any other iterable, and it will work as if the
-top-level generator (the one the yield from is using) were generating those values itself.
-This works with any iterable, and even generator expressions aren’t the exception. Now
+simplify the code like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chain</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">iterables</span><span class="p">:</span>
+        <span class="k">yield from</span> <span class="n">it</span>
+</pre></div>
+</div>
+<p>Notice that for both implementations, the behavior of the generator is exactly the same:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">],</span> <span class="p">(</span><span class="s2">&quot;tuple&quot;</span><span class="p">,</span> <span class="s2">&quot; of &quot;</span><span class="p">,</span> <span class="s2">&quot;values.&quot;</span><span class="p">)))</span>
+<span class="go">[&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;, &#39;world&#39;, &#39;tuple&#39;, &#39; of &#39;, &#39;values.&#39;]</span>
+</pre></div>
+</div>
+<p>This means that we can use <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> over any other iterable, and it will work as if the
+top-level generator (the one the <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> is using) were generating those values itself.</p>
+<p>This works with any iterable, and even generator expressions aren’t the exception. Now
 that we’re familiar with its syntax, let’s see how we could write a simple generator function
 that will produce all the powers of a number (for instance, if provided with
-all_powers(2, 3) , it will have to produce 2^0, 2^1,… 2^3 ):
-def all_powers(n, pow):
-yield from (n *</em> i for i in range(pow + 1))
-While this simplifies the syntax a bit, saving one line of a for statement isn’t a big
-advantage, and it wouldn’t justify adding such a change to the language.
-Indeed, this is actually just a side effect and the real raison d’être of the yield from
-construction is what we are going to explore in the following two sections.
-Capturing the value returned by a sub-generator
-In the following example, we have a generator that calls another two nested generators,
+<code class="docutils literal notranslate"><span class="pre">all_powers(2,</span> <span class="pre">3)</span></code>, it will have to produce 2^0, 2^1,… 2^3 ):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">all_powers</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">pow</span><span class="p">):</span>
+    <span class="k">yield from</span> <span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">pow</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>While this simplifies the syntax a bit, saving one line of a for statement isn’t a big
+advantage, and it wouldn’t justify adding such a change to the language.</p>
+<p>Indeed, this is actually just a side effect and the real raison d’être of the <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code>
+construction is what we are going to explore in the following two sections.</p>
+</div>
+<div class="section" id="capturing-the-value-returned-by-a-sub-generator">
+<h4>3.2.2.2. Capturing the value returned by a sub-generator<a class="headerlink" href="#capturing-the-value-returned-by-a-sub-generator" title="Permalink to this headline">¶</a></h4>
+<p>In the following example, we have a generator that calls another two nested generators,
 producing values in a sequence. Each one of these nested generators returns a value, and
 we will see how the top-level generator is able to effectively capture the return value since
-it’s calling the internal generators through yield from :
-def sequence(name, start, end):
-logger.info(“%s started at %i”, name, start)
-yield from range(start, end)
-logger.info(“%s finished at %i”, name, end)
-return end
-def main():
-step1 = yield from sequence(“first”, 0, 5)
-step2 = yield from sequence(“second”, step1, 10)
-return step1 + step2
-This is a possible execution of the code in main while it’s being iterated:
-&gt;&gt;&gt; g = main()
+it’s calling the internal generators through <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> started at </span><span class="si">{start}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">yield from</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> finished at </span><span class="si">{end}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">end</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">step1</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">sequence</span><span class="p">(</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">step2</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">sequence</span><span class="p">(</span><span class="s2">&quot;second&quot;</span><span class="p">,</span> <span class="n">step1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">step1</span> <span class="o">+</span> <span class="n">step2</span>
+</pre></div>
+</div>
+<p>This is a possible execution of the code in main while it’s being iterated:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; g = main()
 &gt;&gt;&gt; next(g)
-<a class="reference external" href="INFO:generators_yieldfrom_2:first">INFO:generators_yieldfrom_2:first</a> started at 0
+INFO:generators_yieldfrom_2:first started at 0
 0
 &gt;&gt;&gt; next(g)
 1
 &gt;&gt;&gt; next(g)
 2
 &gt;&gt;&gt; next(g)
-[ 212 ]Using Generators
-Chapter 7
 3
 &gt;&gt;&gt; next(g)
 4
 &gt;&gt;&gt; next(g)
-<a class="reference external" href="INFO:generators_yieldfrom_2:first">INFO:generators_yieldfrom_2:first</a> finished at 5
-<a class="reference external" href="INFO:generators_yieldfrom_2:second">INFO:generators_yieldfrom_2:second</a> started at 5
+INFO:generators_yieldfrom_2:first finished at 5
+INFO:generators_yieldfrom_2:second started at 5
 5
 &gt;&gt;&gt; next(g)
 6
@@ -528,87 +553,98 @@ Chapter 7
 &gt;&gt;&gt; next(g)
 9
 &gt;&gt;&gt; next(g)
-<a class="reference external" href="INFO:generators_yieldfrom_2:second">INFO:generators_yieldfrom_2:second</a> finished at 10
+INFO:generators_yieldfrom_2:second finished at 10
 Traceback (most recent call last):
-File “&lt;stdin&gt;”, line 1, in &lt;module&gt;
+File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
 StopIteration: 15
-The first line of main delegates into the internal generator, and produces the values,
+</pre></div>
+</div>
+<p>The first line of main delegates into the internal generator, and produces the values,
 extracting them directly from it. This is nothing new, as we have already seen. Notice,
-though, how the sequence() generator function returns the end value, which is assigned
-in the first line to the variable named step1 , and how this value is correctly used at the
-start of the following instance of that generator.
-In the end, this other generator also returns the second end value ( 10 ), and the main
-generator, in turn, returns the sum of them ( 5+10=15 ), which is the value we see once the
-iteration has stopped.
-We can use yield from to capture the last value of a coroutine after it
-has finished its processing.
-Sending and receiving data to and from a sub-generator
-Now, we will see the other nice feature of the yield from syntax, which is probably what
+though, how the <code class="docutils literal notranslate"><span class="pre">sequence()</span></code> generator function returns the end value, which is assigned
+in the first line to the variable named <code class="docutils literal notranslate"><span class="pre">step1</span></code>, and how this value is correctly used at the
+start of the following instance of that generator.</p>
+<p>In the end, this other generator also returns the second <code class="docutils literal notranslate"><span class="pre">end</span></code> value, and the main
+generator, in turn, returns the sum of them, which is the value we see once the
+iteration has stopped.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> to capture the last value of a coroutine after it has finished its processing.</p>
+</div>
+</div>
+<div class="section" id="sending-and-receiving-data-to-and-from-a-sub-generator">
+<h4>3.2.2.3. Sending and receiving data to and from a sub-generator<a class="headerlink" href="#sending-and-receiving-data-to-and-from-a-sub-generator" title="Permalink to this headline">¶</a></h4>
+<p>Now, we will see the other nice feature of the <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> syntax, which is probably what
 gives it its full power. As we have already introduced when we explored generators acting
 as coroutines, we know that we can send values and throw exceptions at them, and, in such
 cases, the coroutine will either receive the value for its internal processing, or it will have to
-handle the exception accordingly.
-[ 213 ]Using Generators
-Chapter 7
-If we now have a coroutine that delegates into other ones (such as in the previous example),
+handle the exception accordingly.</p>
+<p>If we now have a coroutine that delegates into other ones (such as in the previous example),
 we would also like to preserve this logic. Having to do so manually would be quite
-complex (you can take a look at the code described in PEP-380 if we didn’t have this
-handled by yield from automatically.
-In order to illustrate this, let’s keep the same top-level generator (main) unmodified with
+complex if we didn’t have this handled by <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> automatically.</p>
+<p>In order to illustrate this, let’s keep the same top-level generator (main) unmodified with
 respect to the previous example (calling other internal generators), but let’s modify the
 internal generators to make them able to receive values and handle exceptions. The code is
-probably not idiomatic, only for the purposes of showing how this mechanism works:
-def sequence(name, start, end):
-value = start
-logger.info(“%s started at %i”, name, value)
-while value &lt; end:
-try:
-received = yield value
-logger.info(“%s received %r”, name, received)
-value += 1
-except CustomException as e:
-logger.info(“%s is handling %s”, name, e)
-received = yield “OK”
-return end
-Now, we will call the main coroutine, not only by iterating it, but also by passing values
-and throwing exceptions at it to see how they are handled inside sequence :
-&gt;&gt;&gt; g = main()
-&gt;&gt;&gt; next(g)
-INFO: first started at 0
-0
-&gt;&gt;&gt; next(g)
-INFO: first received None
-1
-&gt;&gt;&gt; g.send(“value for 1”)
-INFO: first received ‘value for 1’
-2
-&gt;&gt;&gt; g.throw(CustomException(“controlled error”))
-INFO: first is handling controlled error
-‘OK’
-… # advance more times
-<a class="reference external" href="INFO:second">INFO:second</a> started at 5
-5
-&gt;&gt;&gt; g.throw(CustomException(“exception at second generator”))
-INFO: second is handling exception at second generator
-‘OK’
-[ 214 ]Using Generators
-Chapter 7
-This example is showing us a lot of different things. Notice how we never send values
-to sequence , but only to main , and even so, the code that is receiving those values is the
-nested generators. Even though we never explicitly send anything to sequence , it’s
-receiving the data as it’s being passed along by yield from .
-The main coroutine calls two other coroutines internally, producing their values, and it will
+probably not idiomatic, only for the purposes of showing how this mechanism works:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">start</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> started at </span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">received</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">value</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> received </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">received</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">except</span> <span class="n">CustomException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is handling </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="n">received</span> <span class="o">=</span> <span class="k">yield</span> <span class="s2">&quot;OK&quot;</span>
+
+    <span class="k">return</span> <span class="n">end</span>
+</pre></div>
+</div>
+<p>Now, we will call the main coroutine, not only by iterating it, but also by passing values
+and throwing exceptions at it to see how they are handled inside sequence :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">main</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="go">INFO: first started at 0</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="go">INFO: first received None</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;value for 1&quot;</span><span class="p">)</span>
+<span class="go">INFO: first received &#39;value for 1&#39;</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">throw</span><span class="p">(</span><span class="n">CustomException</span><span class="p">(</span><span class="s2">&quot;controlled error&quot;</span><span class="p">))</span>
+<span class="go">INFO: first is handling controlled error</span>
+<span class="go">&#39;OK&#39;</span>
+<span class="gp">... </span><span class="c1"># advance more times</span>
+<span class="go">INFO:second started at 5</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">throw</span><span class="p">(</span><span class="n">CustomException</span><span class="p">(</span><span class="s2">&quot;exception at second generator&quot;</span><span class="p">))</span>
+<span class="go">INFO: second is handling exception at second generator</span>
+<span class="go">&#39;OK&#39;</span>
+</pre></div>
+</div>
+<p>This example is showing us a lot of different things. Notice how we never send values
+to <code class="docutils literal notranslate"><span class="pre">sequence</span></code>, but only to main, and even so, the code that is receiving those values is the
+nested generators. Even though we never explicitly send anything to <code class="docutils literal notranslate"><span class="pre">sequence</span></code>, it’s
+receiving the data as it’s being passed along by yield from .</p>
+<p>The main coroutine calls two other coroutines internally, producing their values, and it will
 be suspended at a particular point in time in any of those. When it’s stopped at the first one,
 we can see the logs telling us that it is that instance of the coroutine that received the value
 we sent. The same happens when we throw an exception to it. When the first coroutine
-finishes, it returns the value that was assigned in the variable named step1 , and passed as
-input for the second coroutine, which will do the same (it will handle the send()
-and throw() calls, accordingly).
-The same happens for the values that each coroutine produces. When we are at any given
-step, the return from calling send() corresponds to the value that the subcoroutine (the
+finishes, it returns the value that was assigned in the variable named <code class="docutils literal notranslate"><span class="pre">step1</span></code>, and passed as
+input for the second coroutine, which will do the same (it will handle the <code class="docutils literal notranslate"><span class="pre">send()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">throw()</span></code> calls, accordingly).</p>
+<p>The same happens for the values that each coroutine produces. When we are at any given
+step, the return from calling <code class="docutils literal notranslate"><span class="pre">send()</span></code> corresponds to the value that the subcoroutine (the
 one that main is currently suspended at) has produced. When we throw an exception that is
 being handled, the sequence coroutine produces the value OK , which is propagated to the
-called ( main ), and which in turn will end up at main’s caller.</p>
+called (<code class="docutils literal notranslate"><span class="pre">main</span></code>), and which in turn will end up at main’s caller.</p>
+</div>
+</div>
+</div>
 </div>
 
 
