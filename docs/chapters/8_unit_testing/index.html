@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Unit testing and refactoring &mdash; Clean Code Python</title>
+  <title>Unit testing and refactoring &mdash; Mastering Python</title>
   
 
   
@@ -53,7 +53,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Clean Code in Python
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
           
 
           
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2019.12
+                21/02/2020
               </div>
             
           
@@ -128,7 +128,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Clean Code in Python</a>
+          <a href="../../index.html">Mastering Python</a>
         
       </nav>
 
@@ -430,8 +430,8 @@ cover almost every scenario, and therefore we limit this section to just them.
 Along with testing frameworks and test running libraries, it’s often common to find projects
 that configure code coverage, which they use as a quality metric. Since coverage (when
 used as a metric) is misleading, after seeing how to create unit tests we’ll discuss why it’s
-not to be taken lightly.
-Frameworks and libraries for unit testing
+not to be taken lightly.</p>
+<p>Frameworks and libraries for unit testing
 In this section, we will discuss two frameworks for writing and running unit tests. The first
 one, unittest, is available in the standard library of Python, while the second
 one, pytest, has to be installed externally via pip .
@@ -441,10 +441,8 @@ When it comes to covering testing scenarios for our code, unittest alone will mo
 suffice, since it has plenty of helpers. However, for more complex systems on which we
 have multiple dependencies, connections to external systems, and probably the need to
 patch objects, and define fixtures parameterize test cases, then pytest looks like a more
-complete option.
-[ 226 ]Unit Testing and Refactoring
-Chapter 8
-We will use a small program as an example to show you how could it be tested using both
+complete option.</p>
+<p>We will use a small program as an example to show you how could it be tested using both
 options which in the end will help us to get a better picture of how the two of them
 compare.
 The example demonstrating testing tools is a simplified version of a version control tool

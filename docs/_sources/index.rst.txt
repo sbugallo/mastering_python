@@ -1,5 +1,5 @@
-Clean Code in Python
-====================
+Index
+=====
 
 ..  toctree::
     :maxdepth: 2

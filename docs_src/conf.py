@@ -22,7 +22,7 @@ VERSION = '2019.12'
 
 # -- Project information -----------------------------------------------------
 
-project = 'Clean Code in Python'
+project = 'Mastering Python'
 copyright = '2019, Sergio Bugallo'
 author = 'Sergio Bugallo'
 

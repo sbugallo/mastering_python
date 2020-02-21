@@ -8,6 +8,7 @@ Along with testing frameworks and test running libraries, it's often common to f
 that configure code coverage, which they use as a quality metric. Since coverage (when
 used as a metric) is misleading, after seeing how to create unit tests we'll discuss why it's
 not to be taken lightly.
+
 Frameworks and libraries for unit testing
 In this section, we will discuss two frameworks for writing and running unit tests. The first
 one, unittest, is available in the standard library of Python, while the second
@@ -19,8 +20,7 @@ suffice, since it has plenty of helpers. However, for more complex systems on wh
 have multiple dependencies, connections to external systems, and probably the need to
 patch objects, and define fixtures parameterize test cases, then pytest looks like a more
 complete option.
-[ 226 ]Unit Testing and Refactoring
-Chapter 8
+
 We will use a small program as an example to show you how could it be tested using both
 options which in the end will help us to get a better picture of how the two of them
 compare.

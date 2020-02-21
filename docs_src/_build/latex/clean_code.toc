@@ -1,0 +1,175 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Docstrings and annotations}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}1. Docstrings}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}2. Annotations}{1}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}2.1. Do annotations replace docstrings?}{2}{subsection.1.2.1}
+\contentsline {chapter}{\numberline {2}Pythonic code}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}1. Indexes and slices}{5}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}1.1. Creating your own sequences}{6}{subsection.2.1.1}
+\contentsline {section}{\numberline {2.2}2. Context managers}{6}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}2.1. Implementing context managers}{8}{subsection.2.2.1}
+\contentsline {section}{\numberline {2.3}3. Properties, attributes and different types of methods for objects}{9}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}3.1. Underscores in Python}{9}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}3.2 Properties}{10}{subsection.2.3.2}
+\contentsline {section}{\numberline {2.4}4. Iterable objects}{12}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}4.1. Creating iterable objects}{12}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}4.2. Creating sequences}{14}{subsection.2.4.2}
+\contentsline {section}{\numberline {2.5}5. Container objects}{15}{section.2.5}
+\contentsline {section}{\numberline {2.6}6. Dynamic attributes for objects}{16}{section.2.6}
+\contentsline {section}{\numberline {2.7}7. Callable objects}{16}{section.2.7}
+\contentsline {section}{\numberline {2.8}8. Caveats in Python}{17}{section.2.8}
+\contentsline {subsection}{\numberline {2.8.1}8.1. Mutable default arguments}{17}{subsection.2.8.1}
+\contentsline {subsection}{\numberline {2.8.2}8.2. Extending built\sphinxhyphen {}in types}{18}{subsection.2.8.2}
+\contentsline {chapter}{\numberline {3}General traits of good code}{21}{chapter.3}
+\contentsline {section}{\numberline {3.1}1. Design by contract}{21}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}1.1. Preconditions}{22}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}1.2. Postconditions}{22}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}1.3. Pythonic contracts}{23}{subsection.3.1.3}
+\contentsline {subsection}{\numberline {3.1.4}1.4. Conclusions}{23}{subsection.3.1.4}
+\contentsline {section}{\numberline {3.2}2. Defensive programming}{23}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}2.1. Error handling}{24}{subsection.3.2.1}
+\contentsline {subsubsection}{2.1.1. Value substitution}{24}{subsubsection*.3}
+\contentsline {subsubsection}{2.1.2. Exception handling}{25}{subsubsection*.4}
+\contentsline {paragraph}{2.1.2.1. Handle exceptions at the right level of abstraction}{25}{paragraph*.5}
+\contentsline {paragraph}{2.1.2.2 Do not expose tracebacks}{27}{paragraph*.6}
+\contentsline {paragraph}{2.1.2.3 Avoid empty except blocks}{27}{paragraph*.7}
+\contentsline {paragraph}{2.1.2.4. Include the original exception}{28}{paragraph*.8}
+\contentsline {subsection}{\numberline {3.2.2}2.2. Using assertions in Python}{29}{subsection.3.2.2}
+\contentsline {section}{\numberline {3.3}3. Separation of concerns}{29}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}3.1. Cohesion and coupling}{30}{subsection.3.3.1}
+\contentsline {section}{\numberline {3.4}4. Acronyms to live by}{30}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}4.1. DRY/OAOO}{30}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}4.2. YAGNI}{32}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}4.3. KIS}{32}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}4.4. EAFP/LBYL}{33}{subsection.3.4.4}
+\contentsline {section}{\numberline {3.5}5. Composition and inheritance}{34}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}5.1. When inheritance is a good decision}{34}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}5.2. Anti\sphinxhyphen {}patterns for inheritance}{34}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}5.3. Multiple inheritance in Python}{36}{subsection.3.5.3}
+\contentsline {subsubsection}{5.3.1. Method Resolution Order (MRO)}{37}{subsubsection*.9}
+\contentsline {subsubsection}{5.3.2. Mixins}{38}{subsubsection*.10}
+\contentsline {section}{\numberline {3.6}6. Arguments in functions and methods}{39}{section.3.6}
+\contentsline {subsection}{\numberline {3.6.1}6.1. How function arguments work in Python}{39}{subsection.3.6.1}
+\contentsline {subsubsection}{6.1.1. How arguments are copied to functions}{39}{subsubsection*.11}
+\contentsline {subsubsection}{6.1.2. Variable number of arguments}{40}{subsubsection*.12}
+\contentsline {subsection}{\numberline {3.6.2}6.2. The number of arguments in functions}{42}{subsection.3.6.2}
+\contentsline {subsubsection}{6.2.1. Function arguments and coupling}{42}{subsubsection*.13}
+\contentsline {subsubsection}{6.2.2. Compact function signatures that take too many arguments}{43}{subsubsection*.14}
+\contentsline {section}{\numberline {3.7}7. Final remarks on good practices for software design}{44}{section.3.7}
+\contentsline {subsection}{\numberline {3.7.1}7.1. Orthogonality in software}{44}{subsection.3.7.1}
+\contentsline {subsection}{\numberline {3.7.2}7.2. Structuring the code}{45}{subsection.3.7.2}
+\contentsline {chapter}{\numberline {4}The SOLID principles}{47}{chapter.4}
+\contentsline {section}{\numberline {4.1}1. Single responsibility principle}{47}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}1.1. A class with too many responsibilities}{48}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}1.2. Distributing responsibilities}{49}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}2. The open/closed principle}{50}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}2.1. Example of maintainability perils for not following the open/closed principle}{50}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}2.2. Refactoring the events system for extensibility}{51}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}2.3. Extending the events system}{53}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}2.4. Final thoughts about the OCP}{54}{subsection.4.2.4}
+\contentsline {section}{\numberline {4.3}3. Liskov\IeC {\textquoteright }s substitution principle}{54}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}3.1. Detecting incorrect datatypes in method signatures}{55}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}3.2. More subtle cases of LSP violations}{56}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}3.3. Remarks on the LSP}{58}{subsection.4.3.3}
+\contentsline {section}{\numberline {4.4}4. Interface segregation}{58}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}4.1. An interface that provides too much}{59}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}4.2. The smaller the interface, the better}{59}{subsection.4.4.2}
+\contentsline {subsection}{\numberline {4.4.3}4.3. How small should an interface be?}{60}{subsection.4.4.3}
+\contentsline {section}{\numberline {4.5}5. Dependency inversion}{60}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}5.1. A case of rigid dependencies}{60}{subsection.4.5.1}
+\contentsline {subsection}{\numberline {4.5.2}5.2. Inverting the dependencies}{61}{subsection.4.5.2}
+\contentsline {chapter}{\numberline {5}Using decorators to improve our code}{63}{chapter.5}
+\contentsline {section}{\numberline {5.1}1. What are decorators?}{63}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}1.1. What are decorators in Python?}{63}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}1.2. Decorate functions}{64}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}1.2. Decorate classes}{64}{subsection.5.1.3}
+\contentsline {subsection}{\numberline {5.1.4}1.3. Other types of decorator}{67}{subsection.5.1.4}
+\contentsline {subsection}{\numberline {5.1.5}1.4. Passing arguments to decorators}{67}{subsection.5.1.5}
+\contentsline {subsubsection}{1.4.1. Decorators with nested functions}{68}{subsubsection*.15}
+\contentsline {subsubsection}{1.4.2. Decorator objects}{69}{subsubsection*.16}
+\contentsline {subsection}{\numberline {5.1.6}1.5. Good uses for decorators}{70}{subsection.5.1.6}
+\contentsline {subsubsection}{1.5.1. Transforming parameters}{70}{subsubsection*.17}
+\contentsline {subsubsection}{1.5.2. Tracing code}{70}{subsubsection*.18}
+\contentsline {section}{\numberline {5.2}2. Effective decorators: avoid common mistakes}{70}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}2.1. Preserving data about the original wrapped object}{70}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}2.2. Dealing with side\sphinxhyphen {}effects in decorators}{72}{subsection.5.2.2}
+\contentsline {subsubsection}{2.2.1. Incorrect handling of side\sphinxhyphen {}effects in a decorator}{72}{subsubsection*.19}
+\contentsline {subsubsection}{2.2.2. Requiring decorators with side\sphinxhyphen {}effects}{74}{subsubsection*.20}
+\contentsline {subsection}{\numberline {5.2.3}2.3. Creating decorators that will always work}{75}{subsection.5.2.3}
+\contentsline {section}{\numberline {5.3}3. The DRY principle with decorators}{77}{section.5.3}
+\contentsline {section}{\numberline {5.4}4. Decorators and separation of concerns}{77}{section.5.4}
+\contentsline {section}{\numberline {5.5}5. Analyzing good decorators}{78}{section.5.5}
+\contentsline {chapter}{\numberline {6}Getting more out of our objects with descriptors}{81}{chapter.6}
+\contentsline {section}{\numberline {6.1}1. A first look at descriptors}{81}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}1.1. The machinery behind descriptors}{81}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}1.2. Exploring each method of the descriptor protocol}{83}{subsection.6.1.2}
+\contentsline {subsubsection}{1.2.1. \_\_get\_\_(self, instance, owner)}{83}{subsubsection*.21}
+\contentsline {subsubsection}{1.2.2. \_\_set\_\_(self, instance, value)}{84}{subsubsection*.22}
+\contentsline {subsubsection}{1.2.3. \_\_delete\_\_(self, instance)}{85}{subsubsection*.23}
+\contentsline {subsubsection}{1.2.4. \_\_set\_name\_\_(self, owner, name)}{87}{subsubsection*.24}
+\contentsline {section}{\numberline {6.2}2. Types of descriptors}{88}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}2.1. Non\sphinxhyphen {}data descriptors}{88}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}2.2. Data descriptors}{89}{subsection.6.2.2}
+\contentsline {section}{\numberline {6.3}3. Descriptors in action}{91}{section.6.3}
+\contentsline {subsection}{\numberline {6.3.1}3.1. An application of descriptors}{91}{subsection.6.3.1}
+\contentsline {subsubsection}{3.1.1. A first attempt without using descriptors}{91}{subsubsection*.25}
+\contentsline {subsubsection}{3.1.2. The idiomatic implementation}{92}{subsubsection*.26}
+\contentsline {subsection}{\numberline {6.3.2}3.2. Different forms of implementing descriptors}{94}{subsection.6.3.2}
+\contentsline {subsection}{\numberline {6.3.3}3.2.1. The issue of global shared state}{94}{subsection.6.3.3}
+\contentsline {subsubsection}{3.2.2. Accessing the dictionary of the object}{95}{subsubsection*.27}
+\contentsline {subsubsection}{3.2.3. Using weak references}{95}{subsubsection*.28}
+\contentsline {subsection}{\numberline {6.3.4}3.3. More considerations about descriptors}{96}{subsection.6.3.4}
+\contentsline {subsubsection}{3.3.1. Reusing code}{96}{subsubsection*.29}
+\contentsline {subsubsection}{3.3.2. Avoiding class decorators}{96}{subsubsection*.30}
+\contentsline {section}{\numberline {6.4}4. Analysis of descriptors}{99}{section.6.4}
+\contentsline {subsection}{\numberline {6.4.1}4.1. How Python uses descriptors internally}{99}{subsection.6.4.1}
+\contentsline {subsubsection}{4.1.1. Functions and methods}{99}{subsubsection*.31}
+\contentsline {subsubsection}{4.1.2. Built\sphinxhyphen {}in decorators for methods}{101}{subsubsection*.32}
+\contentsline {subsubsection}{4.1.3. Slots}{102}{subsubsection*.33}
+\contentsline {subsection}{\numberline {6.4.2}4.2. Implementing descriptors in decorators}{102}{subsection.6.4.2}
+\contentsline {chapter}{\numberline {7}Using generators}{103}{chapter.7}
+\contentsline {section}{\numberline {7.1}1. Creating generators}{103}{section.7.1}
+\contentsline {subsection}{\numberline {7.1.1}1.1. A first look at generators}{103}{subsection.7.1.1}
+\contentsline {subsection}{\numberline {7.1.2}1.2. Generator expressions}{105}{subsection.7.1.2}
+\contentsline {section}{\numberline {7.2}2. Iterating idiomatically}{106}{section.7.2}
+\contentsline {subsection}{\numberline {7.2.1}2.1. Idioms for iteration}{106}{subsection.7.2.1}
+\contentsline {subsubsection}{2.1.1. The next() function}{107}{subsubsection*.34}
+\contentsline {subsubsection}{2.1.2. Using a generator}{108}{subsubsection*.35}
+\contentsline {subsubsection}{2.1.3. Itertools}{108}{subsubsection*.36}
+\contentsline {subsubsection}{2.1.4. Simplifying code through iterators}{109}{subsubsection*.37}
+\contentsline {paragraph}{2.1.4.1. Repeated iterations}{109}{paragraph*.38}
+\contentsline {paragraph}{2.1.4.2. Nested loops}{109}{paragraph*.39}
+\contentsline {subsection}{\numberline {7.2.2}2.2. The iterator pattern in Python}{110}{subsection.7.2.2}
+\contentsline {subsubsection}{2.2.1. The interface for iteration}{111}{subsubsection*.40}
+\contentsline {subsubsection}{2.2.2. Sequence objects as iterables}{111}{subsubsection*.41}
+\contentsline {section}{\numberline {7.3}3. Coroutines}{113}{section.7.3}
+\contentsline {subsection}{\numberline {7.3.1}3.1. The methods of the generator interface}{113}{subsection.7.3.1}
+\contentsline {subsubsection}{3.1.1. close()}{113}{subsubsection*.42}
+\contentsline {subsubsection}{3.1.2. throw(ex\_type{[}, ex\_value{[}, ex\_traceback{]}{]})}{114}{subsubsection*.43}
+\contentsline {subsubsection}{3.1.3. send(value)}{115}{subsubsection*.44}
+\contentsline {subsection}{\numberline {7.3.2}3.2. More advanced coroutines}{116}{subsection.7.3.2}
+\contentsline {subsubsection}{3.2.1. Returning values in coroutines}{117}{subsubsection*.45}
+\contentsline {subsubsection}{3.2.2. Delegating into smaller coroutines: the yield from syntax}{117}{subsubsection*.46}
+\contentsline {paragraph}{3.2.2.1. The simplest use of yield from}{118}{paragraph*.47}
+\contentsline {paragraph}{3.2.2.2. Capturing the value returned by a sub\sphinxhyphen {}generator}{118}{paragraph*.48}
+\contentsline {paragraph}{3.2.2.3. Sending and receiving data to and from a sub\sphinxhyphen {}generator}{120}{paragraph*.49}
+\contentsline {section}{\numberline {7.4}4. Asynchronous programming}{121}{section.7.4}
+\contentsline {chapter}{\numberline {8}Unit testing and refactoring}{123}{chapter.8}
+\contentsline {section}{\numberline {8.1}1. Design principles and unit testing}{123}{section.8.1}
+\contentsline {subsection}{\numberline {8.1.1}1.1. A note about other forms of automated testing}{124}{subsection.8.1.1}
+\contentsline {subsection}{\numberline {8.1.2}1.2. Unit testing and agile software development}{124}{subsection.8.1.2}
+\contentsline {subsection}{\numberline {8.1.3}1.3. Unit testing and software design}{125}{subsection.8.1.3}
+\contentsline {subsection}{\numberline {8.1.4}1.4. Defining the boundaries of what to test}{126}{subsection.8.1.4}
+\contentsline {section}{\numberline {8.2}2. Frameworks and tools for testing}{127}{section.8.2}
+\contentsline {section}{\numberline {8.3}3. Refactoring}{132}{section.8.3}
+\contentsline {section}{\numberline {8.4}4. More about unit testing}{133}{section.8.4}
+\contentsline {section}{\numberline {8.5}5. A brief introduction to test\sphinxhyphen {}driven development}{134}{section.8.5}
+\contentsline {chapter}{\numberline {9}Common design patterns}{137}{chapter.9}
+\contentsline {section}{\numberline {9.1}1. Considerations for design patterns in Python}{137}{section.9.1}
+\contentsline {section}{\numberline {9.2}2. Design patterns in action}{137}{section.9.2}
+\contentsline {section}{\numberline {9.3}3. The null object pattern}{137}{section.9.3}
+\contentsline {section}{\numberline {9.4}4. Final thoughts about design patterns}{137}{section.9.4}
+\contentsline {chapter}{\numberline {10}Clean architecture}{139}{chapter.10}
+\contentsline {section}{\numberline {10.1}1. From clean code to clean architecture}{139}{section.10.1}
+\contentsline {section}{\numberline {10.2}2. Software components}{139}{section.10.2}
+\contentsline {section}{\numberline {10.3}3. Use case}{139}{section.10.3}
