@@ -432,7 +432,7 @@ work. A similar scenario might occur if we designed our decorator for a method, 
 we want it to also apply for static methods or class methods.</p>
 <p>When designing decorators, we typically think about reusing code, so we will want to use
 that decorator for functions and methods as well.</p>
-<p>Defining our decorators with the signature <code class="docutils literal notranslate"><span class="pre">*args</span></code> , and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> , will make them work in
+<p>Defining our decorators with the signature <code class="docutils literal notranslate"><span class="pre">*args</span></code>, and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>, will make them work in
 all cases, because it’s the most generic kind of signature that we can have. However,
 sometimes we might want not to use this, and instead define the decorator wrapping
 function according to the signature of the original function, mainly because of two reasons:</p>

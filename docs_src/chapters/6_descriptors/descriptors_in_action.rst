@@ -243,7 +243,7 @@ last standing option, and, in this case, is acceptable.
 3.2.2. Accessing the dictionary of the object
 ---------------------------------------------
 
-The way we implement descriptors throughout this book is making the descriptor object
+The way we implement descriptors is making the descriptor object
 store the values in the dictionary of the object, ``__dict__``, and retrieve the parameters from
 there as well.
 
@@ -288,7 +288,7 @@ This addresses the issues, but it does come with some considerations:
 - The objects no longer hold their attributes: the descriptor does instead. This is somewhat controversial, and it might not be entirely accurate from a conceptual point of view. If we forget this detail, we might be asking the object by inspecting its dictionary, trying to find things that just aren't there (calling ``vars(client)`` will not return the complete data, for example).
 - It poses the requirement over the objects that they need to be hashable. If they aren't, they can't be part of the mapping. This might be too demanding a requirement for some applications.
 
-For these reasons, we prefer the implementation that has been shown so far in this book,
+For these reasons, we prefer the implementation that has been shown so far,
 which uses the dictionary of each instance. However, for completeness, we have shown this
 alternative as well.
 
@@ -310,7 +310,7 @@ would be using a property (whether for its get logic, set logic, or both), but r
 structure many times.
 
 Properties are just a particular case of descriptors (the @property decorator is a descriptor
-that implements the full descriptor protocol to define their get , set , and delete actions),
+that implements the full descriptor protocol to define their get, set, and delete actions),
 which means that we can use descriptors for far more complex tasks.
 
 Another powerful type we have seen for reusing code was decorators. Descriptors can help us create to better
@@ -454,7 +454,7 @@ decorator. This example added the ``serialize()`` method and hid the fields befo
 presenting them to its resulting dictionary, but if we asked for any of these attributes to an
 instance of the event in memory at any point, it would still give us the original value,
 without any transformation applied to it (we could have chosen to apply the
-transformation when setting the value, and return it directly on the ``__get__()`` , as well).
+transformation when setting the value, and return it directly on the ``__get__()``, as well).
 
 Depending on the sensitivity of the application, this may or may not be acceptable, but in
 this case, when we ask the object for its public attributes, the descriptor will apply the

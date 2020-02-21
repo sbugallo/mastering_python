@@ -128,7 +128,7 @@ However, only the first one works as expected, as the second one gives an error:
 .. code-block:: python
 
     Traceback (most recent call last):
-    File "file", line , in <module>
+    File "file", line, in <module>
     instance.method("first", "second")
     TypeError: __call__() missing 1 required positional argument: 'arg2'
 
@@ -182,7 +182,7 @@ as class attributes as well.
 4.1.2. Built-in decorators for methods
 --------------------------------------
 
-All ``@property`` , ``@classmethod``, and ``@staticmethod`` decorators are descriptors.
+All ``@property``, ``@classmethod``, and ``@staticmethod`` decorators are descriptors.
 
 We have mentioned several times that the idiom makes the descriptor return itself when it's
 being called from a class directly. Since properties are actually descriptors, that is the

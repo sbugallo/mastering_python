@@ -263,7 +263,7 @@ equivalent, based on the preceding definition:</p>
 </div>
 <p>However, only the first one works as expected, as the second one gives an error:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-<span class="n">File</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="n">File</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="n">instance</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">)</span>
 <span class="ne">TypeError</span><span class="p">:</span> <span class="fm">__call__</span><span class="p">()</span> <span class="n">missing</span> <span class="mi">1</span> <span class="n">required</span> <span class="n">positional</span> <span class="n">argument</span><span class="p">:</span> <span class="s1">&#39;arg2&#39;</span>
 </pre></div>
@@ -309,7 +309,7 @@ as class attributes as well.</p>
 </div>
 <div class="section" id="built-in-decorators-for-methods">
 <h3>4.1.2. Built-in decorators for methods<a class="headerlink" href="#built-in-decorators-for-methods" title="Permalink to this headline">¶</a></h3>
-<p>All <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> , <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>, and <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> decorators are descriptors.</p>
+<p>All <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>, and <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> decorators are descriptors.</p>
 <p>We have mentioned several times that the idiom makes the descriptor return itself when it’s
 being called from a class directly. Since properties are actually descriptors, that is the
 reason why, when we ask it from the class, we don’t get the result of computing the

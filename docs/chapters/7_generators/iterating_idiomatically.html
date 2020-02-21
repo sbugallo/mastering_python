@@ -336,7 +336,7 @@ the more useful it will be for more clients, hence enhancing its chances of bein
 <p>Instead of changing this code, we’re going to keep it as it is and assume that the new data is
 filtered according to whatever requirements each customer of the class has.</p>
 <p>For instance, if we wanted to process only the first 10 purchases that amount to more than
-1,000 , we would do the following:</p>
+1,000, we would do the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">purchases</span> <span class="o">=</span> <span class="n">islice</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">purchases</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span> <span class="o">=</span> <span class="n">PurchasesStats</span><span class="p">(</span><span class="n">purchases</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>

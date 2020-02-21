@@ -210,7 +210,7 @@ Instead of changing this code, we're going to keep it as it is and assume that t
 filtered according to whatever requirements each customer of the class has.
 
 For instance, if we wanted to process only the first 10 purchases that amount to more than
-1,000 , we would do the following:
+1,000, we would do the following:
 
 .. code-block:: python
 

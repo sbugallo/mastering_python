@@ -55,7 +55,7 @@ fixed length (instead of reading everything that is available at once):
             db_handler.close()
 
 At each call to the generator, it will return 10 rows obtained from the database handler, but
-when we decide to explicitly finish the iteration and call ``close()`` , we also want to close the
+when we decide to explicitly finish the iteration and call ``close()``, we also want to close the
 connection to the database:
 
 .. code-block:: python
@@ -311,7 +311,7 @@ caller to catch it.
 
 In the following example, we are creating a simple generator that produces two values
 and then returns a third. Notice how we have to catch the exception in order to get this
-value , and how it's stored precisely inside the exception under the attribute named ``value``:
+value, and how it's stored precisely inside the exception under the attribute named ``value``:
 
 .. code-block:: python
 
@@ -367,7 +367,7 @@ The naive implementation might look like this:
             for value in it:
                 yield value
 
-It receives a variable number of iterables , traverses through all of them, and since each
+It receives a variable number of iterables, traverses through all of them, and since each
 value is iterable, it supports a ``for... in..`` construction, so we have another for loop
 to get every value inside each particular iterable, which is produced by the caller function.
 This might be helpful in multiple cases, such as chaining generators together or trying to
@@ -556,5 +556,5 @@ and ``throw()`` calls, accordingly).
 The same happens for the values that each coroutine produces. When we are at any given
 step, the return from calling ``send()`` corresponds to the value that the subcoroutine (the
 one that main is currently suspended at) has produced. When we throw an exception that is
-being handled, the sequence coroutine produces the value OK , which is propagated to the
+being handled, the sequence coroutine produces the value OK, which is propagated to the
 called (``main``), and which in turn will end up at main's caller.

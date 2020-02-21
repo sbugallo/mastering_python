@@ -204,7 +204,7 @@ that they will have been changed by the time the function returns.</p>
 </div>
 <p>This might look like an inconsistency, but it’s not. When we pass the first argument, a string, this is
 assigned to the argument on the function. Since string objects are immutable, a statement like
-<code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+=</span> <span class="pre">&lt;expression&gt;</span></code> will in fact create the new object, <code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+</span> <span class="pre">&lt;expression&gt;</span></code> , and assign
+<code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+=</span> <span class="pre">&lt;expression&gt;</span></code> will in fact create the new object, <code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+</span> <span class="pre">&lt;expression&gt;</span></code>, and assign
 that back to the argument. At that point, an argument is just a local variable inside the scope of the
 function and has nothing to do with the original one in the caller.</p>
 <p>On the other hand, when we pass list, which is a mutable object, then that statement has a different meaning
@@ -317,8 +317,8 @@ row, which is not idiomatic at all. The second implementation uses unpacking whi
 </pre></div>
 </div>
 <p>Notice that the second version is much easier to read. In the first version of the function
-(<code class="docutils literal notranslate"><span class="pre">bad_users_from_rows</span></code>), we have data expressed in the form <code class="docutils literal notranslate"><span class="pre">row[0]</span></code> , <code class="docutils literal notranslate"><span class="pre">row[1]</span></code> , and <code class="docutils literal notranslate"><span class="pre">row[2]</span></code>, which
-doesn’t tell us anything about what they are. On the other hand, variables such as <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">first_name</span></code> ,
+(<code class="docutils literal notranslate"><span class="pre">bad_users_from_rows</span></code>), we have data expressed in the form <code class="docutils literal notranslate"><span class="pre">row[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">row[1]</span></code>, and <code class="docutils literal notranslate"><span class="pre">row[2]</span></code>, which
+doesn’t tell us anything about what they are. On the other hand, variables such as <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">first_name</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">last_name</span></code> speak for themselves.</p>
 <p>We can leverage this kind of functionality to our advantage when designing our own functions.</p>
 <p>An example of this that we can find in the standard library lies in the max function, which is defined as

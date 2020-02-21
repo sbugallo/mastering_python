@@ -323,7 +323,7 @@ we want it to also apply for static methods or class methods.
 When designing decorators, we typically think about reusing code, so we will want to use
 that decorator for functions and methods as well.
 
-Defining our decorators with the signature ``*args`` , and ``**kwargs`` , will make them work in
+Defining our decorators with the signature ``*args``, and ``**kwargs``, will make them work in
 all cases, because it's the most generic kind of signature that we can have. However,
 sometimes we might want not to use this, and instead define the decorator wrapping
 function according to the signature of the original function, mainly because of two reasons:

@@ -125,7 +125,7 @@ a change to illustrate the relationship between LSP and DbC.
 
 This time, we are going to assume a precondition for the method that checks the criteria
 based on the data, that the provided parameter must be a dictionary that contains both keys
-"before" and "after" , and that their values are also nested dictionaries. This allows us to
+"before" and "after", and that their values are also nested dictionaries. This allows us to
 encapsulate even further, because now the client does not need to catch the ``KeyError``
 exception, but instead just calls the precondition method (assuming that is acceptable to fail
 if the system is operating under the wrong assumptions). As a side note, it is good that we

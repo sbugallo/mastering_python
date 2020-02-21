@@ -60,7 +60,7 @@ are many others that will work just the same) that manages a series of coroutine
 coroutines belong to the event loop, which is going to call them according to its scheduling
 mechanism. When each one of these runs, it will call our code (according to the logic we
 have defined inside the coroutine we programmed), and when we want to get control back
-to the event loop, we call ``await <coroutine>`` , which will process a task asynchronously.
+to the event loop, we call ``await <coroutine>``, which will process a task asynchronously.
 The event loop will resume and another coroutine will take place while that operation is left
 running.
 

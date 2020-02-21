@@ -49,7 +49,7 @@ In the following we can see the difference:
 
 This might look like an inconsistency, but it's not. When we pass the first argument, a string, this is
 assigned to the argument on the function. Since string objects are immutable, a statement like
-``argument += <expression>`` will in fact create the new object, ``argument + <expression>`` , and assign
+``argument += <expression>`` will in fact create the new object, ``argument + <expression>``, and assign
 that back to the argument. At that point, an argument is just a local variable inside the scope of the
 function and has nothing to do with the original one in the caller.
 
@@ -175,8 +175,8 @@ row, which is not idiomatic at all. The second implementation uses unpacking whi
         return [User(user_id, first_name, last_name) for (user_id, first_name, last_name) in dbrows]
 
 Notice that the second version is much easier to read. In the first version of the function
-(``bad_users_from_rows``), we have data expressed in the form ``row[0]`` , ``row[1]`` , and ``row[2]``, which
-doesn't tell us anything about what they are. On the other hand, variables such as ``user_id``, ``first_name`` ,
+(``bad_users_from_rows``), we have data expressed in the form ``row[0]``, ``row[1]``, and ``row[2]``, which
+doesn't tell us anything about what they are. On the other hand, variables such as ``user_id``, ``first_name``,
 and ``last_name`` speak for themselves.
 
 We can leverage this kind of functionality to our advantage when designing our own functions.

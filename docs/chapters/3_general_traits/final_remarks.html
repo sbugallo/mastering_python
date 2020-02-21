@@ -182,8 +182,8 @@ possible, a good design will try to minimize the impact as much as possible. We 
 separation of concerns, cohesion, and isolation of components.</p>
 <p>In terms of the runtime structure of software, orthogonality can be interpreted as the fact that makes changes
 (or side-effects) local. This means, for instance, that calling a method on an object should not alter the
-internal state of other (unrelated) objects. We have already (and will continue to do so) emphasized in this
-book the importance of minimizing side-effects in our code.</p>
+internal state of other (unrelated) objects. We have already (and will continue to do so) emphasized the
+importance of minimizing side-effects in our code.</p>
 <p>In the example with the mixin class, we created a tokenizer object that returned an iterable. The fact that
 the <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> method returned a new generator increases the chances that all three classes (the base,
 the mixing, and the concrete class) are orthogonal. If this had returned something in concrete (a list, let’s
@@ -255,7 +255,7 @@ files, we can create a file specific to the constant values to be used in the pr
 there: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">myproject.constants</span> <span class="pre">import</span> <span class="pre">CONNECTION_TIMEOUT</span></code>. Centralizing information like this makes it
 easier to reuse code and helps to avoid inadvertent duplication.</p>
 <p>More details about separating modules and creating Python packages will be discussed in
-Chapter 10 , Clean Architecture, when we explore this in the context of software architecture.</p>
+Chapter 10, Clean Architecture, when we explore this in the context of software architecture.</p>
 </div>
 </div>
 

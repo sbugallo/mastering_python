@@ -23,8 +23,8 @@ separation of concerns, cohesion, and isolation of components.
 
 In terms of the runtime structure of software, orthogonality can be interpreted as the fact that makes changes
 (or side-effects) local. This means, for instance, that calling a method on an object should not alter the
-internal state of other (unrelated) objects. We have already (and will continue to do so) emphasized in this
-book the importance of minimizing side-effects in our code.
+internal state of other (unrelated) objects. We have already (and will continue to do so) emphasized the
+importance of minimizing side-effects in our code.
 
 In the example with the mixin class, we created a tokenizer object that returned an iterable. The fact that
 the ``__iter__`` method returned a new generator increases the chances that all three classes (the base,
@@ -109,4 +109,4 @@ there: ``from myproject.constants import CONNECTION_TIMEOUT``. Centralizing info
 easier to reuse code and helps to avoid inadvertent duplication.
 
 More details about separating modules and creating Python packages will be discussed in
-Chapter 10 , Clean Architecture, when we explore this in the context of software architecture.
+Chapter 10, Clean Architecture, when we explore this in the context of software architecture.

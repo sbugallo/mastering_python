@@ -63,7 +63,7 @@ in line with changes on this one, and it is up to every particular data target; 
 the interface correctly and adapt to changes if necessary.
 
 In other words, the original ``EventStreamer`` of the first implementation only worked with
-objects of type Syslog , which was not very flexible. Then we realized that it could work
+objects of type Syslog, which was not very flexible. Then we realized that it could work
 with any object that could respond to a .send() message, and identified this method as the
 interface that it needed to comply with. Now, in this version, Syslog is actually extending
 the abstract base class named ``DataTargetClient``, which defines the ``send()`` method.

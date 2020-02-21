@@ -378,7 +378,7 @@ each instance and setting and retrieving the values from there.</p>
 last standing option, and, in this case, is acceptable.</p>
 <div class="section" id="accessing-the-dictionary-of-the-object">
 <h3>3.2.2. Accessing the dictionary of the object<a class="headerlink" href="#accessing-the-dictionary-of-the-object" title="Permalink to this headline">¶</a></h3>
-<p>The way we implement descriptors throughout this book is making the descriptor object
+<p>The way we implement descriptors is making the descriptor object
 store the values in the dictionary of the object, <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>, and retrieve the parameters from
 there as well.</p>
 <div class="admonition note">
@@ -419,7 +419,7 @@ never be garbage-collected because they are pointing at each other.</p>
 <li><p>The objects no longer hold their attributes: the descriptor does instead. This is somewhat controversial, and it might not be entirely accurate from a conceptual point of view. If we forget this detail, we might be asking the object by inspecting its dictionary, trying to find things that just aren’t there (calling <code class="docutils literal notranslate"><span class="pre">vars(client)</span></code> will not return the complete data, for example).</p></li>
 <li><p>It poses the requirement over the objects that they need to be hashable. If they aren’t, they can’t be part of the mapping. This might be too demanding a requirement for some applications.</p></li>
 </ul>
-<p>For these reasons, we prefer the implementation that has been shown so far in this book,
+<p>For these reasons, we prefer the implementation that has been shown so far,
 which uses the dictionary of each instance. However, for completeness, we have shown this
 alternative as well.</p>
 </div>
@@ -438,7 +438,7 @@ duplication. The best way to decide when to use descriptors is to identify cases
 would be using a property (whether for its get logic, set logic, or both), but repeating its
 structure many times.</p>
 <p>Properties are just a particular case of descriptors (the &#64;property decorator is a descriptor
-that implements the full descriptor protocol to define their get , set , and delete actions),
+that implements the full descriptor protocol to define their get, set, and delete actions),
 which means that we can use descriptors for far more complex tasks.</p>
 <p>Another powerful type we have seen for reusing code was decorators. Descriptors can help us create to better
 decorators by making sure that they will be able to work correctly for class methods as
@@ -568,7 +568,7 @@ decorator. This example added the <code class="docutils literal notranslate"><sp
 presenting them to its resulting dictionary, but if we asked for any of these attributes to an
 instance of the event in memory at any point, it would still give us the original value,
 without any transformation applied to it (we could have chosen to apply the
-transformation when setting the value, and return it directly on the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> , as well).</p>
+transformation when setting the value, and return it directly on the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code>, as well).</p>
 <p>Depending on the sensitivity of the application, this may or may not be acceptable, but in
 this case, when we ask the object for its public attributes, the descriptor will apply the
 transformation before presenting the results. It is still possible to access the original values

@@ -16,8 +16,8 @@ More generally speaking, every time we had to apply a transformation to a functi
 had to call it with the modifier function, and then reassign it to the same name the
 function was originally defined with.
 
-For instance, if we have a function called original , and then we have a function that
-changes the behavior of original on top of it, called modifier , we have to write
+For instance, if we have a function called original, and then we have a function that
+changes the behavior of original on top of it, called modifier, we have to write
 something like the following:
 
 .. code-block:: python

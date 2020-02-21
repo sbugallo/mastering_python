@@ -1203,7 +1203,7 @@ that they will have been changed by the time the function returns.</p>
 </div>
 <p>This might look like an inconsistency, but it’s not. When we pass the first argument, a string, this is
 assigned to the argument on the function. Since string objects are immutable, a statement like
-<code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+=</span> <span class="pre">&lt;expression&gt;</span></code> will in fact create the new object, <code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+</span> <span class="pre">&lt;expression&gt;</span></code> , and assign
+<code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+=</span> <span class="pre">&lt;expression&gt;</span></code> will in fact create the new object, <code class="docutils literal notranslate"><span class="pre">argument</span> <span class="pre">+</span> <span class="pre">&lt;expression&gt;</span></code>, and assign
 that back to the argument. At that point, an argument is just a local variable inside the scope of the
 function and has nothing to do with the original one in the caller.</p>
 <p>On the other hand, when we pass list, which is a mutable object, then that statement has a different meaning
@@ -1316,8 +1316,8 @@ row, which is not idiomatic at all. The second implementation uses unpacking whi
 </pre></div>
 </div>
 <p>Notice that the second version is much easier to read. In the first version of the function
-(<code class="docutils literal notranslate"><span class="pre">bad_users_from_rows</span></code>), we have data expressed in the form <code class="docutils literal notranslate"><span class="pre">row[0]</span></code> , <code class="docutils literal notranslate"><span class="pre">row[1]</span></code> , and <code class="docutils literal notranslate"><span class="pre">row[2]</span></code>, which
-doesn’t tell us anything about what they are. On the other hand, variables such as <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">first_name</span></code> ,
+(<code class="docutils literal notranslate"><span class="pre">bad_users_from_rows</span></code>), we have data expressed in the form <code class="docutils literal notranslate"><span class="pre">row[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">row[1]</span></code>, and <code class="docutils literal notranslate"><span class="pre">row[2]</span></code>, which
+doesn’t tell us anything about what they are. On the other hand, variables such as <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, <code class="docutils literal notranslate"><span class="pre">first_name</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">last_name</span></code> speak for themselves.</p>
 <p>We can leverage this kind of functionality to our advantage when designing our own functions.</p>
 <p>An example of this that we can find in the standard library lies in the max function, which is defined as
@@ -1453,8 +1453,8 @@ possible, a good design will try to minimize the impact as much as possible. We 
 separation of concerns, cohesion, and isolation of components.</p>
 <p>In terms of the runtime structure of software, orthogonality can be interpreted as the fact that makes changes
 (or side-effects) local. This means, for instance, that calling a method on an object should not alter the
-internal state of other (unrelated) objects. We have already (and will continue to do so) emphasized in this
-book the importance of minimizing side-effects in our code.</p>
+internal state of other (unrelated) objects. We have already (and will continue to do so) emphasized the
+importance of minimizing side-effects in our code.</p>
 <p>In the example with the mixin class, we created a tokenizer object that returned an iterable. The fact that
 the <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> method returned a new generator increases the chances that all three classes (the base,
 the mixing, and the concrete class) are orthogonal. If this had returned something in concrete (a list, let’s
@@ -1526,7 +1526,7 @@ files, we can create a file specific to the constant values to be used in the pr
 there: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">myproject.constants</span> <span class="pre">import</span> <span class="pre">CONNECTION_TIMEOUT</span></code>. Centralizing information like this makes it
 easier to reuse code and helps to avoid inadvertent duplication.</p>
 <p>More details about separating modules and creating Python packages will be discussed in
-Chapter 10 , Clean Architecture, when we explore this in the context of software architecture.</p>
+Chapter 10, Clean Architecture, when we explore this in the context of software architecture.</p>
 </div>
 </div>
 </div>

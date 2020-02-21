@@ -99,7 +99,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Getting more out of our objects with descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../7_generators/index.html">Using generators</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Unit testing and refactoring</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#design-principles-and-unit-testing">1. Design principles and unit testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#design-principles-and-unit-testing">1. Design principles and unit testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-note-about-other-forms-of-automated-testing">1.1. A note about other forms of automated testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unit-testing-and-agile-software-development">1.2. Unit testing and agile software development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unit-testing-and-software-design">1.3. Unit testing and software design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-the-boundaries-of-what-to-test">1.4. Defining the boundaries of what to test</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#frameworks-and-tools-for-testing">2. Frameworks and tools for testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#refactoring">3. Refactoring</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#more-about-unit-testing">4. More about unit testing</a></li>
@@ -183,20 +189,1124 @@
             
   <div class="section" id="unit-testing-and-refactoring">
 <h1>Unit testing and refactoring<a class="headerlink" href="#unit-testing-and-refactoring" title="Permalink to this headline">¶</a></h1>
+<p>The ideas explored in this chapter are fundamental pillars because of their importance towards our ultimate
+goal: to write better and more maintainable software.</p>
+<p>Unit tests (and any form of automatic tests, for that matter) are critical to software
+maintainability, and therefore are something that cannot be missing from any quality
+project. It is for that reason that this chapter is dedicated exclusively to aspects of
+automated testing as a key strategy, to safely modify the code, and iterate over it, in
+incrementally better versions.</p>
 <div class="section" id="design-principles-and-unit-testing">
 <h2>1. Design principles and unit testing<a class="headerlink" href="#design-principles-and-unit-testing" title="Permalink to this headline">¶</a></h2>
+<p>In this section, are first going to take a look at unit testing from a conceptual point of view.
+We will revisit some of the software engineering principles we discussed in the previous to
+get an idea of how this is related to clean code.</p>
+<p>After that, we will discuss in more detail how to put these concepts into practice (at the
+code level), and what frameworks and tools we can make use of.</p>
+<p>First we quickly define what unit testing is about. Unit tests are parts of the code in charge
+of validating other parts of the code. Normally, anyone would be tempted to say that unit
+tests, validate the “core” of the application, but such definition regards unit tests to a
+secondary place, which is not the way they are thought of. Unit tests are core,
+and a critical component of the software and they should be treated with the same
+considerations as the business logic.</p>
+<p>A unit tests is a piece of code that imports parts of the code with the business logic, and
+exercises its logic, asserting several scenarios with the idea to guarantee certain conditions.
+There are some traits that unit tests must have, such as:</p>
+<ul class="simple">
+<li><p>Isolation: unit test should be completely independent from any other external agent, and they have to focus only on the business logic. For this reason, they do not connect to a database, they don’t perform HTTP requests, etc. Isolation also means that the tests are independent among themselves: they must be able to run in any order, without depending on any previous state.</p></li>
+<li><p>Performance: unit tests must run quickly. They are intended to be run multiple times, repeatedly.</p></li>
+<li><p>Self-validating: The execution of a unit tests determines its result. There should be no extra step required to interpret the unit test (much less manual).</p></li>
+</ul>
+<p>More concretely, in Python this means that we will have new files where we are going
+to place our unit tests, and they are going to be called by some tool. Inside this files we program the tests
+themselves. Afterwards, a tool will collect our unit tests and run them, giving a result.</p>
+<p>This last part is what self-validation actually means. When the tool calls our files, a Python
+process will be launched, and our tests will be running on it. If the tests fail, the process will
+have exited with an error code (in a Unix environment, this can be any number different
+than 0). The standard is that the tool runs the test, and prints a dot (<code class="docutils literal notranslate"><span class="pre">.</span></code>) for every successful
+test, an <code class="docutils literal notranslate"><span class="pre">F</span></code> if the test failed (the condition of the test was not satisfied), and an <code class="docutils literal notranslate"><span class="pre">E</span></code> if there was
+an exception.</p>
+<div class="section" id="a-note-about-other-forms-of-automated-testing">
+<h3>1.1. A note about other forms of automated testing<a class="headerlink" href="#a-note-about-other-forms-of-automated-testing" title="Permalink to this headline">¶</a></h3>
+<p>Unit tests are intended to verify very small units, for example a function, or a method. We
+want from our unit tests to reach a very detailed level of granularity, testing as much code
+as possible. To test a class we would not want to use a unit tests, but rather a test suite,
+which is a collection of unit tests. Each one of them will be testing something more specific,
+like a method of that class.</p>
+<p>This is not the only form of unit tests, and it cannot catch every possible error. There are
+also acceptance and integration tests, both out of the scope.</p>
+<p>In an integration test, we will want to test multiple components at once. In this case we
+want to validate if collectively, they work as expected. In this case is acceptable (more than
+that, desirable) to have side-effects, and to forget about isolation, meaning that we will
+want to issue HTTP requests, connect to databases, and so on.</p>
+<p>An acceptance test is an automated form of testing that tries to validate the system from the
+perspective of an user, typically executing use cases.</p>
+<p>These two last forms of testing lose another nice trait with respect of unit tests: velocity. As
+you can imagine, they will take more time to run, therefore they will be run less frequently.</p>
+<p>In a good development environment, the programmer will have the entire test suite, and
+will run unit tests all the time, repeatedly, while he or she is making changes to the code,
+iterating, refactoring, and so on. Once the changes are ready, and the pull request is open, the
+continuous integration service will run the build for that branch, where the unit tests will
+run, as long as the integration or acceptance tests that might exist. Needless to say, the
+status of the build should be successful (green) before merging, but the important part is
+the difference between the kind of tests: we want to run unit tests all the time, and less
+frequently those test that take longer. For this reason, we want to have a lot of small unit
+tests, and a few automated tests, strategically designed to cover as much as possible of
+where the unit tests could not reach (the database, for instance).</p>
+<p>Finally, a word to the wise. Remember we encourage pragmatism. Besides these
+definitions give, and the points made about unit tests in the beginning of the section, the
+reader has to keep in mind that the best solution according to your criteria and context,
+should predominate. Nobody knows your system better than you. Which means, if for
+some reason you have to write an unit tests that needs to launch a Docker container to test
+against a database, go for it. Practicality beats purity.</p>
+</div>
+<div class="section" id="unit-testing-and-agile-software-development">
+<h3>1.2. Unit testing and agile software development<a class="headerlink" href="#unit-testing-and-agile-software-development" title="Permalink to this headline">¶</a></h3>
+<p>In modern software development, we want to deliver value constantly, and as quickly as
+possible. The rationale behind these goals is that the earlier we get feedback, the less the
+impact, and the easier it will be to change. These are no new ideas at all; some of them
+resemble manufacturing principles from decades ago, and others (such as the idea of
+getting feedback from stakeholders as soon as possible and iterating upon it) you can find
+in essays such as The Cathedral and the Bazaar (abbreviated as CatB).</p>
+<p>Therefore, we want to be able to respond effectively to changes, and for that, the software
+we write will have to change. Like we mentioned in the previous chapters, we want our
+software to be adaptable, flexible, and extensible.</p>
+<p>The code alone (regardless of how well written and designed it is) cannot guarantee us that
+it’s flexible enough to be changed. Let’s say we design a piece of software following the
+SOLID principles, and in one part we actually have a set of components that comply with
+the open/closed principle, meaning that we can easily extend them without affecting too
+much existing code. Assume further that the code is written in a way that favors
+refactoring, so we could change it as required. What’s to say that when we make these
+changes, we aren’t introducing any bugs? How do we know that existing functionality is
+preserved? Would you feel confident enough releasing that to your users? Will they believe
+that the new version works just as expected?</p>
+<p>The answer to all of these questions is that we can’t be sure unless we have a formal proof
+of it. And unit tests are just that, formal proof that the program works according to the
+specification.</p>
+<p>Unit (or automated) tests, therefore, work as a safety net that gives us the confidence to
+work on our code. Armed with these tools, we can efficiently work on our code, and
+therefore this is what ultimately determines the velocity (or capacity) of the team working
+on the software product. The better the tests, the more likely it is we can deliver value
+quickly without being stopped by bugs every now and then.</p>
+</div>
+<div class="section" id="unit-testing-and-software-design">
+<h3>1.3. Unit testing and software design<a class="headerlink" href="#unit-testing-and-software-design" title="Permalink to this headline">¶</a></h3>
+<p>This is the other face of the coin when it comes to the relationship between the main code
+and unit testing. Besides the pragmatic reasons explored in the previous section, it comes
+down to the fact that good software is testable software. <strong>Testability</strong> (the quality attribute
+that determines how easy to test software is) is not just a nice to have, but a driver for clean
+code.</p>
+<p>Unit tests aren’t just something complementary to the main code base, but rather something
+that has a direct impact and real influence on how the code is written. There are many
+levels of this, from the very beginning when we realize that the moment we want to add
+unit tests for some parts of our code, we have to change it (resulting in a better version of
+it), to its ultimate expression (explored near the end of this chapter) when the entire code
+(the design) is driven by the way it’s going to be tested via <strong>test-driven design</strong>.</p>
+<p>Starting off with a simple example, we will show you a small use case in which tests (and
+the need to test our code) lead to improvements in the way our code ends up being written.</p>
+<p>In the following example, we will simulate a process that requires sending metrics to an
+external system about the results obtained at each particular task (as always, details won’t
+make any difference as long as we focus on the code). We have a <code class="docutils literal notranslate"><span class="pre">Process</span></code> object that
+represents some task on the domain problem, and it uses a <code class="docutils literal notranslate"><span class="pre">metrics</span></code> client (an external
+dependency and therefore something we don’t control) to send the actual metrics to the
+external entity (that this could be sending data to <code class="docutils literal notranslate"><span class="pre">syslog</span></code>, or <code class="docutils literal notranslate"><span class="pre">statsd</span></code>, for instance):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MetricsClient</span><span class="p">:</span>
+<span class="sd">&quot;&quot;&quot;3rd-party metrics client&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">metric_value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;expected type str for metric_name&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metric_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;expected type str for metric_value&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sending </span><span class="si">{metric_name}</span><span class="s2"> = </span><span class="si">{metric_value}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Process</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">MetricsClient</span><span class="p">()</span> <span class="c1"># A 3rd-party metrics client</span>
+    <span class="k">def</span> <span class="nf">process_iterations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iterations</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_process</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;iteration.</span><span class="si">{i}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the simulated version of the third-party client, we put the requirement that the
+parameters provided must be of type string. Therefore, if the result of the <code class="docutils literal notranslate"><span class="pre">run_process</span></code>
+method is not a string, we might expect it to fail, and indeed it does:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;expected type str for metric_value&quot;</span><span class="p">)</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">expected</span> <span class="nb">type</span> <span class="nb">str</span> <span class="k">for</span> <span class="n">metric_value</span>
+</pre></div>
+</div>
+<p>Remember that this validation is out of our hands and we cannot change the code, so we
+must provide the method with parameters of the correct type before proceeding. But since
+this is a bug we detected, we first want to write a unit test to make sure it will not happen
+again. We do this to actually prove that we fixed the issue, and to protect against this bug in
+the future, regardless of how many times the code is refactored.</p>
+<p>It would be possible to test the code as is by mocking the client of the <code class="docutils literal notranslate"><span class="pre">Process</span></code> object (we
+will see how to do so in the section about mock objects, when we explore the tools for unit
+testing), but doing so runs more code than is needed (notice how the part we want to test is
+nested into the code). Moreover, it’s good that the method is relatively small, because if it
+weren’t, the test would have to run even more undesired parts that we might also need to
+mock. This is another example of good design (small, cohesive functions or methods), that
+relates to testability.</p>
+<p>Finally, we decide not to go to much trouble and test just the part that we need to, so
+instead of interacting with the client directly on the main method, we delegate to a
+wrapper method, and the new class looks like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WrappedClient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">MetricsClient</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">metric_value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">metric_name</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">metric_value</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Process</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">WrappedClient</span><span class="p">()</span>
+        <span class="o">...</span> <span class="c1"># rest of the code remains unchanged</span>
+</pre></div>
+</div>
+<p>In this case, we opted for creating our own version of the client for metrics, that is, a
+wrapper around the third-party library one we used to have. To do this, we place a class
+that (with the same interface) will make the conversion of the types accordingly.</p>
+<p>This way of using composition resembles the adapter design pattern (we’ll explore design
+patterns in the next chapter, so, for now, it’s just an informative message), and since this is a
+new object in our domain, it can have its respective unit tests. Having this object will make
+things simpler to test, but more importantly, now that we look at it, we realize that this is
+probably the way the code should have been written in the first place. Trying to write a unit
+test for our code made us realize that we were missing an important abstraction entirely!</p>
+<p>Now that we have separated the method as it should be, let’s write the actual unit test for it.
+The details about the unittest module used in this example will be explored in more
+detail in the part of the chapter where we explore testing tools and libraries, but for now
+reading the code will give us a first impression on how to test it, and it will make the
+previous concepts a little less abstract:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">Mock</span>
+
+
+<span class="k">class</span> <span class="nc">TestWrappedClient</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_send_converts_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wrapped_client</span> <span class="o">=</span> <span class="n">WrappedClient</span><span class="p">()</span>
+        <span class="n">wrapped_client</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+        <span class="n">wrapped_client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">wrapped_client</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Mock</span></code> is a type that’s available in the <code class="docutils literal notranslate"><span class="pre">unittest.mock</span></code> module, which is a quite convenient
+object to ask about all sort of things. For example, in this case, we’re using it in place of the
+third-party library (mocked into the boundaries of the system, as commented on the next
+section) to check that it’s called as expected (and once again, we’re not testing the library
+itself, only that it is called correctly). Notice how we run a call like the one our <code class="docutils literal notranslate"><span class="pre">Process</span></code>
+object, but we expect the parameters to be converted to strings.</p>
+</div>
+<div class="section" id="defining-the-boundaries-of-what-to-test">
+<h3>1.4. Defining the boundaries of what to test<a class="headerlink" href="#defining-the-boundaries-of-what-to-test" title="Permalink to this headline">¶</a></h3>
+<p>Testing requires effort. And if we are not careful when deciding what to test, we will never
+end testing, hence wasting a lot of effort without achieving much.</p>
+<p>We should scope the testing to the boundaries of our code. If we don’t, we would have to
+also test the dependencies (external/third-party libraries or modules) or our code, and then
+their respective dependencies, and so on and so forth in a never-ending journey. It’s not our
+responsibility to test dependencies, so we can assume that these projects have tests of their
+own. It would be enough just to test that the correct calls to external dependencies are done
+with the correct parameters (and that might even be an acceptable use of patching), but we
+shouldn’t put more effort in than that.</p>
+<p>This is another instance where good software design pays off. If we have been careful in
+our design, and clearly defined the boundaries of our system (that is, we designed towards
+interfaces, instead of concrete implementations that will change, hence inverting the
+dependencies over external components to reduce temporal coupling), then it will be much
+more easier to mock these interfaces when writing unit tests.</p>
+<p>In good unit testing, we want to patch on the boundaries of our system and focus on the
+core functionality to be exercised. We don’t test external libraries (third-party tools installed
+via <code class="docutils literal notranslate"><span class="pre">pip</span></code>, for instance), but instead, we check that they are called correctly. When we explore
+mock objects later on in this chapter, we will review techniques and tools for performing
+these types of assertion.</p>
+</div>
 </div>
 <div class="section" id="frameworks-and-tools-for-testing">
 <h2>2. Frameworks and tools for testing<a class="headerlink" href="#frameworks-and-tools-for-testing" title="Permalink to this headline">¶</a></h2>
+<p>There are a lot of tools we can use for writing out unit tests, all of them with pros and cons
+and serving different purposes. But among all of them, there are two that will most likely
+cover almost every scenario, and therefore we limit this section to just them.
+Along with testing frameworks and test running libraries, it’s often common to find projects
+that configure code coverage, which they use as a quality metric. Since coverage (when
+used as a metric) is misleading, after seeing how to create unit tests we’ll discuss why it’s
+not to be taken lightly.
+Frameworks and libraries for unit testing
+In this section, we will discuss two frameworks for writing and running unit tests. The first
+one, unittest, is available in the standard library of Python, while the second
+one, pytest, has to be installed externally via pip .
+unittest : https:/​ / ​ docs.​ python.​ org/​ 3/​ library/​ unittest.​ html
+pytest : https:/​ / ​ docs.​ pytest.​ org/​ en/​ latest/
+When it comes to covering testing scenarios for our code, unittest alone will most likely
+suffice, since it has plenty of helpers. However, for more complex systems on which we
+have multiple dependencies, connections to external systems, and probably the need to
+patch objects, and define fixtures parameterize test cases, then pytest looks like a more
+complete option.
+[ 226 ]Unit Testing and Refactoring
+Chapter 8
+We will use a small program as an example to show you how could it be tested using both
+options which in the end will help us to get a better picture of how the two of them
+compare.
+The example demonstrating testing tools is a simplified version of a version control tool
+that supports code reviews in merge requests. We will start with the following criteria:
+A merge request is rejected if at least one person disagrees with the changes
+If nobody has disagreed, and the merge request is good for at least two other
+developers, it’s approved
+In any other case, its status is pending
+And here is what the code might look like:
+from enum import Enum
+class MergeRequestStatus(Enum):
+APPROVED = “approved”
+REJECTED = “rejected”
+PENDING = “pending”
+class MergeRequest:
+def __init__(self):
+self._context = {
+“upvotes”: set(),
+“downvotes”: set(),
+}
+&#64;property
+def status(self):
+if self._context[“downvotes”]:
+return MergeRequestStatus.REJECTED
+elif len(self._context[“upvotes”]) &gt;= 2:
+return MergeRequestStatus.APPROVED
+return MergeRequestStatus.PENDING
+def upvote(self, by_user):
+self._context[“downvotes”].discard(by_user)
+self._context[“upvotes”].add(by_user)
+def downvote(self, by_user):
+self._context[“upvotes”].discard(by_user)
+self._context[“downvotes”].add(by_user)
+[ 227 ]Unit Testing and Refactoring
+Chapter 8
+unittest
+The unittest module is a great option with which to start writing unit tests because it
+provides a rich API to write all kinds of testing conditions, and since it’s available in the
+standard library, it’s quite versatile and convenient.
+The unittest module is based on the concepts of JUnit (from Java), which in turn is also
+based on the original ideas of unit testing that come from Smalltalk, so it’s object-oriented in
+nature. For this reason, tests are written through objects, where the checks are verified by
+methods, and it’s common to group tests by scenarios in classes.
+To start writing unit tests, we have to create a test class that inherits from
+unittest.TestCase, and define the conditions we want to stress on its methods. These
+methods should start with test_*, and can internally use any of the methods inherited
+from unittest.TestCase to check conditions that must hold true.
+Some examples of conditions we might want to verify for our case are as follows:
+class TestMergeRequestStatus(unittest.TestCase):
+def test_simple_rejected(self):
+merge_request = MergeRequest()
+merge_request.downvote(“maintainer”)
+self.assertEqual(merge_request.status, MergeRequestStatus.REJECTED)
+def test_just_created_is_pending(self):
+self.assertEqual(MergeRequest().status, MergeRequestStatus.PENDING)
+def test_pending_awaiting_review(self):
+merge_request = MergeRequest()
+merge_request.upvote(“core-dev”)
+self.assertEqual(merge_request.status, MergeRequestStatus.PENDING)
+def test_approved(self):
+merge_request = MergeRequest()
+merge_request.upvote(“dev1”)
+merge_request.upvote(“dev2”)
+self.assertEqual(merge_request.status, MergeRequestStatus.APPROVED)
+The API for unit testing provides many useful methods for comparison, the most common
+one being assertEquals(&lt;actual&gt;, &lt;expected&gt;[, message]), which can be used to
+compare the result of the operation against the value we were expecting, optionally using a
+message that will be shown in the case of an error.
+[ 228 ]Unit Testing and Refactoring
+Chapter 8
+Another useful testing method allows us to check whether a certain exception was raised or
+not. When something exceptional happens, we raise an exception in our code to prevent
+continuous processing under the wrong assumptions, and also to inform the caller that
+something is wrong with the call as it was performed. This is the part of the logic that ought
+to be tested, and that’s what this method is for.
+Imagine that we are now extending our logic a little bit further to allow users to close their
+merge requests, and once this happens, we don’t want any more votes to take place (it
+wouldn’t make sense to evaluate a merge request once this was already closed). To prevent
+this from happening, we extend our code and we raise an exception on the unfortunate
+event when someone tries to cast a vote on a closed merge request.
+After adding two new statuses ( OPEN and CLOSED ), and a new close() method, we
+modify the previous methods for the voting to handle this check first:
+class MergeRequest:
+def __init__(self):
+self._context = {
+“upvotes”: set(),
+“downvotes”: set(),
+}
+self._status = MergeRequestStatus.OPEN
+def close(self):
+self._status = MergeRequestStatus.CLOSED
+…
+def _cannot_vote_if_closed(self):
+if self._status == MergeRequestStatus.CLOSED:
+raise MergeRequestException(“can’t vote on a closed merge
+request”)
+def upvote(self, by_user):
+self._cannot_vote_if_closed()
+self._context[“downvotes”].discard(by_user)
+self._context[“upvotes”].add(by_user)
+def downvote(self, by_user):
+self._cannot_vote_if_closed()
+self._context[“upvotes”].discard(by_user)
+self._context[“downvotes”].add(by_user)
+[ 229 ]Unit Testing and Refactoring
+Chapter 8
+Now, we want to check that this validation indeed works. For this, we’re going to use
+the asssertRaises and assertRaisesRegex methods:
+def test_cannot_upvote_on_closed_merge_request(self):
+self.merge_request.close()
+self.assertRaises(
+MergeRequestException, self.merge_request.upvote, “dev1”
+)
+def test_cannot_downvote_on_closed_merge_request(self):
+self.merge_request.close()
+self.assertRaisesRegex(
+MergeRequestException,
+“can’t vote on a closed merge request”,
+self.merge_request.downvote,
+“dev1”,
+)
+The former will expect that the provided exception is raised when calling the callable in the
+second argument, with the arguments ( <a href="#id1"><span class="problematic" id="id2">*</span></a>args and <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs ) on the rest of the function,
+and if that’s not the case it will fail, saying that the exception that was expected to be raised,
+wasn’t. The latter does the same but it also checks that the exception that was raised,
+contains the message matching the regular expression that was provided as a parameter.
+Even if the exception is raised, but with a different message (not matching the regular
+expression), the test will fail.
+Try to check for the error message, as not only will the exception, as an
+extra check, be more accurate and ensure that it is actually the exception
+we want that is being triggered, it will check whether another one of the
+same types got there by chance.
+Parametrized tests
+Now, we would like to test how the threshold acceptance for the merge request works, just
+by providing data samples of what the context looks like without needing the entire
+MergeRequest object. We want to test the part of the status property that is after the line
+that checks if it’s closed, but independently.
+The best way to achieve this is to separate that component into another class, use
+composition, and then move on to test this new abstraction with its own test suite:
+class AcceptanceThreshold:
+def __init__(self, merge_request_context: dict) -&gt; None:
+self._context = merge_request_context
+[ 230 ]Unit Testing and Refactoring
+Chapter 8
+def status(self):
+if self._context[“downvotes”]:
+return MergeRequestStatus.REJECTED
+elif len(self._context[“upvotes”]) &gt;= 2:
+return MergeRequestStatus.APPROVED
+return MergeRequestStatus.PENDING
+class MergeRequest:
+…
+&#64;property
+def status(self):
+if self._status == MergeRequestStatus.CLOSED:
+return self._status
+return AcceptanceThreshold(self._context).status()
+With these changes, we can run the tests again and verify that they pass, meaning that this
+small refactor didn’t break anything of the current functionality (unit tests ensure
+regression). With this, we can proceed with our goal to write tests that are specific to the
+new class:
+class TestAcceptanceThreshold(unittest.TestCase):
+def setUp(self):
+self.fixture_data = (
+(
+{“downvotes”: set(), “upvotes”: set()},
+MergeRequestStatus.PENDING
+),
+(
+{“downvotes”: set(), “upvotes”: {“dev1”}},
+MergeRequestStatus.PENDING,
+),
+(
+{“downvotes”: “dev1”, “upvotes”: set()},
+MergeRequestStatus.REJECTED
+),
+(
+{“downvotes”: set(), “upvotes”: {“dev1”, “dev2”}},
+MergeRequestStatus.APPROVED
+),
+)
+def test_status_resolution(self):
+for context, expected in self.fixture_data:
+with self.subTest(context=context):
+status = AcceptanceThreshold(context).status()
+self.assertEqual(status, expected)
+[ 231 ]Unit Testing and Refactoring
+Chapter 8
+Here, in the setUp() method, we define the data fixture to be used throughout the tests. In
+this case, it’s not actually needed, because we could have put it directly on the method, but
+if we expect to run some code before any test is executed, this is the place to write it,
+because this method is called once before every test is run.
+By writing this new version of the code, the parameters under the code being tested are
+clearer and more compact, and at each case, it will report the results.
+To simulate that we’re running all of the parameters, the test iterates over all the data, and
+exercises the code with each instance. One interesting helper here is the use of subTest,
+which in this case we use to mark the test condition being called. If one of these iterations
+failed, unittest would report it with the corresponding value of the variables that were
+passed to the subTest (in this case, it was named context, but any series of keyword
+arguments would work just the same). For example, one error occurrence might look like
+this:
+FAIL: (context={‘downvotes’: set(), ‘upvotes’: {‘dev1’, ‘dev2’}})
+———————————————————————-
+Traceback (most recent call last):
+File “” test_status_resolution
+self.assertEqual(status, expected)
+AssertionError: &lt;MergeRequestStatus.APPROVED: ‘approved’&gt; !=
+&lt;MergeRequestStatus.REJECTED: ‘rejected’&gt;
+If you choose to parameterize tests, try to provide the context of each
+instance of the parameters with as much information as possible to make
+debugging easier.
+pytest
+Pytest is a great testing framework, and can be installed via pip install pytest . A
+difference with respect to unittest is that, while it’s still possible to classify test scenarios
+in classes and create object-oriented models of our tests, this is not actually mandatory, and
+it’s possible to write unit tests with less boilerplate by just checking the conditions we want
+to verify with the assert statement.
+By default, making comparisons with an assert statement will be enough for pytest to
+identify a unit test and report its result accordingly. More advanced uses such as those seen
+in the previous section are also possible, but they require using specific functions from the
+package.
+[ 232 ]Unit Testing and Refactoring
+Chapter 8
+A nice feature is that the command pytests will run all the tests that it can discover, even
+if they were written with unittest . This compatibility makes it easier to transition
+from unittest toward pytest gradually.
+Basic test cases with pytest
+The conditions we tested in the previous section can be rewritten in simple functions with
+pytest .
+Some examples with simple assertions are as follows:
+def test_simple_rejected():
+merge_request = MergeRequest()
+merge_request.downvote(“maintainer”)
+assert merge_request.status == MergeRequestStatus.REJECTED
+def test_just_created_is_pending():
+assert MergeRequest().status == MergeRequestStatus.PENDING
+def test_pending_awaiting_review():
+merge_request = MergeRequest()
+merge_request.upvote(“core-dev”)
+assert merge_request.status == MergeRequestStatus.PENDING
+Boolean equality comparisons don’t require more than a simple assert statement, whereas
+other kinds of checks like the ones for the exceptions do require that we use some functions:
+def test_invalid_types():
+merge_request = MergeRequest()
+pytest.raises(TypeError, merge_request.upvote, {“invalid-object”})
+def test_cannot_vote_on_closed_merge_request():
+merge_request = MergeRequest()
+merge_request.close()
+pytest.raises(MergeRequestException, merge_request.upvote, “dev1”)
+with pytest.raises(
+MergeRequestException,
+match=”can’t vote on a closed merge request”,
+):
+merge_request.downvote(“dev1”)
+[ 233 ]Unit Testing and Refactoring
+Chapter 8
+In this case, pytest.raises is the equivalent of unittest.TestCase.assertRaises,
+and it also accepts that it be called both as a method and as a context manager. If we want
+to check the message of the exception, instead of a different method
+(like assertRaisesRegex ), the same function has to be used, but as a context manager,
+and by providing the match parameter with the expression we would like to identify.
+pytest will also wrap the original exception into a custom one that can be expected (by
+checking some of its attributes such as .value, for instance) in case we want to check for
+more conditions, but this use of the function covers the vast majority of cases.
+Parametrized tests
+Running parametrized tests with pytest is better, not only because it provides a cleaner
+API, but also because each combination of the test with its parameters generates a new test
+case.
+To work with this, we have to use the pytest.mark.parametrize decorator on our test.
+The first parameter of the decorator is a string indicating the names of the parameters to
+pass to the test function, and the second has to be iterable with the respective values for
+those parameters.
+Notice how the body of the testing function is reduced to one line (after removing the
+internal for loop, and its nested context manager), and the data for each test case is
+correctly isolated from the body of the function, making it easier to extend and maintain:
+&#64;pytest.mark.parametrize(“context,expected_status”, (
+(
+{“downvotes”: set(), “upvotes”: set()},
+MergeRequestStatus.PENDING
+),
+(
+{“downvotes”: set(), “upvotes”: {“dev1”}},
+MergeRequestStatus.PENDING,
+),
+(
+{“downvotes”: “dev1”, “upvotes”: set()},
+MergeRequestStatus.REJECTED
+),
+(
+{“downvotes”: set(), “upvotes”: {“dev1”, “dev2”}},
+MergeRequestStatus.APPROVED
+),
+))
+def test_acceptance_threshold_status_resolution(context, expected_status):
+assert AcceptanceThreshold(context).status() == expected_status
+[ 234 ]Unit Testing and Refactoring
+Chapter 8
+Use &#64;pytest.mark.parametrize to eliminate repetition, keep the body
+of the test as cohesive as possible, and make the parameters (test inputs or
+scenarios) that the code must support explicitly.
+Fixtures
+One of the great things about pytest is how it facilitates creating reusable features so that
+we can feed our tests with data or objects in order to test more effectively and without
+repetition.
+For example, we might want to create a MergeRequest object in a particular state, and use
+that object in multiple tests. We define our object as a fixture by creating a function and
+applying the &#64;pytest.fixture decorator. The tests that want to use that fixture will have
+to have a parameter with the same name as the function that’s defined, and pytest will
+make sure that it’s provided:
+&#64;pytest.fixture
+def rejected_mr():
+merge_request = MergeRequest()
+merge_request.downvote(“dev1”)
+merge_request.upvote(“dev2”)
+merge_request.upvote(“dev3”)
+merge_request.downvote(“dev4”)
+return merge_request
+def test_simple_rejected(rejected_mr):
+assert rejected_mr.status == MergeRequestStatus.REJECTED
+def test_rejected_with_approvals(rejected_mr):
+rejected_mr.upvote(“dev2”)
+rejected_mr.upvote(“dev3”)
+assert rejected_mr.status == MergeRequestStatus.REJECTED
+def test_rejected_to_pending(rejected_mr):
+rejected_mr.upvote(“dev1”)
+assert rejected_mr.status == MergeRequestStatus.PENDING
+def test_rejected_to_approved(rejected_mr):
+rejected_mr.upvote(“dev1”)
+rejected_mr.upvote(“dev2”)
+assert rejected_mr.status == MergeRequestStatus.APPROVED
+[ 235 ]Unit Testing and Refactoring
+Chapter 8
+Remember that tests affect the main code as well, so the principles of clean code apply to
+them as well. In this case, the Don’t Repeat Yourself (DRY) principle that we explored in
+previous chapters appears once again, and we can achieve it with the help of pytest
+fixtures.
+Besides creating multiple objects or exposing data that will be used throughout the test
+suite, it’s also possible to use them to set up some conditions, for example, to globally patch
+some functions that we don’t want to be called, or when we want patch objects to be used
+instead.
+Code coverage
+Tests runners support coverage plugins (to be installed via pip ) that will provide useful
+information about what lines in the code have been executed while the tests were running.
+This information is of great help so that we know which parts of the code need to be
+covered by tests, as well identifying improvements to be made (both in the production code
+and in the tests). One of the most widely used libraries for this is coverage ( https:/​ / ​ pypi.
+org/​ project/​ coverage/​ ).
+While they are of great help (and we highly recommend that you use them and configure
+your project to run coverage in the CI when tests are run), they can also be misleading;
+particularly in Python, we can get a false impression if we don’t pay close attention to the
+coverage report.
+Setting up rest coverage
+In the case of pytest, we have to install the pytest-cov package (at the time of this
+writing, version 2.5.1 is used in this book). Once installed, when the tests are run, we have
+to tell the pytest runner that pytest-cov will also run, and which package (or packages)
+should be covered (among other parameters and configurations).
+This package supports multiple configurations, like different sorts of output formats, and
+it’s easy to integrate it with any CI tool, but among all these features a highly recommended
+option is to set the flag that will tell us which lines haven’t been covered by tests yet,
+because this is what’s going to help us diagnose our code and allow us to start writing more
+tests.
+[ 236 ]Unit Testing and Refactoring
+Chapter 8
+To show you an example of what this would look like, use the following command:
+pytest –cov-report term-missing –cov=coverage_1 test_coverage_1.py
+This will produce an output similar to the following:
+test_coverage_1.py ……………. [100%]
+———– coverage: platform linux, python 3.6.5-final-0 ———–
+Name
+Stmts Miss Cover Missing
+———————————————
+coverage_1.py 38
+1 97%
+53
+Here, it’s telling us that there is a line that doesn’t have unit tests so that we can take a look
+and see how to write a unit test for it. This is a common scenario where we realize that to
+cover those missing lines, we need to refactor the code by creating smaller methods. As a
+result, our code will look much better, as in the example we saw at the beginning of this
+chapter.
+The problem lies in the inverse situation—can we trust the high coverage? Does it mean our
+code is correct? Unfortunately, having good test coverage is necessary but in sufficient
+condition for clean code. Not having tests for parts of the code is clearly something bad.
+Having tests is actually very good (and we can say this for the tests that do exist), and
+actually asserts real conditions that they are a guarantee of quality for that part of the code.
+However, we cannot say that is all that is required; despite having a high level of coverage,
+even more tests are required.
+These are the caveats of test coverage, which we will mention in the next section.
+Caveats of test coverage
+Python is interpreted and, at a very high-level, coverage tools take advantage of this to
+identify the lines that were interpreted (run) while the tests were running. It will then
+report this at the end. The fact that a line was interpreted does not mean that it was
+properly tested, and this is why we should be careful about reading the final coverage
+report and trusting what it says.
+[ 237 ]Unit Testing and Refactoring
+Chapter 8
+This is actually true for any language. The fact that a line was exercised does not mean at all
+that it was stressed with all its possible combinations. The fact that all branches run
+successfully with the provided data only means that the code supported that combination,
+but it doesn’t tell us anything about any other possible combinations of parameters that
+would make the program crash.
+Use coverage as a tool to find blind spots in the code, but not as a metric
+or target goal.
+Mock objects
+There are cases where our code is not the only thing that will be present in the context of
+our tests. After all, the systems we design and build have to do something real, and that
+usually means connecting to external services (databases, storage services, external APIs,
+cloud services, and so on). Because they need to have those side-effects, they’re inevitable.
+As much as we abstract our code, program towards interfaces, and isolate code from
+external factors in order to minimize side-effects, they will be present in our tests, and we
+need an effective way to handle that.
+Mock objects are one of the best tactics to defend against undesired side-effects. Our code
+might need to perform an HTTP request or send a notification email, but we surely don’t
+want that to happen in our unit tests. Besides, unit tests should run quickly, as we want to
+run them quite often (all the time, actually), and this means we cannot afford latency.
+Therefore, real unit tests don’t use any actual service—they don’t connect to any database,
+they don’t issue HTTP requests, and basically, they do nothing other than exercise the logic
+of the production code.
+We need tests that do such things, but they aren’t units. Integration tests are supposed to
+test functionality with a broader perspective, almost mimicking the behavior of a user. But
+they aren’t fast. Because they connect to external systems and services, they take longer to
+run and are more expensive. In general, we would like to have lots of unit tests that run
+really quickly in order to run them all the time, and have integration tests run less often (for
+instance, on any new merge request).
+While mock objects are useful, abusing their use ranges between a code smell or an anti-
+pattern is the first caveat we would like to mention before going into the details of it.
+[ 238 ]Unit Testing and Refactoring
+Chapter 8
+A fair warning about patching and mocks
+We said before that unit tests help us write better code, because the moment we want to
+start testing parts of the code, we usually have to write them to be testable, which often
+means they are also cohesive, granular, and small. These are all good traits to have in a
+software component.
+Another interesting gain is that testing will help us notice code smells in parts where we
+thought our code was correct. One of the main warnings that our code has code smells is
+whether we find ourselves trying to monkey-patch (or mock) a lot of different things just to
+cover a simple test case.
+The unittest module provides a tool for patching our objects at unittest.mock.patch .
+Patching means that the original code (given by a string denoting its location at import
+time), will be replaced by something else, other than its original code, being the default a
+mock object. This replaces the code at run-time, and has the disadvantage that we are losing
+contact with the original code that was there in the first place, making our tests a little more
+shallow. It also carries performance considerations, because of the overhead that imposes
+modifying objects in the interpreter at run-time, and it’s something that might end up
+update if we refactor our code and move things around.
+Using monkey-patching or mocks in our tests might be acceptable, and by itself it doesn’t
+represent an issue. On the other hand, abuse in monkey-patching is indeed a flag that
+something has to be improved in our code.
+Using mock objects
+In unit testing terminology, there are several types of object that fall into the category
+named test doubles. A test double is a type of object that will take the place of a real one in
+our test suite for different kinds of reasons (maybe we don’t need the actual production
+code, but just a dummy object would work, or maybe we can’t use it because it requires
+access to services or it has side-effects that we don’t want in our unit tests, and so on).
+There are different types of test double, such as dummy objects, stubs, spies, or mocks.
+Mocks are the most general type of object, and since they’re quite flexible and versatile, they
+are appropriate for all cases without needing to go into much detail about the rest of them.
+It is for this reason that the standard library also includes an object of this kind, and it is
+common in most Python programs. That’s the one we are going to be using
+here: unittest.mock.Mock .
+[ 239 ]Unit Testing and Refactoring
+Chapter 8
+A mock is a type of object created to a specification (usually resembling the object of a
+production class) and some configured responses (that is, we can tell the mock what it
+should return upon certain calls, and what its behavior should be). The Mock object will
+then record, as part of its internal status, how it was called (with what parameters, how
+many times, and so on), and we can use that information to verify the behavior of our
+application at a later stage.
+In the case of Python, the Mock object that’s available from the standard library provides a
+nice API to make all sorts of behavioral assertions, such as checking how many times the
+mock was called, with what parameters, and so on.
+Types of mocks
+The standard library provides Mock and MagicMock objects in the unittest.mock
+module. The former is a test double that can be configured to return any value and will
+keep track of the calls that were made to it. The latter does the same, but it also supports
+magic methods. This means that, if we have written idiomatic code that uses magic
+methods (and parts of the code we are testing will rely on that), it’s likely that we will have
+to use a MagicMock instance instead of just a Mock .
+Trying to use Mock when our code needs to call magic methods will result in an error. See
+the following code for an example of this:
+class GitBranch:
+def __init__(self, commits: List[Dict]):
+self._commits = {c[“id”]: c for c in commits}
+def __getitem__(self, commit_id):
+return self._commits[commit_id]
+def __len__(self):
+return len(self._commits)
+def author_by_id(commit_id, branch):
+return branch[commit_id][“author”]
+[ 240 ]Unit Testing and Refactoring
+Chapter 8
+We want to test this function; however, another test needs to call
+the author_by_id function. For some reason, since we’re not testing that function, any
+value provided to that function (and returned) will be good:
+def test_find_commit():
+branch = GitBranch([{“id”: “123”, “author”: “dev1”}])
+assert author_by_id(“123”, branch) == “dev1”
+def test_find_any():
+author = author_by_id(“123”, Mock()) is not None
+# … rest of the tests..
+As anticipated, this will not work:
+def author_by_id(commit_id, branch):
+&gt; return branch[commit_id][“author”]
+E TypeError: ‘Mock’ object is not subscriptable
+Using MagicMock instead will work. We can even configure the magic method of this type
+of mock to return something we need in order to control the execution of our test:
+def test_find_any():
+mbranch = MagicMock()
+mbranch.__getitem__.return_value = {“author”: “test”}
+assert author_by_id(“123”, mbranch) == “test”
+A use case for test doubles
+To see a possible use of mocks, we need to add a new component to our application that
+will be in charge of notifying the merge request of the status of the build . When a build
+is finished, this object will be called with the ID of the merge request and the status of the
+build, and it will update the status of the merge request with this information by
+sending an HTTP POST request to a particular fixed endpoint:
+# mock_2.py
+from datetime import datetime
+import requests
+from constants import STATUS_ENDPOINT
+class BuildStatus:
+“””The CI status of a pull request.”””
+[ 241 ]Unit Testing and Refactoring
+Chapter 8
+&#64;staticmethod
+def build_date() -&gt; str:
+return datetime.utcnow().isoformat()
+&#64;classmethod
+def notify(cls, merge_request_id, status):
+build_status = {
+“id”: merge_request_id,
+“status”: status,
+“built_at”: cls.build_date(),
+}
+response = requests.post(STATUS_ENDPOINT, json=build_status)
+response.raise_for_status()
+return response
+This class has many side-effects, but one of them is an important external dependency
+which is hard to surmount. If we try to write a test over it without modifying anything, it
+will fail with a connection error as soon as it tries to perform the HTTP connection.
+As a testing goal, we just want to make sure that the information is composed correctly, and
+that library requests are being called with the appropriate parameters. Since this is an
+external dependency, we don’t test requests; just checking that it’s called correctly will be
+enough.
+Another problem we will face when trying to compare data being sent to the library is that
+the class is calculating the current timestamp, which is impossible to predict in a unit test.
+Patching datetime directly is not possible, because the module is written in C. There are
+some external libraries that can do that ( freezegun, for example), but they come with a
+performance penalty, and for this example would be overkill. Therefore, we opt to
+wrapping the functionality we want in a static method that we will be able to patch.
+Now that we have established the points that need to be replaced in the code, let’s write the
+unit test:
+# test_mock_2.py
+from unittest import mock
+from constants import STATUS_ENDPOINT
+from mock_2 import BuildStatus
+&#64;mock.patch(“mock_2.requests”)
+def test_build_notification_sent(mock_requests):
+build_date = “2018-01-01T00:00:01”
+with mock.patch(“mock_2.BuildStatus.build_date”,
+[ 242 ]Unit Testing and Refactoring
+Chapter 8
+return_value=build_date):
+BuildStatus.notify(123, “OK”)
+expected_payload = {“id”: 123, “status”: “OK”, “built_at”:
+build_date}
+mock_requests.post.assert_called_with(
+STATUS_ENDPOINT, json=expected_payload
+)
+First, we use mock.patch as a decorator to replace the requests module. The result of this
+function will create a mock object that will be passed as a parameter to the test
+(named mock_requests in this example). Then, we use this function again, but this time as
+a context manager to change the return value of the method of the class that computes the
+date of the build, replacing the value with one we control, that we will use in the assertion.
+Once we have all of this in place, we can call the class method with some parameters, and
+then we can use the mock object to check how it was called. In this case, we are using the
+method to see if requests.post was indeed called with the parameters as we wanted
+them to be composed.
+This is a nice feature of mocks—not only do they put some boundaries around all external
+components (in this case to prevent actually sending some notifications or issuing HTTP
+requests), but they also provide a useful API to verify the calls and their parameters.
+While, in this case, we were able to test the code by setting the respective mock objects in
+place, it’s also true that we had to patch quite a lot in proportion to the total lines of code for
+the main functionality. There is no rule about the ratio of pure productive code being tested
+versus how many parts of that code we have to mock, but certainly, by using common
+sense, we can see that, if we had to patch quite a lot of things in the same parts, something
+is not clearly abstracted, and it looks like a code smell.
+In the next section, we will explore how to refactor code to overcome this issue.</p>
 </div>
 <div class="section" id="refactoring">
 <h2>3. Refactoring<a class="headerlink" href="#refactoring" title="Permalink to this headline">¶</a></h2>
+<p>Refactoring is a critical activity in software maintenance, yet something that can’t be done
+(at least correctly) without having unit tests. Every now and then, we need to support a
+new feature or use our software in unintended ways. We need to realize that the only way
+to accommodate such requirements is by first refactoring our code, make it more generic.
+Only then can we move forward.
+[ 243 ]Unit Testing and Refactoring
+Chapter 8
+Typically, when refactoring our code, we want to improve its structure and make it better,
+sometimes more generic, more readable, or more flexible. The challenge is to achieve these
+goals while at the same time preserving the exact same functionality it had prior to the
+modifications that were made. This means that, in the eyes of the clients of those
+components we’re refactoring, it might as well be the case that nothing had happened at all.
+This constraint of having to support the same functionalities as before but with a different
+version of the code implies that we need to run regression tests on code that was modified.
+The only cost-effective way of running regression tests is if those tests are automatic. The
+most cost-effective version of automatic tests is unit tests.
+Evolving our code
+In the previous example, we were able to separate out the side-effects from our code to
+make it testable by patching those parts of the code that depended on things we couldn’t
+control on the unit test. This is a good approach since, after all, the mock.patch function
+comes in handy for these sorts of task and replaces the objects we tell it to, giving us back a
+Mock object.
+The downside of that is that we have to provide the path of the object we are going to
+mock, including the module, as a string. This is a bit fragile, because if we refactor our code
+(let’s say we rename the file or move it to some other location), all the places with the patch
+will have to be updated, or the test will break.
+In the example, the fact that the notify() method directly depends on an implementation
+detail (the requests module) is a design issue, that is, it is taking its toll on the unit tests as
+well with the aforementioned fragility that is implied.
+We still need to replace those methods with doubles (mocks), but if we refactor the code,
+we can do it in a better way. Let’s separate these methods into smaller ones, and most
+importantly inject the dependency rather than keep it fixed. The code now applies
+the dependency inversion principle, and it expects to work with something that supports
+an interface (in this example, implicit one) such as the one the requests module provides:
+from datetime import datetime
+from constants import STATUS_ENDPOINT
+class BuildStatus:
+endpoint = STATUS_ENDPOINT
+[ 244 ]Unit Testing and Refactoring
+Chapter 8
+def __init__(self, transport):
+self.transport = transport
+&#64;staticmethod
+def build_date() -&gt; str:
+return datetime.utcnow().isoformat()
+def compose_payload(self, merge_request_id, status) -&gt; dict:
+return {
+“id”: merge_request_id,
+“status”: status,
+“built_at”: self.build_date(),
+}
+def deliver(self, payload):
+response = self.transport.post(self.endpoint, json=payload)
+response.raise_for_status()
+return response
+def notify(self, merge_request_id, status):
+return self.deliver(self.compose_payload(merge_request_id, status))
+We separate the methods (not notify is now compose + deliver),
+make compose_payload() a new method (so that we can replace, without the need to
+patch the class), and require the transport dependency to be injected. Now that
+transport is a dependency, it is much easier to change that object for any double we want.
+It is even possible to expose a fixture of this object with the doubles replaced as required:
+&#64;pytest.fixture
+def build_status():
+bstatus = BuildStatus(Mock())
+bstatus.build_date = Mock(return_value=”2018-01-01T00:00:01”)
+return bstatus
+def test_build_notification_sent(build_status):
+build_status.notify(1234, “OK”)
+expected_payload = {
+“id”: 1234,
+“status”: “OK”,
+“built_at”: build_status.build_date(),
+}
+[ 245 ]Unit Testing and Refactoring
+Chapter 8
+build_status.transport.post.assert_called_with(
+build_status.endpoint, json=expected_payload
+)
+Production code isn’t the only thing that evolves
+We keep saying that unit tests are as important as production code. And if we are careful
+enough with production code as to create the best possible abstraction, why wouldn’t we
+do the same for unit tests?
+If the code for unit tests is as important as the main code, then it’s definitely wise to design
+it with extensibility in mind and make it as maintainable as possible. After all, this is the
+code that will have to be maintained by an engineer other than its original author, so it has
+to be readable.
+The reason why we pay so much attention to make the code’s flexibility is that we know
+requirements change and evolve over time, and eventually as domain business rules
+change, our code will have to change as well to support these new requirements. Since the
+production code changed to support new requirements, in turn, the testing code will have
+to change as well to support the newer version of the production code.
+In one of the first examples we used, we created a series of tests for the merge request
+object, trying different combinations and checking the status at which the merge request
+was left. This is a good first approach, but we can do better than that.
+Once we understand the problem better, we can start creating better abstractions. With this,
+the first idea that comes to mind is that we can create a higher-level abstraction that checks
+for particular conditions. For example, if we have an object that is a test suite that
+specifically targets the MergeRequest class, we know its functionality will be limited to the
+behavior of this class (because it should comply to the SRP), and therefore we could create
+specific testing methods on this testing class. These will only make sense for this class, but
+that will be helpful in reducing a lot of boilerplate code.
+[ 246 ]Unit Testing and Refactoring
+Chapter 8
+Instead of repeating assertions that follow the exact same structure, we can create a method
+that encapsulates this and reuse it across all of the tests:
+class TestMergeRequestStatus(unittest.TestCase):
+def setUp(self):
+self.merge_request = MergeRequest()
+def assert_rejected(self):
+self.assertEqual(
+self.merge_request.status, MergeRequestStatus.REJECTED
+)
+def assert_pending(self):
+self.assertEqual(
+self.merge_request.status, MergeRequestStatus.PENDING
+)
+def assert_approved(self):
+self.assertEqual(
+self.merge_request.status, MergeRequestStatus.APPROVED
+)
+def test_simple_rejected(self):
+self.merge_request.downvote(“maintainer”)
+self.assert_rejected()
+def test_just_created_is_pending(self):
+self.assert_pending()
+If something changes with how we check the status of a merge request (or let’s say we want
+to add extra checks), there is only one place (the assert_approved() method) that will
+have to be modified. More importantly, by creating these higher-level abstractions, the code
+that started as merely unit tests starts to evolve into what could end up being a testing
+framework with its own API or domain language, making testing more declarative.</p>
 </div>
 <div class="section" id="more-about-unit-testing">
 <h2>4. More about unit testing<a class="headerlink" href="#more-about-unit-testing" title="Permalink to this headline">¶</a></h2>
+<p>With the concepts we have revisited so far, we know how to test our code, think about our
+design in terms of how it is going to be tested, and configure the tools in our project to run
+the automated tests that will give us some degree of confidence over the quality of the
+software we have written.
+[ 247 ]Unit Testing and Refactoring
+Chapter 8
+If our confidence in the code is determined by the unit tests written on it, how do we know
+that they are enough? How could we be sure that we have been through enough on the test
+scenarios and that we are not missing some tests? Who says that these tests are correct?
+Meaning, who tests the tests?
+The first part of the question, about being thorough on the tests we wrote, is answered by
+going beyond in our testing efforts through property-based testing.
+The second part of the question might have multiple answers from different points of view,
+but we are going to briefly mention mutation testing as a means of determining that our
+tests are indeed correct. In this sense, we are thinking that the unit tests check our main
+productive code, and this works as a control for the unit tests as well.
+Property-based testing
+Property-based testing consists of generating data for tests cases with the goal of finding
+scenarios that will make the code fail, which weren’t covered by our previous unit tests.
+The main library for this is hypothesis which, configured along with our unit tests, will
+help us find problematic data that will make our code fail.
+We can imagine that what this library does is find counter examples for our code. We write
+our production code (and unit tests for it!), and we claim it’s correct. Now, with this library,
+we define some hypothesis that must hold for our code, and if there are some cases where
+our assertions don’t hold, the hypothesis will provide a set of data that causes the error.
+The best thing about unit tests is that they make us think harder about our production code.
+The best thing about the hypothesis is that it makes us think harder about our unit tests.
+Mutation testing
+We know that tests are the formal verification method we have to ensure that our code is
+correct. And what makes sure that the test is correct? The production code, you might
+think, and yes, in a way this is correct, we can think of the main code as a counter balance
+for our tests.
+[ 248 ]Unit Testing and Refactoring
+Chapter 8
+The point in writing unit tests is that we are protecting ourselves against bugs, and testing
+for failure scenarios we really don’t want to happen in production. It’s good that the tests
+pass, but it would be bad if they pass for the wrong reasons. That is, we can use unit tests as
+an automatic regression tool—if someone introduces a bug in the code, later on, we expect
+at least one of our tests to catch it and fail. If this doesn’t happen, either there is a test
+missing, or the ones we had are not doing the right checks.
+This is the idea behind mutation testing. With a mutation testing tool, the code will be
+modified to new versions (called mutants), that are variations of the original code but with
+some of its logic altered (for example, operators are swapped, conditions are inverted, and
+so on). A good test suite should catch these mutants and kill them, in which case it means
+we can rely on the tests. If some mutants survive the experiment, it’s usually a bad sign. Of
+course, this is not entirely precise, so there are intermediate states we might want to ignore.
+To quickly show you how this works and to allow you to get a practical idea of this, we are
+going to use a different version of the code that computes the status of a merge request
+based on the number of approvals and rejections. This time, we have changed the code for a
+simple version that, based on these numbers, returns the result. We have moved the
+enumeration with the constants for the statuses to a separate module so that it now looks
+more compact:
+# File mutation_testing_1.py
+from mrstatus import MergeRequestStatus as Status
+def evaluate_merge_request(upvote_count, downvotes_count):
+if downvotes_count &gt; 0:
+return Status.REJECTED
+if upvote_count &gt;= 2:
+return Status.APPROVED
+return Status.PENDING
+And now will we add a simple unit test, checking one of the conditions and its expected
+result :
+# file: test_mutation_testing_1.py
+class TestMergeRequestEvaluation(unittest.TestCase):
+def test_approved(self):
+result = evaluate_merge_request(3, 0)
+self.assertEqual(result, Status.APPROVED)
+Now, we will install mutpy, a mutation testing tool for Python, with pip install mutpy,
+and tell it to run the mutation testing for this module with these tests:
+$ mut.py –target mutation_testing_$N [ 249 ]Unit Testing and Refactoring
+Chapter 8
+–unit-test test_mutation_testing_$N –operator AOD <cite># delete arithmetic operator</cite> –operator AOR <cite># replace arithmetic operator</cite> –operator COD <cite># delete conditional operator</cite> –operator COI <cite># insert conditional operator</cite> –operator CRP <cite># replace constant</cite> –operator ROR <cite># replace relational operator</cite> –show-mutants
+The result is going to look something similar to this:
+[*] Mutation score [0.04649 s]: 100.0%
+- all: 4
+- killed: 4 (100.0%)
+- survived: 0 (0.0%)
+- incompetent: 0 (0.0%)
+- timeout: 0 (0.0%)
+This is a good sign. Let’s take a particular instance to analyze what happened. One of the
+lines on the output shows the following mutant:
+- [# 1] ROR mutation_testing_1:11 :
+——————————————————
+7: from mrstatus import MergeRequestStatus as Status
+8:
+9:
+10: def evaluate_merge_request(upvote_count, downvotes_count):
+~11:
+if downvotes_count &lt; 0:
+12:
+return Status.REJECTED
+13:
+if upvote_count &gt;= 2:
+14:
+return Status.APPROVED
+15:
+return Status.PENDING
+——————————————————
+[0.00401 s] killed by test_approved
+(test_mutation_testing_1.TestMergeRequestEvaluation)
+Notice that this mutant consists of the original version with the operator changed in line 11
+( &gt; for &lt; ), and the result is telling us that this mutant was killed by the tests. This means that
+with this version of the code (let’s imagine that someone by mistakes makes this change),
+then the result of the function would have been APPROVED, and since the test expects it to
+be REJECTED, it fails, which is a good sign (the test caught the bug that was introduced).
+[ 250 ]Unit Testing and Refactoring
+Chapter 8
+Mutation testing is a good way to assure the quality of the unit tests, but it requires some
+effort and careful analysis. By using this tool in complex environments, we will have to take
+some time analyzing each scenario. It is also true that it is expensive to run these tests
+because it requires multiples runs of different versions of the code, which might take up too
+many resources and may take longer to complete. However, it would be even more
+expensive to have to make these checks manually and will require much more effort. Not
+doing these checks at all might be even riskier, because we would be jeopardizing the
+quality of the tests.</p>
 </div>
 <div class="section" id="a-brief-introduction-to-test-driven-development">
 <h2>5. A brief introduction to test-driven development<a class="headerlink" href="#a-brief-introduction-to-test-driven-development" title="Permalink to this headline">¶</a></h2>
+<p>There are entire books dedicated only to TDD, so it would not be realistic to try and cover
+this topic comprehensively. However, it’s such an important topic that it has to
+be mentioned.</p>
+<p>The idea behind TDD is that tests should be written before production code in a way that
+the production code is only written to respond to tests that are failing due to that missing
+implementation of the functionality.</p>
+<p>There are multiple reasons why we would like to write the tests first and then the code.
+From a pragmatic point of view, we would be covering our production code quite
+accurately. Since all of the production code was written to respond to a unit test, it would
+be highly unlikely that there are tests missing for functionality (that doesn’t mean that there
+is 100% of coverage of course, but at least all main functions, methods, or components will
+have their respective tests, even if they aren’t completely covered).</p>
+<p>The workflow is simple and at a high-level consist of three steps. First, we write a unit test
+that describes something we need to be implemented. When we run this test, it will fail,
+because that functionality has not been implemented yet. Then, we move onto
+implementing the minimal required code that satisfies that condition, and we run the test
+again. This time, the test should pass. Now, we can improve (refactor) the code.</p>
+<p>This cycle has been popularized as the famous <strong>red-green-refactor</strong>, meaning that in the
+beginning, the tests fail (red), then we make them pass (green), and then we proceed to
+refactor the code and iterate it.</p>
 </div>
 </div>
 

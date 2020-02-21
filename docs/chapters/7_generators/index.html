@@ -564,7 +564,7 @@ the more useful it will be for more clients, hence enhancing its chances of bein
 <p>Instead of changing this code, we’re going to keep it as it is and assume that the new data is
 filtered according to whatever requirements each customer of the class has.</p>
 <p>For instance, if we wanted to process only the first 10 purchases that amount to more than
-1,000 , we would do the following:</p>
+1,000, we would do the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">purchases</span> <span class="o">=</span> <span class="n">islice</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">purchases</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span> <span class="o">=</span> <span class="n">PurchasesStats</span><span class="p">(</span><span class="n">purchases</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
@@ -844,7 +844,7 @@ fixed length (instead of reading everything that is available at once):</p>
 </pre></div>
 </div>
 <p>At each call to the generator, it will return 10 rows obtained from the database handler, but
-when we decide to explicitly finish the iteration and call <code class="docutils literal notranslate"><span class="pre">close()</span></code> , we also want to close the
+when we decide to explicitly finish the iteration and call <code class="docutils literal notranslate"><span class="pre">close()</span></code>, we also want to close the
 connection to the database:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">streamer</span> <span class="o">=</span> <span class="n">stream_db_records</span><span class="p">(</span><span class="n">DBHandler</span><span class="p">(</span><span class="s2">&quot;testdb&quot;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">streamer</span><span class="p">)</span>
@@ -1063,7 +1063,7 @@ the value to be returned is stored inside the exception object. It’s the respo
 caller to catch it.</p>
 <p>In the following example, we are creating a simple generator that produces two values
 and then returns a third. Notice how we have to catch the exception in order to get this
-value , and how it’s stored precisely inside the exception under the attribute named <code class="docutils literal notranslate"><span class="pre">value</span></code>:</p>
+value, and how it’s stored precisely inside the exception under the attribute named <code class="docutils literal notranslate"><span class="pre">value</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">generator</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">yield</span> <span class="mi">1</span>
 <span class="gp">... </span>    <span class="k">yield</span> <span class="mi">2</span>
@@ -1109,7 +1109,7 @@ of iterables and will return them all together in one stream.</p>
             <span class="k">yield</span> <span class="n">value</span>
 </pre></div>
 </div>
-<p>It receives a variable number of iterables , traverses through all of them, and since each
+<p>It receives a variable number of iterables, traverses through all of them, and since each
 value is iterable, it supports a <code class="docutils literal notranslate"><span class="pre">for...</span> <span class="pre">in..</span></code> construction, so we have another for loop
 to get every value inside each particular iterable, which is produced by the caller function.
 This might be helpful in multiple cases, such as chaining generators together or trying to
@@ -1274,7 +1274,7 @@ and <code class="docutils literal notranslate"><span class="pre">throw()</span><
 <p>The same happens for the values that each coroutine produces. When we are at any given
 step, the return from calling <code class="docutils literal notranslate"><span class="pre">send()</span></code> corresponds to the value that the subcoroutine (the
 one that main is currently suspended at) has produced. When we throw an exception that is
-being handled, the sequence coroutine produces the value OK , which is propagated to the
+being handled, the sequence coroutine produces the value OK, which is propagated to the
 called (<code class="docutils literal notranslate"><span class="pre">main</span></code>), and which in turn will end up at main’s caller.</p>
 </div>
 </div>
@@ -1332,7 +1332,7 @@ are many others that will work just the same) that manages a series of coroutine
 coroutines belong to the event loop, which is going to call them according to its scheduling
 mechanism. When each one of these runs, it will call our code (according to the logic we
 have defined inside the coroutine we programmed), and when we want to get control back
-to the event loop, we call <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">&lt;coroutine&gt;</span></code> , which will process a task asynchronously.
+to the event loop, we call <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">&lt;coroutine&gt;</span></code>, which will process a task asynchronously.
 The event loop will resume and another coroutine will take place while that operation is left
 running.</p>
 <p>In practice, there are more particularities and edge cases that are beyond the scope. It is, however, worth
