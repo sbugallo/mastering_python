@@ -613,11 +613,13 @@ interact with the functionality exposed. Not only that, but by exposing a functi
 hiding everything behind an interface, we are free of changing or refactoring that
 underlying code as many times as we want, because as long as it is behind the facade, it
 will not break backward compatibility, and our users will not be affected.
+
 Note how this idea of using facades is not even limited to objects and classes, but also
 applies to packages (technically, packages are objects in Python, but still). We can use this
 idea of the facade to decide the layout of a package; that is, what is visible to the user and
 importable, and what is internal and should not be imported directly.
-When we create a directory to build a package, we place the __init__.py file along with
+
+When we create a directory to build a package, we place the ``__init__.py`` file along with
 the rest of the files. This is the root of the module, a sort of facade. The rest of the files
 define the objects to export, but they shouldn't be directly imported by clients. The init file
 should import them and then clients should get them from there. This creates a better
@@ -626,6 +628,7 @@ objects, and more importantly, the package (the rest of the files) can be refact
 rearranged as many times as needed, and this will not affect clients as long as the main API
 on the init file is maintained. It is of utmost importance to keep principles like this one in
 mind in order to build maintainable software.
+
 There is an example of this in Python itself, with the os module. This module groups an
 operating system's functionality, but underneath it, uses the posix module for Portable
 Operating System Interface (POSIX) operating systems (this is called nt in Windows
@@ -638,13 +641,7 @@ from which platform it is being called, and expose the corresponding functionali
 
 Behavioral patterns aim to solve the problem of how objects should cooperate, how they
 should communicate, and what their interfaces should be at run-time.
-We discuss mainly the following behavioral patterns:
-Chain of responsibility
-Template method
-Command
-State
-[ 269 ]Common Design Patterns
-Chapter 9
+
 This can be accomplished statically by means of inheritance or dynamically by using
 composition. Regardless of what the pattern uses, what we will see throughout the
 following examples is that what these patterns have in common is the fact that the resulting
@@ -658,12 +655,15 @@ Now we are going to take another look at our event systems. We want to parse inf
 about the events that happened on the system from the log lines (text files, dumped from
 our HTTP application server, for example), and we want to extract this information in a
 convenient way.
+
 In our previous implementation, we achieved an interesting solution that was compliant
-with the open/closed principle and relied on the use of the __subclasses__() magic
+with the open/closed principle and relied on the use of the ``__subclasses__()`` magic
 method to discover all possible event types and process the data with the right event,
 resolving the responsibility through a method encapsulated on each class.
+
 This solution worked for our purposes, and it was quite extensible, but as we'll see, this
 design pattern will bring additional benefits.
+
 The idea here is that we are going to create the events in a slightly different way. Each event
 still has the logic to determine whether or not it can process a particular log line, but it will
 also have a successor. This successor is a new event, the next one in the line, that will
@@ -671,71 +671,98 @@ continue processing the text line in case the first one was not able to do so. T
 simple—we chain the events, and each one of them tries to process the data. If it can, then it
 just returns the result. If it can't, it will pass it to its successor and repeat, as shown in the
 following code:
-import re
-class Event:
-pattern = None
-def __init__(self, next_event=None):
-self.successor = next_event
-def process(self, logline: str):
-if self.can_process(logline):
-return self._process(logline)
-if self.successor is not None:
-return self.successor.process(logline)
-[ 270 ]Common Design Patterns
-Chapter 9
-def _process(self, logline: str) -> dict:
-parsed_data = self._parse_data(logline)
-return {
-"type": self.__class__.__name__,
-"id": parsed_data["id"],
-"value": parsed_data["value"],
-}
-@classmethod
-def can_process(cls, logline: str) -> bool:
-return cls.pattern.match(logline) is not None
-@classmethod
-def _parse_data(cls, logline: str) -> dict:
-return cls.pattern.match(logline).groupdict()
-class LoginEvent(Event):
-pattern = re.compile(r"(?P<id>\d+):\s+login\s+(?P<value>\S+)")
-class LogoutEvent(Event):
-pattern = re.compile(r"(?P<id>\d+):\s+logout\s+(?P<value>\S+)")
+
+.. code-block:: python
+
+    import re
+
+
+    class Event:
+        pattern = None
+
+        def __init__(self, next_event=None):
+            self.successor = next_event
+
+        def process(self, logline: str):
+            if self.can_process(logline):
+                return self._process(logline)
+            if self.successor is not None:
+                return self.successor.process(logline)
+
+        def _process(self, logline: str) -> dict:
+            parsed_data = self._parse_data(logline)
+            return {
+                "type": self.__class__.__name__,
+                "id": parsed_data["id"],
+                "value": parsed_data["value"],
+            }
+
+        @classmethod
+        def can_process(cls, logline: str) -> bool:
+            return cls.pattern.match(logline) is not None
+
+        @classmethod
+        def _parse_data(cls, logline: str) -> dict:
+            return cls.pattern.match(logline).groupdict()
+
+    class LoginEvent(Event):
+        pattern = re.compile(r"(?P<id>\d+):\s+login\s+(?P<value>\S+)")
+
+    class LogoutEvent(Event):
+        pattern = re.compile(r"(?P<id>\d+):\s+logout\s+(?P<value>\S+)")
+
 With this implementation, we create the event objects, and arrange them in the particular
-order in which they are going to be processed. Since they all have a process() method,
+order in which they are going to be processed. Since they all have a ``process()`` method,
 they are polymorphic for this message, so the order in which they are aligned is completely
 transparent to the client, and either one of them would be transparent too. Not only that,
-but the process() method has the same logic; it tries to extract the information if the data
+but the ``process()`` method has the same logic; it tries to extract the information if the data
 provided is correct for the type of object handling it, and if not, it moves on to the next one
 in the line.
+
 This way, we could process a login event in the following way:
->>> chain = LogoutEvent(LoginEvent())
->>> chain.process("567: login User")
-{'type': 'LoginEvent', 'id': '567', 'value': 'User'}
-Note how LogoutEvent received LoginEvent as its successor, and when it was asked to
+
+.. code-block:: python
+
+    >>> chain = LogoutEvent(LoginEvent())
+    >>> chain.process("567: login User")
+    {'type': 'LoginEvent', 'id': '567', 'value': 'User'}
+
+Note how ``LogoutEvent`` received ``LoginEvent`` as its successor, and when it was asked to
 process something that it couldn't handle, it redirected to the correct object. As we can see
-from the type key on the dictionary, LoginEvent was the one that actually created that
+from the type key on the dictionary, ``LoginEvent`` was the one that actually created that
 dictionary.
-This solution is flexible enough, and shares an interesting trait with our previous one—all
+
+This solution is flexible enough, and shares an interesting trait with our previous one: all
 conditions are mutually exclusive. As long as there are no collisions, and no piece of data
 has more than one handler, processing the events in any order will not be an issue.
-[ 271 ]Common Design Patterns
-Chapter 9
+
 But what if we cannot make such an assumption? With the previous implementation, we
-could still change the __subclasses__() call for a list that we made according to our
+could still change the ``__subclasses__()`` call for a list that we made according to our
 criteria, and that would have worked just fine. And what if we wanted that order of
 precedence to be determined at runtime (by the user or client, for example)? That would be
 a shortcoming.
+
 With the new solution, it's possible to accomplish such requirements, because we assemble
 the chain at runtime, so we can manipulate it dynamically as we need to.
+
 For example, now we add a generic type that groups both the login and logout a session
 event, as shown in the following code:
-class SessionEvent(Event):
-pattern = re.compile(r"(?P<id>\d+):\s+log(in|out)\s+(?P<value>\S+)")
+
+.. code-block:: python
+
+    class SessionEvent(Event):
+        pattern = re.compile(r"(?P<id>\d+):\s+log(in|out)\s+(?P<value>\S+)")
+
 If for some reason, and in some part of the application, we want to capture this before the
-login event, this can be done by the following chain :
-chain = SessionEvent(LoginEvent(LogoutEvent()))
+login event, this can be done by the following chain:
+
+.. code-block:: python
+
+    chain = SessionEvent(LoginEvent(LogoutEvent()))
+
 By changing the order, we can, for instance, say that a generic session event has a higher
 priority than the login, but not the logout, and so on.
+
 The fact that this pattern works with objects makes it more flexible with respect to our
 previous implementation, which relied on classes (and while they are still objects in Python,
 they aren't excluded from some degree of rigidity).
@@ -743,33 +770,36 @@ they aren't excluded from some degree of rigidity).
 2.3.2. The template method
 --------------------------
 
-The template method is a pattern that yields important benefits when implemented
+The ``template`` method is a pattern that yields important benefits when implemented
 properly. Mainly, it allows us to reuse code, and it also makes our objects more flexible and
 easy to change while preserving polymorphism.
+
 The idea is that there is a class hierarchy that defines some behavior, let's say an important
 method of its public interface. All of the classes of the hierarchy share a common template
 and might need to change only certain elements of it. The idea, then, is to place this generic
 logic in the public method of the parent class that will internally call all other (private)
 methods, and these methods are the ones that the derived classes are going to modify;
 therefore, all the logic in the template is reused.
-[ 272 ]Common Design Patterns
-Chapter 9
+
 Avid readers might have noticed that we already implemented this pattern in the previous
 section (as part of the chain of responsibility example). Note that the classes derived
-from Event implement only one thing their particular pattern. For the rest of the logic, the
-template is in the Event class. The process event is generic, and relies on two auxiliary
-methods can_process() and process() (which in turn calls _parse_data() ).
+from ``Event`` implement only one thing their particular pattern. For the rest of the logic, the
+template is in the ``Event`` class. The process event is generic, and relies on two auxiliary
+methods ``can_process()`` and ``process()`` (which in turn calls ``_parse_data()``).
+
 These extra methods rely on a class attribute pattern. Therefore, in order to extend this with
 a new type of object, we just have to create a new derived class and place the regular
 expression. After that, the rest of the logic will be inherited with this new attribute changed.
 This reuses a lot of code because the logic for processing the log lines is defined once and
 only once in the parent class.
+
 This makes the design flexible because preserving the polymorphism is also easily
 achievable. If we need a new event type that for some reason needs a different way of
 parsing data, we only override this private method in that subclass, and the compatibility
 will be kept, as long as it returns something of the same type as the original one (complying
 with Liskov's substitution and open/closed principles). This is because it is the parent class
 that is calling the method from the derived classes.
+
 This pattern is also useful if we are designing our own library or framework. By arranging
 the logic this way, we give users the ability to change the behavior of one of the classes
 quite easily. They would have to create a subclass and override the particular private
@@ -784,224 +814,248 @@ done from the moment that it is requested to its actual execution. More than tha
 separate the original request issued by a client from its recipient, which might be a different
 object. In this section, we are going to focus mainly on the first aspect of the patterns; the
 fact that we can separate how an order has to be run from when it actually executes.
-We know we can create callable objects by implementing the __call__() magic method,
+
+We know we can create callable objects by implementing the ``__call__()`` magic method,
 so we could just initialize the object and then call it later on. In fact, if this is the only
 requirement, we might even achieve this through a nested function that, by means of a
 closure, creates another function to achieve the effect of a delayed execution. But this
 pattern can be extended to ends that aren't so easily achievable.
-[ 273 ]Common Design Patterns
-Chapter 9
+
 The idea is that the command might also be modified after its definition. This means that
 the client specifies a command to run, and then some of its parameters might be changed,
 more options added, and so on, until someone finally decides to perform the action.
+
 Examples of this can be found in libraries that interact with databases. For instance,
-in psycopg2 (a PostgreSQL client library), we establish a connection. From this, we get a
+in ``psycopg2`` (a PostgreSQL client library), we establish a connection. From this, we get a
 cursor, and to that cursor we can pass an SQL statement to run. When we call the execute
 method, the internal representation of the object changes, but nothing is actually run in the
-database. It is when we call fetchall() (or a similar method) that the data is actually
+database. It is when we call ``fetchall()`` (or a similar method) that the data is actually
 queried and is available in the cursor.
+
 The same happens in the popular Object Relational Mapper SQLAlchemy
 (ORM SQLAlchemy). A query is defined through several steps, and once we have the
 query object, we can still interact with it (add or remove filters, change the conditions,
 apply for an order, and so on), until we decide we want the results of the query. After
 calling each method, the query object changes its internal properties and returns self
 (itself).
+
 These are examples that resemble the behavior that we would like to achieve. A very
 simple way of creating this structure would be to have an object that stores the parameters
 of the commands that are to be run. After that, it has to also provide methods for
 interacting with those parameters (adding or removing filters, and so on). Optionally, we
 can add tracing or logging capabilities to that object to audit the operations that have been
 taking place. Finally, we need to provide a method that will actually perform the action.
-This one can be just __call__() or a custom one. Let's call it do() .
+This one can be just ``__call__()`` or a custom one. Let's call it ``do()``.
 
 2.3.4. State
 ------------
+
 The state pattern is a clear example of reification in software design, making the concept of
 our domain problem an explicit object rather than just a side value.
-In Chapter 8 , Unit Testing and Refactoring, we had an object that represented a merge
+
+Previously, we had an object that represented a merge
 request, and it had a state associated with it (open, closed, and so on). We used an enum to
 represent those states because, at that point, they were just data holding a value the string
 representation of that particular state. If they had to have some behavior, or the entire
 merge request had to perform some actions depending on its state and transitions, this
 would not have been enough.
-[ 274 ]Common Design Patterns
-Chapter 9
+
 The fact that we are adding behavior, a runtime structure, to a part of the code has to make
 us think in terms of objects, because that's what objects are supposed to do, after all. And
-here comes the reification—now the state cannot just simply be an enumeration with a
+here comes the reification: now the state cannot just simply be an enumeration with a
 string; it needs to be an object.
+
 Imagine that we have to add some rules to the merge request say, that when it moves from
-open to closed, all approvals are removed (they will have to review the code again)—and
+open to closed, all approvals are removed (they will have to review the code again), and
 that when a merge request is just opened, the number of approvals is set to zero (regardless
 of whether it's a reopened or a brand new merge request). Another rule could be that when
 a merge request is merged, we want to delete the source branch, and of course, we want to
 forbid users from performing invalid transitions (for example, a closed merge request
 cannot be merged, and so on).
+
 If we were to put all that logic into a single place, namely in the MergeRequest class, we
 will end up with a class that has lots of responsibilities (a poor design), probably many
 methods, and a very large number of if statements. It would be hard to follow the code
 and to understand which part is supposed to represent which business rule.
+
 It's better to distribute this into smaller objects, each one with fewer responsibilities, and the
 state objects are a good place for this. We create an object for each kind of state we want to
 represent, and, in their methods, we place the logic for the transitions with the
-aforementioned rules. The MergeRequest object will then have a state collaborator, and
-this, in turn, will also know about MergeRequest (the double-dispatching mechanism is
-needed to run the appropriate actions on MergeRequest and handle the transitions).
+aforementioned rules. The ``MergeRequest`` object will then have a state collaborator, and
+this, in turn, will also know about ``MergeRequest`` (the double-dispatching mechanism is
+needed to run the appropriate actions on ``MergeRequest`` and handle the transitions).
+
 We define a base abstract class with the set of methods to be implemented, and then a
 subclass for each particular state we want to represent. Then the MergeRequest object
 delegates all the actions to state , as shown in the following code:
-class InvalidTransitionError(Exception):
-"""Raised when trying to move to a target state from an unreachable
-source
-state.
-"""
-class MergeRequestState(abc.ABC):
-def __init__(self, merge_request):
-self._merge_request = merge_request
-@abc.abstractmethod
-def open(self):
-...
-[ 275 ]Common Design Patterns
-Chapter 9
-@abc.abstractmethod
-def close(self):
-...
-@abc.abstractmethod
-def merge(self):
-...
-def __str__(self):
-return self.__class__.__name__
-class Open(MergeRequestState):
-def open(self):
-self._merge_request.approvals = 0
-def close(self):
-self._merge_request.approvals = 0
-self._merge_request.state = Closed
-def merge(self):
-logger.info("merging %s", self._merge_request)
-logger.info("deleting branch %s",
-self._merge_request.source_branch)
-self._merge_request.state = Merged
-class Closed(MergeRequestState):
-def open(self):
-logger.info("reopening closed merge request %s",
-self._merge_request)
-self._merge_request.state = Open
-def close(self):
-pass
-def merge(self):
-raise InvalidTransitionError("can't merge a closed request")
-class Merged(MergeRequestState):
-def open(self):
-raise InvalidTransitionError("already merged request")
-def close(self):
-raise InvalidTransitionError("already merged request")
-def merge(self):
-[ 276 ]Common Design Patterns
-Chapter 9
-pass
-class MergeRequest:
-def __init__(self, source_branch: str, target_branch: str) -> None:
-self.source_branch = source_branch
-self.target_branch = target_branch
-self._state = None
-self.approvals = 0
-self.state = Open
-@property
-def state(self):
-return self._state
-@state.setter
-def state(self, new_state_cls):
-self._state = new_state_cls(self)
-def open(self):
-return self.state.open()
-def close(self):
-return self.state.close()
-def merge(self):
-return self.state.merge()
-def __str__(self):
-return f"{self.target_branch}:{self.source_branch}"
+
+.. code-block:: python
+
+    class InvalidTransitionError(Exception):
+        """Raised when trying to move to a target state from an unreachable source state."""
+
+    class MergeRequestState(abc.ABC):
+        def __init__(self, merge_request):
+            self._merge_request = merge_request
+
+        @abc.abstractmethod
+        def open(self):
+        ...
+
+        @abc.abstractmethod
+        def close(self):
+        ...
+
+        @abc.abstractmethod
+        def merge(self):
+        ...
+
+        def __str__(self):
+            return self.__class__.__name__
+
+    class Open(MergeRequestState):
+        def open(self):
+            self._merge_request.approvals = 0
+
+        def close(self):
+            self._merge_request.approvals = 0
+            self._merge_request.state = Closed
+
+        def merge(self):
+            logger.info("merging %s", self._merge_request)
+            logger.info("deleting branch %s",
+            self._merge_request.source_branch)
+            self._merge_request.state = Merged
+
+    class Closed(MergeRequestState):
+        def open(self):
+            logger.info("reopening closed merge request %s",
+            self._merge_request)
+            self._merge_request.state = Open
+
+        def close(self):
+            pass
+
+        def merge(self):
+            raise InvalidTransitionError("can't merge a closed request")
+
+    class Merged(MergeRequestState):
+        def open(self):
+            raise InvalidTransitionError("already merged request")
+        def close(self):
+            raise InvalidTransitionError("already merged request")
+        def merge(self):
+            pass
+
+    class MergeRequest:
+        def __init__(self, source_branch: str, target_branch: str) -> None:
+            self.source_branch = source_branch
+            self.target_branch = target_branch
+            self._state = None
+            self.approvals = 0
+            self.state = Open
+
+        @property
+        def state(self):
+            return self._state
+
+        @state.setter
+        def state(self, new_state_cls):
+            self._state = new_state_cls(self)
+
+        def open(self):
+            return self.state.open()
+
+        def close(self):
+            return self.state.close()
+
+        def merge(self):
+            return self.state.merge()
+
+        def __str__(self):
+            return f"{self.target_branch}:{self.source_branch}"
+
 The following list outlines some clarifications about implementation details and the design
 decisions that should be made:
-The state is a property, so not only is it public, but there is a single place with the
-definitions of how states are created for a merge request, passing self as a
-parameter.
-The abstract base class is not strictly needed, but there are benefits to having it.
-First, it makes the kind of object we are dealing with more explicit. Second, it
-forces every substate to implement all the methods of the interface. There are two
-alternatives to this:
-We could have not put the methods, and let AttributeError raise when
-trying to perform an invalid action, but this is not correct, and it doesn't
-express what happened.
-[ 277 ]Common Design Patterns
-Chapter 9
-Related to this point is the fact that we could have just used a simple base
-class and left those methods empty, but then the default behavior of not
-doing anything doesn't make it any clearer what should happen. If one of
-the methods in the subclass should do nothing (as in the case of merge),
-then it's better to let the empty method just sit there and make it explicit that
-for that particular case, nothing should be done, as opposed to force that
-logic to all objects.
-MergeRequest and MergeRequestState have links to each other. The moment
-a transition is made, the former object will not have extra references and should
-be garbage-collected, so this relationship should be always 1:1. With some small
-and more detailed considerations, a weak reference might be used.
+
+- The state is a property, so not only is it public, but there is a single place with the definitions of how states are created for a merge request, passing ``self`` as a parameter.
+- The abstract base class is not strictly needed, but there are benefits to having it. First, it makes the kind of object we are dealing with more explicit. Second, it forces every substate to implement all the methods of the interface. There are two alternatives to this:
+
+    - We could have not put the methods, and let ``AttributeError`` raise when trying to perform an invalid action, but this is not correct, and it doesn't express what happened.
+    - Related to this point is the fact that we could have just used a simple base class and left those methods empty, but then the default behavior of not doing anything doesn't make it any clearer what should happen. If one of the methods in the subclass should do nothing (as in the case of merge), then it's better to let the empty method just sit there and make it explicit that for that particular case, nothing should be done, as opposed to force that logic to all objects.
+
+- ``MergeRequest`` and ``MergeRequestState`` have links to each other. The moment a transition is made, the former object will not have extra references and should be garbage-collected, so this relationship should be always 1:1. With some small and more detailed considerations, a weak reference might be used.
+
 The following code shows some examples of how the object is used:
->>> mr = MergeRequest("develop", "master")
->>> mr.open()
->>> mr.approvals
-0
->>> mr.approvals = 3
->>> mr.close()
->>> mr.approvals
-0
->>> mr.open()
-INFO:log:reopening closed merge request master:develop
->>> mr.merge()
-INFO:log:merging master:develop
-INFO:log:deleting branch develop
->>> mr.close()
-Traceback (most recent call last):
-...
-InvalidTransitionError: already merged request
-The actions for transitioning states are delegated to the state object, which MergeRequest
-holds at all times (this can be any of the subclasses of ABC ). They all know how to respond
+
+.. code-block:: python
+
+    >>> mr = MergeRequest("develop", "master")
+    >>> mr.open()
+    >>> mr.approvals
+    0
+    >>> mr.approvals = 3
+    >>> mr.close()
+    >>> mr.approvals
+    0
+    >>> mr.open()
+    INFO:log:reopening closed merge request master:develop
+    >>> mr.merge()
+    INFO:log:merging master:develop
+    INFO:log:deleting branch develop
+    >>> mr.close()
+    Traceback (most recent call last):
+    ...
+    InvalidTransitionError: already merged request
+
+The actions for transitioning states are delegated to the state object, which ``MergeRequest``
+holds at all times (this can be any of the subclasses of ``ABC``). They all know how to respond
 to the same messages (in different ways), so these objects will take the appropriate actions
 corresponding to each transition (deleting branches, raising exceptions, and so on), and
 will then move MergeRequest to the next state.
-Since MergeRequest delegates all actions to its state object, we will find that this
+
+Since ``MergeRequest`` delegates all actions to its state object, we will find that this
 typically happens every time the actions that it needs to do are in the form
-self.state.open() , and so on. Can we remove some of that boilerplate?
-[ 278 ]Common Design Patterns
-Chapter 9
-We could, by means of __getattr__() , as it is portrayed in the following code:
-class MergeRequest:
-def __init__(self, source_branch: str, target_branch: str) -> None:
-self.source_branch = source_branch
-self.target_branch = target_branch
-self._state: MergeRequestState
-self.approvals = 0
-self.state = Open
-@property
-def state(self):
-return self._state
-@state.setter
-def state(self, new_state_cls):
-self._state = new_state_cls(self)
-@property
-def status(self):
-return str(self.state)
-def __getattr__(self, method):
-return getattr(self.state, method)
-def __str__(self):
-return f"{self.target_branch}:{self.source_branch}"
+``self.state.open()``, and so on. Can we remove some of that boilerplate?
+
+We could, by means of ``__getattr__()``, as it is portrayed in the following code:
+
+.. code-block:: python
+
+    class MergeRequest:
+        def __init__(self, source_branch: str, target_branch: str) -> None:
+            self.source_branch = source_branch
+            self.target_branch = target_branch
+            self._state: MergeRequestState
+            self.approvals = 0
+            self.state = Open
+
+        @property
+        def state(self):
+            return self._state
+
+        @state.setter
+        def state(self, new_state_cls):
+            self._state = new_state_cls(self)
+
+        @property
+        def status(self):
+            return str(self.state)
+
+        def __getattr__(self, method):
+            return getattr(self.state, method)
+
+        def __str__(self):
+            return f"{self.target_branch}:{self.source_branch}"
+
 On the one hand, it is good that we reuse some code and remove repetitive lines. This gives
 the abstract base class even more sense. Somewhere, we want to have all possible actions
-documented, listed in a single place. That place used to be the MergeRequest class, but
+documented, listed in a single place. That place used to be the ``MergeRequest`` class, but
 now those methods are gone, so the only remaining source of that truth is
-in MergeRequestState . Luckily, the type annotation on the state attribute is really
+in ``MergeRequestState``. Luckily, the type annotation on the state attribute is really
 helpful for users to know where to look for the interface definition.
-A user can simply take a look and see that everything that MergeRequest doesn't have will
+
+A user can simply take a look and see that everything that ``MergeRequest`` doesn't have will
 be asked of its state attribute. From the init definition, the annotation will tell us that
-this is an object of the MergeRequestState type, and by looking at this interface, we will
-see that we can safely ask for the open() , close() , and merge() methods on it.
+this is an object of the ``MergeRequestState`` type, and by looking at this interface, we will
+see that we can safely ask for the ``open()``, ``close()``, and ``merge()`` methods on it.
