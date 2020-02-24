@@ -8,15 +8,16 @@ patterns off by heart, we should focus on keeping two things in mind. Some of th
 are invisible in Python, and we use them probably without even noticing. Secondly, not all
 patterns are equally common; some of them are tremendously useful, and so they are found
 very frequently, while others are for more specific cases.
+
 In this section, we will revisit the most common patterns, those that are most likely to
 emerge from our design. Note the use of the word emerge here. It is important. We should
 not force the application of a design pattern to the solution we are building, but rather
 evolve, refactor, and improve our solution until a pattern emerges.
+
 Design patterns are therefore not invented but discovered. When a situation that occurs
 repeatedly in our code reveals itself, the general and more abstract layout of classes, objects,
 and related components appears under a name by which we identify a pattern.
-[ 255 ]Common Design Patterns
-Chapter 9
+
 Thinking the same thing, but now backward, we realize that the name of a design pattern
 wraps up a lot of concepts. This is probably the best thing about design patterns; they
 provide a language. Through design patterns, it's easier to communicate design ideas
@@ -24,6 +25,7 @@ effectively. When two or more software engineers share the same vocabulary, and 
 them mentions builder, the rest of them can immediately think about all the classes, and
 how they would be related, what their mechanics would be, and so on, without having to
 repeat this explanation all over again.
+
 The reader will notice that the code shown in this chapter is different from the canonical or
 original envisioning of the design pattern in question. There is more than one reason for
 this. The first reason is that the examples take a more pragmatic approach, aimed at
@@ -31,177 +33,226 @@ solutions for particular scenarios rather than exploring general design theory. 
 reason is that the patterns are implemented with the particularities of Python, which in
 some cases are very subtle, but in other cases, the differences are noticeable, generally
 simplifying the code.
-Creational patterns
+
+2.1. Creational patterns
+++++++++++++++++++++++++
+
 In software engineering, creational patterns are those that deal with object instantiation,
 trying to abstract away much of the complexity (like determining the parameters to
 initialize an object, all the related objects that might be needed, etc.), in order to leave the
 user with a simpler interface, that should be safer to use. The basic form of object creation
 could result in design problems or added complexity to the design. Creational design
 patterns solve this problem by somehow controlling this object creation.
+
 Out of the five patterns for creating objects, we will discuss mainly the variants that are
 used to avoid the singleton pattern, and replace it with the Borg pattern (most commonly
 used in Python applications), discussing their differences and advantages.
-Factories
+
+2.1.1. Factories
+----------------
+
 As was mentioned in the introduction, one of the core features of Python is that everything
 is an object, and as such, they can all be treated equally. This means that there are no special
 distinctions of things that we can or cannot do with classes, functions, or custom objects.
 They can all be passed by parameter, assigned, and so on.
+
 It is for this reason that many of the factory patterns are not really needed. We could just
 simply define a function that will construct a set of objects, and we can even pass the class
 that we want to create by a parameter.
-[ 256 ]Common Design Patterns
-Chapter 9
-Singleton and shared state (monostate)
+
+2.1.2. Singleton and shared state (monostate)
+---------------------------------------------
+
 The singleton pattern, on the other hand, is something not entirely abstracted away by
 Python. The truth is that most of the time, this pattern is either not really needed or is a bad
 choice. There are a lot of problems with singletons (after all, they are, in fact, a form of
 global variables for object-oriented software, and as such, are a bad practice). They are hard
 to unit test, the fact that they might be modified at any time by any object makes them hard
 to predict, and their side-effects can be really problematic.
+
 As a general principle, we should avoid using singletons as much as possible. If in some
 extreme case, they are required, the easiest way of achieving this in Python is by using a
 module. We can create an object in a module, and once it's there, it will be available from
 every part of the module that is imported. Python itself makes sure that modules are
 already singletons, in the sense that no matter how many times they're imported, and from
 how many places, the same module is always the one that is going to be loaded
-into sys.modules .
-Shared state
+into ``sys.modules``.
+
+2.1.2.1. Shared state
+~~~~~~~~~~~~~~~~~~~~~
+
 Rather than forcing our design to have a singleton in which only one instance is created, no
 matter how the object is invoked, constructed, or initialized, it is better to replicate the data
 across multiple instances.
-The idea of the monostate pattern (SNGMONO) is that we can have many instances that are
+
+The idea of the monostate pattern is that we can have many instances that are
 just regular objects, without having to care whether they're singletons or not (seeing as
 they're just objects). The good thing about this pattern is that these objects will have their
 information synchronized, in a completely transparent way, without us having to worry
 about how this works internally.
+
 This makes this pattern a much better choice, not only for its convenience, but also because
 it is less error-prone, and suffers from fewer of the disadvantages of singletons (regarding
 their testability, creating derived classes, and so on).
+
 We can use this pattern on many levels, depending on how much information we need to
 synchronize.
+
 In its simplest form, we can assume that we only need to have one attribute to be reflected
 across all instances. If that is the case, the implementation is as trivial as using a class
 variable, and we just need to take care in providing a correct interface to update and
 retrieve the value of the attribute.
-[ 257 ]Common Design Patterns
-Chapter 9
+
 Let's say we have an object that has to pull a version of a code in a Git repository by the
 latest tag . There might be multiple instances of this object, and when every client calls the
 method for fetching the code, this object will use the tag version from its attribute. At any
 point, this tag can be updated for a newer version, and we want any other instance (new or
 already created) to use this new branch when the fetch operation is being called, as shown
 in the following code:
-class GitFetcher:
-_current_tag = None
-def __init__(self, tag):
-self.current_tag = tag
-@property
-def current_tag(self):
-if self._current_tag is None:
-raise AttributeError("tag was never set")
-return self._current_tag
-@current_tag.setter
-def current_tag(self, new_tag):
-self.__class__._current_tag = new_tag
-def pull(self):
-logger.info("pulling from %s", self.current_tag)
-return self.current_tag
+
+.. code-block:: python
+
+    class GitFetcher:
+        _current_tag = None
+
+    def __init__(self, tag):
+        self.current_tag = tag
+
+    @property
+    def current_tag(self):
+        if self._current_tag is None:
+            raise AttributeError("tag was never set")
+        return self._current_tag
+
+    @current_tag.setter
+    def current_tag(self, new_tag):
+        self.__class__._current_tag = new_tag
+
+    def pull(self):
+        logger.info("pulling from %s", self.current_tag)
+        return self.current_tag
+
 The reader can simply verify that creating multiple objects of the GitFetcher type with
 different versions will result in all objects being set with the latest version at any time, as
 shown in the following code:
->>>
->>>
->>>
->>>
-0.3
->>>
-0.3
-f1 = GitFetcher(0.1)
-f2 = GitFetcher(0.2)
-f1.current_tag = 0.3
-f2.pull()
-f1.pull()
+
+.. code-block:: python
+
+    >>> f1 = GitFetcher(0.1)
+    >>> f2 = GitFetcher(0.2)
+    >>> f1.current_tag = 0.3
+    >>> f2.pull()
+    0.3
+    >>> f1.pull()
+    0.3
+
 In the case that we need more attributes, or that we wish to encapsulate the shared attribute
 a bit more, to make the design cleaner, we can use a descriptor.
-[ 258 ]Common Design Patterns
-Chapter 9
+
 A descriptor, like the one shown in the following code, solves the problem, and while it's
 true that it requires more code, it also encapsulates a more concrete responsibility, and part
 of the code is actually moved away from our original class, making either one of them more
 cohesive and compliant with the single responsibility principle:
-class SharedAttribute:
-def __init__(self, initial_value=None):
-self.value = initial_value
-self._name = None
-def __get__(self, instance, owner):
-if instance is None:
-return self
-if self.value is None:
-raise AttributeError(f"{self._name} was never set")
-return self.value
-def __set__(self, instance, new_value):
-self.value = new_value
-def __set_name__(self, owner, name):
-self._name = name
+
+.. code-block:: python
+
+    class SharedAttribute:
+
+        def __init__(self, initial_value=None):
+            self.value = initial_value
+            self._name = None
+
+        def __get__(self, instance, owner):
+            if instance is None:
+                return self
+            if self.value is None:
+                raise AttributeError(f"{self._name} was never set")
+            return self.value
+
+        def __set__(self, instance, new_value):
+            self.value = new_value
+
+        def __set_name__(self, owner, name):
+            self._name = name
+
 Apart from these considerations, it's also true that the pattern is now more reusable. If we
 want to repeat this logic, we just have to create a new descriptor object that would work
 (complying with the DRY principle).
+
 If we now want to do the same, but for the current branch, we create this new class
 attribute, and the rest of the class is kept intact, while still having the desired logic in place,
 as shown in the following code:
-class GitFetcher:
-current_tag = SharedAttribute()
-current_branch = SharedAttribute()
-def __init__(self, tag, branch=None):
-self.current_tag = tag
-self.current_branch = branch
-def pull(self):
-logger.info("pulling from %s", self.current_tag)
-return self.current_tag
-[ 259 ]Common Design Patterns
-Chapter 9
+
+.. code-block:: python
+
+    class GitFetcher:
+        current_tag = SharedAttribute()
+        current_branch = SharedAttribute()
+
+        def __init__(self, tag, branch=None):
+            self.current_tag = tag
+            self.current_branch = branch
+
+        def pull(self):
+            logger.info("pulling from %s", self.current_tag)
+            return self.current_tag
+
 The balance and trade-off of this new approach should be clear by now. This new
 implementation uses a bit more code, but it's reusable, so it saves lines of code (and
 duplicated logic) in the long run. Once again, refer to the three or more instances rule to
 decide if you should create such an abstraction.
+
 Another important benefit of this solution is that it also reduces the repetition of unit tests.
 Reusing code here will give us more confidence on the overall quality of the solution,
 because now we just have to write unit tests for the descriptor object, not for all the classes
 that use it (we can safely assume that they're correct as long as the unit tests prove the
 descriptor to be correct).
-The borg pattern
+
+2.1.2.2. The borg pattern
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The previous solutions should work for most cases, but if we really have to go for a
 singleton (and this has to be a really good exception), then there is one last better
 alternative to it, only this is a riskier one.
+
 This is the actual monostate pattern, referred to as the borg pattern in Python. The idea is to
 create an object that is capable of replicating all of its attributes among all instances of the
 same class. The fact that absolutely every attribute is being replicated has to be a warning to
 keep in mind undesired side-effects. Still, this pattern has many advantages over the
 singleton.
-In this case, we are going to split the previous object into two—one that works over Git
+
+In this case, we are going to split the previous object into two: one that works over Git
 tags, and the other over branches. And we are using the code that will make the borg
 pattern work:
-class BaseFetcher:
-def __init__(self, source):
-self.source = source
-class TagFetcher(BaseFetcher):
-_attributes = {}
-def __init__(self, source):
-self.__dict__ = self.__class__._attributes
-super().__init__(source)
-def pull(self):
-logger.info("pulling from tag %s", self.source)
-return f"Tag = {self.source}"
-class BranchFetcher(BaseFetcher):
-[ 260 ]Common Design Patterns
-Chapter 9
-_attributes = {}
-def __init__(self, source):
-self.__dict__ = self.__class__._attributes
-super().__init__(source)
-def pull(self):
-logger.info("pulling from branch %s", self.source)
-return f"Branch = {self.source}"
+
+.. code-block:: python
+
+    class BaseFetcher:
+        def __init__(self, source):
+            self.source = source
+
+    class TagFetcher(BaseFetcher):
+        _attributes = {}
+
+        def __init__(self, source):
+            self.__dict__ = self.__class__._attributes
+            super().__init__(source)
+
+        def pull(self):
+            logger.info("pulling from tag %s", self.source)
+            return f"Tag = {self.source}"
+
+    class BranchFetcher(BaseFetcher):
+        _attributes = {}
+
+        def __init__(self, source):
+            self.__dict__ = self.__class__._attributes
+            super().__init__(source)
+
+        def pull(self):
+            logger.info("pulling from branch %s", self.source)
+            return f"Branch = {self.source}"
+
 Both objects have a base class, sharing their initialization method. But then they have to
 implement it again in order to make the borg logic work. The idea is that we use a class
 attribute that is a dictionary to store the attributes, and then we make the dictionary of each
@@ -210,45 +261,59 @@ any update on the dictionary of an object will be reflected in the class, which 
 same for the rest of the objects because their class is the same, and dictionaries are mutable
 objects that are passed as a reference. In other words, when we create new objects of this
 type, they will all use the same dictionary, and this dictionary is constantly being updated.
+
 Note that we cannot put the logic of the dictionary on the base class, because this will mix
 the values among the objects of different classes, which is not what we want. This
 boilerplate solution is what would make many think it's actually an idiom rather than a
 pattern.
+
 A possible way of abstracting this in a way that achieves the DRY principle would be to
 create a mixin class, as shown in the following code:
-class SharedAllMixin:
-def __init__(self, *args, **kwargs):
-try:
-self.__class__._attributes
-except AttributeError:
-self.__class__._attributes = {}
-self.__dict__ = self.__class__._attributes
-super().__init__(*args, **kwargs)
-class BaseFetcher:
-def __init__(self, source):
-self.source = source
-class TagFetcher(SharedAllMixin, BaseFetcher):
-def pull(self):
-logger.info("pulling from tag %s", self.source)
-[ 261 ]Common Design Patterns
-Chapter 9
-return f"Tag = {self.source}"
-class BranchFetcher(SharedAllMixin, BaseFetcher):
-def pull(self):
-logger.info("pulling from branch %s", self.source)
-return f"Branch = {self.source}"
+
+.. code-block:: python
+
+    class SharedAllMixin:
+        def __init__(self, *args, **kwargs):
+            try:
+                self.__class__._attributes
+            except AttributeError:
+                self.__class__._attributes = {}
+
+            self.__dict__ = self.__class__._attributes
+            super().__init__(*args, **kwargs)
+
+    class BaseFetcher:
+        def __init__(self, source):
+            self.source = source
+
+    class TagFetcher(SharedAllMixin, BaseFetcher):
+        def pull(self):
+            logger.info("pulling from tag %s", self.source)
+            return f"Tag = {self.source}"
+
+    class BranchFetcher(SharedAllMixin, BaseFetcher):
+        def pull(self):
+            logger.info("pulling from branch %s", self.source)
+            return f"Branch = {self.source}"
+
 This time, we are using the mixin class to create the dictionary with the attributes in each
 class in case it doesn't already exist, and then continuing with the same logic.
+
 This implementation should not have any major problems with inheritance, so it's a more
 viable alternative.
-Builder
+
+2.1.3. Builder
+--------------
+
 The builder pattern is an interesting pattern that abstracts away all the complex
 initialization of an object. This pattern does not rely on any particularity of the language, so
 it's as equally applicable in Python as it would be in any other language.
+
 While it solves a valid case, it's usually also a complicated case that is more likely to appear
 in the design of a framework, library, or an API. Similar to the recommendations given for
 descriptors, we should reserve this implementation for cases where we expect to expose an
 API that is going to be consumed by multiple users.
+
 The high level idea of this patter is that we need to create a complex object, that is an object
 that also requires many others to work with. Rather than letting the user create all those
 auxiliary objects, and then assign them to the main one, we would like to create an
@@ -256,49 +321,64 @@ abstraction that allows all of that to be done in a single step. In order to ach
 have a builder object that knows how to create all the parts and link them together, giving
 the user an interface (which could be a class method), to parametrize all the information
 about what the resulting object should look like.
-Structural patterns
+
+2.2. Structural patterns
+++++++++++++++++++++++++
+
 Structural patterns are useful for situations where we need to create simpler interfaces or
 objects that are more powerful by extending their functionality without adding complexity
 to their interfaces.
-[ 262 ]Common Design Patterns
-Chapter 9
+
 The best thing about these patterns is that we can create more interesting objects, with
 enhanced functionality, and we can achieve this in a clean way; that is, by composing
 multiple single objects (the clearest example of this being the composite pattern), or by
 gathering many simple and cohesive interfaces.
-Adapter
+
+2.2.1. Adapter
+--------------
+
 The adapter pattern is probably one of the simplest design patterns there are, and one of the
 most useful ones at the same time. Also known as a wrapper, this pattern solves the
 problem of adapting interfaces of two or more objects that are not compatible.
+
 We typically encounter the situation where part of our code works with a model or set of
 classes that were polymorphic with respect to a method. For example, if there were
-multiple objects for retrieving data with a fetch() method, then we want to maintain this
+multiple objects for retrieving data with a ``fetch()`` method, then we want to maintain this
 interface so we don't have to make major changes to our code.
+
 But then we come to a point where the need to add a new data source, and alas, this one
-won't have a fetch() method. To make things worse, not only is this type of object not
+won't have a ``fetch()`` method. To make things worse, not only is this type of object not
 compatible, but it is also not something we control (perhaps a different team decided on the
 API, and we cannot modify the code).
+
 Instead of using this object directly, we adopt its interface to the one we need. There are
 two ways of doing this.
+
 The first way would be to create a class that inherits from the one we want to use, and that
 creates an alias for the method (if required, it will also have to adapt the parameters and the
 signature).
+
 By means of inheritance, we import the external class and create a new one that will define
 the new method, calling the one that has a different name. In this example, let's say the
-external dependency has a method named search() , which takes only one parameter for
-the search because it queries in a different fashion, so our adapter method not only calls
+external dependency has a method named ``search()``, which takes only one parameter for
+the search because it queries in a different fashion, so our ``adapter`` method not only calls
 the external one, but it also translates the parameters accordingly, as shown in the
 following code:
-from _adapter_base import UsernameLookup
-class UserSource(UsernameLookup):
-def fetch(self, user_id, username):
-user_namespace = self._adapt_arguments(user_id, username)
-return self.search(user_namespace)
-[ 263 ]Common Design Patterns
-Chapter 9
-@staticmethod
-def _adapt_arguments(user_id, username):
-return f"{user_id}:{username}"
+
+.. code-block:: python
+
+    from _adapter_base import UsernameLookup
+
+
+    class UserSource(UsernameLookup):
+        def fetch(self, user_id, username):
+            user_namespace = self._adapt_arguments(user_id, username)
+            return self.search(user_namespace)
+
+        @staticmethod
+        def _adapt_arguments(user_id, username):
+            return f"{user_id}:{username}"
+
 It might be the case that our class already derives from another one, in which case, this will
 end up as a case of multiple inheritances, which Python supports, so it shouldn't be a
 problem. However, as we have seen many times before, inheritance comes with more
@@ -307,32 +387,40 @@ library?), and it's inflexible. Conceptually, it also wouldn't be the right choi
 reserve inheritance for situations of specification (an is a kind of relationship), and in this
 case, it's not clear at all that our object has to be one of the kinds that are provided by a
 third-party library (especially since we don't fully comprehend that object).
+
 Therefore, a better approach would be to use composition instead. Assuming that we can
-provide our object with an instance of UsernameLookup , the code would be as simple as
+provide our object with an instance of UsernameLookup, the code would be as simple as
 just redirecting the petition prior to adopting the parameters, as shown in the following
 code:
-class UserSource:
-...
-def fetch(self, user_id, username):
-user_namespace = self._adapt_arguments(user_id, username)
-return self.username_lookup.search(user_namespace)
+
+.. code-block:: python
+
+    class UserSource:
+        ...
+        def fetch(self, user_id, username):
+            user_namespace = self._adapt_arguments(user_id, username)
+            return self.username_lookup.search(user_namespace)
+
 If we need to adopt multiple methods, and we can devise a generic way of adapting their
-signature as well, it might be worth using the __getattr__() magic method to redirect
+signature as well, it might be worth using the ``__getattr__()`` magic method to redirect
 requests towards the wrapped object, but as always with generic implementations, we
 should be careful of not adding more complexity to the solution.
-Composite
+
+2.2.2. Composite
+----------------
+
 There will be parts of our programs that require us to work with objects that are made out
 of other objects. We have base objects that have a well-defined logic, and then we will have
 other container objects that will group a bunch of base objects, and the challenge is that we
 want to treat both of them (the base and the container objects) without noticing any
 differences.
+
 The objects are structured in a tree hierarchy, where the basic objects would be the leaves of
 the tree, and the composed objects intermediate nodes. A client might want to call any of
 them to get the result of a method that is called. The composite object, however, will act as a
 client; this also will pass this request along with all the objects it contains whether they are
 leaves or other intermediate notes until they all are processed.
-[ 264 ]Common Design Patterns
-Chapter 9
+
 Imagine a simplified version of an online store in which we have products. Say that we
 offer the possibility of grouping those products, and we give customers a discount per
 group of products. A product has a price, and this value will be asked for when the
@@ -341,145 +429,183 @@ computed. We will have an object that represents this group that contains the pr
 that delegates the responsibility of asking the price to each particular product (which might
 be another group of products as well), and so on, until there is nothing else to compute. The
 implementation of this is shown in the following code:
-class Product:
-def __init__(self, name, price):
-self._name = name
-self._price = price
-@property
-def price(self):
-return self._price
-class ProductBundle:
-def __init__(
-self,
-name,
-perc_discount,
-*products: Iterable[Union[Product, "ProductBundle"]]
-) -> None:
-self._name = name
-self._perc_discount = perc_discount
-self._products = products
-@property
-def price(self):
-total = sum(p.price for p in self._products)
-return total * (1 - self._perc_discount)
+
+.. code-block:: python
+
+    class Product:
+        def __init__(self, name, price):
+            self._name = name
+            self._price = price
+
+        @property
+        def price(self):
+            return self._price
+
+    class ProductBundle:
+        def __init__(self,
+                     name,
+                     perc_discount,
+                     *products: Iterable[Union[Product, "ProductBundle"]]) -> None:
+
+        self._name = name
+        self._perc_discount = perc_discount
+        self._products = products
+
+        @property
+        def price(self):
+            total = sum(p.price for p in self._products)
+            return total * (1 - self._perc_discount)
+
 We expose the public interface through a property, and leave the price as a private
-attribute. The ProductBundle class uses this property to compute the value with the
+attribute. The ``ProductBundle`` class uses this property to compute the value with the
 discount applied by first adding all the prices of all the products it contains.
+
 The only discrepancy between these objects is that they are created with different
 parameters. To be fully compatible, we should have tried to mimic the same interface and
 then added extra methods for adding products to the bundle but using an interface that
 allows the creation of complete objects. Not needing these extra steps is an advantage that
 justifies this small difference.
-[ 265 ]Common Design Patterns
-Chapter 9
-Decorator
-Don't confuse the decorator pattern with the concept of a Python decorator which we have
-gone through in Chapter 5 , Using Decorators to Improve Our Code. There is some
+
+2.2.3. Decorator
+----------------
+
+Don't confuse the decorator pattern with the concept of a Python decorator. There is some
 resemblance, but the idea of the design pattern is quite different.
+
 This pattern allows us to dynamically extend the functionality of some objects, without
 needing inheritance. It's a good alternative to multiple inheritance in creating more flexible
 objects.
+
 We are going to create a structure that let's a user define a set of operations (decorations) to
 be applied over an object, and we'll see how each step takes place in the specified order.
+
 The following code example is a simplified version of an object that constructs a query in
 the form of a dictionary from parameters that are passed to it (it might be an object that we
 would use for running queries to elasticsearch, for instance, but the code leaves out
 distracting implementation details to focus on the concepts of the pattern).
+
 In its most basic form, the query just returns the dictionary with the data it was provided
-when it was created. Clients expect to use the render() method of this object:
-class DictQuery:
-def __init__(self, **kwargs):
-self._raw_query = kwargs
-def render(self) -> dict:
-return self._raw_query
+when it was created. Clients expect to use the ``render()`` method of this object:
+
+.. code-block:: python
+
+    class DictQuery:
+        def __init__(self, **kwargs):
+            self._raw_query = kwargs
+
+        def render(self) -> dict:
+            return self._raw_query
+
 Now we want to render the query in different ways by applying transformations to the
 data (filtering values, normalizing them, and so on). We could create decorators and apply
 them to the render method, but that wouldn't be flexible enough what if we want to
 change them at runtime? Or if we want to select some of them, but not others?
+
 The design is to create another object, with the same interface and the capability of
 enhancing (decorating) the original result through many steps, but which can be combined.
 These objects are chained, and each one of them does what it was originally supposed to
 do, plus something else. This something else is the particular decoration step.
+
 Since Python has duck typing, we don't need to create a new base class and make these new
-objects part of that hierarchy, along with DictQuery . Simply creating a new class that has
-a render() method will be enough (again, polymorphism should not require inheritance).
+objects part of that hierarchy, along with ``DictQuery``. Simply creating a new class that has
+a ``render()`` method will be enough (again, polymorphism should not require inheritance).
 This process is shown in the following code:
-class QueryEnhancer:
-def __init__(self, query: DictQuery):
-[ 266 ]Common Design Patterns
-Chapter 9
-self.decorated = query
-def render(self):
-return self.decorated.render()
-class RemoveEmpty(QueryEnhancer):
-def render(self):
-original = super().render()
-return {k: v for k, v in original.items() if v}
-class CaseInsensitive(QueryEnhancer):
-def render(self):
-original = super().render()
-return {k: v.lower() for k, v in original.items()}
-The QueryEnhancer phrase has an interface that is compatible with what the clients
-of DictQuery are expecting, so they are interchangeable. This object is designed to receive
+
+.. code-block:: python
+
+    class QueryEnhancer:
+        def __init__(self, query: DictQuery):
+            self.decorated = query
+
+        def render(self):
+            return self.decorated.render()
+
+    class RemoveEmpty(QueryEnhancer):
+        def render(self):
+            original = super().render()
+            return {k: v for k, v in original.items() if v}
+
+    class CaseInsensitive(QueryEnhancer):
+        def render(self):
+            original = super().render()
+            return {k: v.lower() for k, v in original.items()}
+
+The ``QueryEnhancer`` phrase has an interface that is compatible with what the clients
+of ``DictQuery`` are expecting, so they are interchangeable. This object is designed to receive
 a decorated one. It's going to take the values from this and convert them, returning the
 modified version of the code.
-If we want to remove all values that evaluate to False and normalize them to form our
+
+If we want to remove all values that evaluate to ``False`` and normalize them to form our
 original query, we would have to use the following schema:
->>> original = DictQuery(key="value", empty="", none=None,
-upper="UPPERCASE", title="Title")
->>> new_query = CaseInsensitive(RemoveEmpty(original))
->>> original.render()
-{'key': 'value', 'empty': '', 'none': None, 'upper': 'UPPERCASE', 'title':
-'Title'}
->>> new_query.render()
-{'key': 'value', 'upper': 'uppercase', 'title': 'title'}
+
+.. code-block:: python
+
+    >>> original = DictQuery(key="value", empty="", none=None, upper="UPPERCASE", title="Title")
+    >>> new_query = CaseInsensitive(RemoveEmpty(original))
+    >>> original.render()
+    {'key': 'value', 'empty': '', 'none': None, 'upper': 'UPPERCASE', 'title':
+    'Title'}
+    >>> new_query.render()
+    {'key': 'value', 'upper': 'uppercase', 'title': 'title'}
+
 This is a pattern that we can also implement in different ways, taking advantage of the
 dynamic nature of Python, and the fact that functions are objects. We could implement this
-pattern with functions that are provided to the base decorator object ( QueryEnhancer ),
+pattern with functions that are provided to the base decorator object (``QueryEnhancer``),
 and define each decoration step as a function, as shown in the following code:
-class QueryEnhancer:
-def __init__(
-self,
-query: DictQuery,
-*decorators: Iterable[Callable[[Dict[str, str]], Dict[str, str]]]
-) -> None:
-self._decorated = query
-self._decorators = decorators
-[ 267 ]Common Design Patterns
-Chapter 9
-def render(self):
-current_result = self._decorated.render()
-for deco in self._decorators:
-current_result = deco(current_result)
-return current_result
+
+.. code-block:: python
+
+    class QueryEnhancer:
+        def __init__(self,
+                     query: DictQuery,
+                     *decorators: Iterable[Callable[[Dict[str, str]], Dict[str, str]]]) -> None:
+            self._decorated = query
+            self._decorators = decorators
+
+        def render(self):
+            current_result = self._decorated.render()
+            for deco in self._decorators:
+                current_result = deco(current_result)
+
+            return current_result
+
 With respect to the client, nothing has changed because this class maintains the
-compatibility through its render() method. Internally, however, this object is used in a
+compatibility through its ``render()`` method. Internally, however, this object is used in a
 slightly different fashion, as shown in the following code:
->>> query = DictQuery(foo="bar", empty="", none=None, upper="UPPERCASE",
-title="Title")
->>> QueryEnhancer(query, remove_empty, case_insensitive).render()
-{'foo': 'bar', 'upper': 'uppercase', 'title': 'title'}
-In the preceding code, remove_empty and case_insensitive are just regular functions
+
+.. code-block:: python
+
+    >>> query = DictQuery(foo="bar", empty="", none=None, upper="UPPERCASE",
+    title="Title")
+    >>> QueryEnhancer(query, remove_empty, case_insensitive).render()
+    {'foo': 'bar', 'upper': 'uppercase', 'title': 'title'}
+
+In the preceding code, ``remove_empty`` and ``case_insensitive`` are just regular functions
 that transform a dictionary.
+
 In this example, the function-based approach seems easier to understand. There might be
 cases with more complex rules that rely on data from the object being decorated (not only
 its result), and in those cases, it might be worth going for the object-oriented approach,
 especially if we really want to create a hierarchy of objects where each class actually
 represents some knowledge we want to make explicit in our design.
-Facade
+
+2.2.4. Facade
+-------------
+
 Facade is an excellent pattern. It's useful in many situations where we want to simplify the
-interaction between objects. The pattern is applied where there is a relation of many-to-
-many among several objects, and we want them to interact. Instead of creating all of these
+interaction between objects. The pattern is applied where there is a relation of many-to-many
+among several objects, and we want them to interact. Instead of creating all of these
 connections, we place an intermediate object in front of many of them that act as a facade.
+
 The facade works as a hub or a single point of reference in this layout. Every time a new
 object wants to connect to another one, instead of having to have N interfaces for all N
 possible objects it needs to connect to, it will instead just talk to the facade, and this will
 redirect the request accordingly. Everything that's behind the facade is completely opaque
 to the rest of the external objects.
+
 Apart from the main and obvious benefit (the decoupling of objects), this pattern also
 encourages a simpler design with fewer interfaces and better encapsulation.
-[ 268 ]Common Design Patterns
-Chapter 9
+
 This is a pattern that we can use not only for improving the code of our domain problem
 but also to create better APIs. If we use this pattern and provide a single interface, acting as
 a single point of truth or entry point for our code, it will be much easier for our users to
@@ -506,7 +632,10 @@ Operating System Interface (POSIX) operating systems (this is called nt in Windo
 platforms). The idea is that, for portability reasons, we shouldn't ever really import
 the posix module directly, but always the os module. It is up to this module to determine
 from which platform it is being called, and expose the corresponding functionality.
-Behavioral patterns
+
+2.3. Behavioral patterns
+++++++++++++++++++++++++
+
 Behavioral patterns aim to solve the problem of how objects should cooperate, how they
 should communicate, and what their interfaces should be at run-time.
 We discuss mainly the following behavioral patterns:
@@ -521,7 +650,10 @@ composition. Regardless of what the pattern uses, what we will see throughout th
 following examples is that what these patterns have in common is the fact that the resulting
 code is better in some significant way, whether this is because it avoids duplication or
 creates good abstractions that encapsulate behavior accordingly and decouple our models.
-Chain of responsibility
+
+2.3.1. Chain of responsibility
+------------------------------
+
 Now we are going to take another look at our event systems. We want to parse information
 about the events that happened on the system from the log lines (text files, dumped from
 our HTTP application server, for example), and we want to extract this information in a
@@ -607,7 +739,10 @@ priority than the login, but not the logout, and so on.
 The fact that this pattern works with objects makes it more flexible with respect to our
 previous implementation, which relied on classes (and while they are still objects in Python,
 they aren't excluded from some degree of rigidity).
-The template method
+
+2.3.2. The template method
+--------------------------
+
 The template method is a pattern that yields important benefits when implemented
 properly. Mainly, it allows us to reuse code, and it also makes our objects more flexible and
 easy to change while preserving polymorphism.
@@ -640,7 +775,10 @@ the logic this way, we give users the ability to change the behavior of one of t
 quite easily. They would have to create a subclass and override the particular private
 method, and the result will be a new object with the new behavior that is guaranteed to be
 compatible with previous callers of the original object.
-Command
+
+2.3.3. Command
+--------------
+
 The command pattern provides us with the ability to separate an action that needs to be
 done from the moment that it is requested to its actual execution. More than that, it can also
 separate the original request issued by a client from its recipient, which might be a different
@@ -675,7 +813,9 @@ interacting with those parameters (adding or removing filters, and so on). Optio
 can add tracing or logging capabilities to that object to audit the operations that have been
 taking place. Finally, we need to provide a method that will actually perform the action.
 This one can be just __call__() or a custom one. Let's call it do() .
-State
+
+2.3.4. State
+------------
 The state pattern is a clear example of reification in software design, making the concept of
 our domain problem an explicit object rather than just a side value.
 In Chapter 8 , Unit Testing and Refactoring, we had an object that represented a merge
