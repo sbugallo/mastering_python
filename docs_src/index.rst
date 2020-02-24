@@ -22,4 +22,3 @@ Index
     chapters/8_unit_testing/index
     chapters/9_design_patterns/index
     chapters/10_clean_architecture/index
-
