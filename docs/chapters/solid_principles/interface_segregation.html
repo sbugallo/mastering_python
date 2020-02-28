@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Interface segregation &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Interface segregation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/solid_principles/interface_segregation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="interface-segregation">
+<h1>4. Interface segregation<a class="headerlink" href="#interface-segregation" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>interface segregation principle (ISP)</strong> provides some guidelines over an idea that we
+have revisited quite repeatedly already: that interfaces should be small.</p>
+<p>In object-oriented terms, an interface is represented by the set of methods an object
+exposes. This is to say that all the messages that an object is able to receive or interpret
+constitute its interface, and this is what other clients can request. The interface separates the
+definition of the exposed behavior for a class from its implementation.</p>
+<p>In Python, interfaces are implicitly defined by a class according to its methods. This is
+because Python follows the so-called <strong>duck typing</strong> principle.</p>
+<p>Traditionally, the idea behind duck typing was that any object is really represented by the
+methods it has, and by what it is capable of doing. This means that, regardless of the type of
+the class, its name, its docstring, class attributes, or instance attributes, what ultimately
+defines the essence of the object are the methods it has. The methods defined on a class
+(what it knows how to do) are what determines what that object will actually be. It was
+called duck typing because of the idea that “If it walks like a duck, and quacks like a duck,
+it must be a duck.”</p>
+<p>For a long time, duck typing was the sole way interfaces were defined in Python. Later on,
+Python 3 (PEP-3119) introduced the concept of abstract base classes as a way to define
+interfaces in a different way. The basic idea of abstract base classes is that they define a
+basic behavior or interface that some derived classes are responsible for implementing. This
+is useful in situations where we want to make sure that certain critical methods are actually
+overridden, and it also works as a mechanism for overriding or extending the functionality
+of methods such as <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code>.</p>
+<p>This module also contains a way of registering some types as part of a hierarchy, in what is
+called a <strong>virtual subclass</strong>. The idea is that this extends the concept of duck typing a little bit
+further by adding a new criterion—walks like a duck, quacks like a duck, or… it says it is a
+duck.</p>
+<p>These notions of how Python interprets interfaces are important for understanding this
+principle and the next one.</p>
+<p>In abstract terms, this means that the ISP states that, when we define an interface that
+provides multiple methods, it is better to instead break it down into multiple ones, each one
+containing fewer methods (preferably just one), with a very specific and accurate scope. By
+separating interfaces into the smallest possible units, to favor code reusability, each class
+that wants to implement one of these interfaces will most likely be highly cohesive given
+that it has a quite definite behavior and set of responsibilities.</p>
+<div class="section" id="an-interface-that-provides-too-much">
+<h2>4.1. An interface that provides too much<a class="headerlink" href="#an-interface-that-provides-too-much" title="Permalink to this headline">¶</a></h2>
+<p>Now, we want to be able to parse an event from several data sources, in different formats
+(XML and JSON, for instance). Following good practice, we decide to target an interface as
+our dependency instead of a concrete class, and something like the following is devised:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch4_isp_bad_interface.png"><img alt="../../_images/ch4_isp_bad_interface.png" src="../../_images/ch4_isp_bad_interface.png" style="width: 20%;" /></a>
+</div>
+<p>In order to create this as an interface in Python, we would use an abstract base class and
+define the methods (<code class="docutils literal notranslate"><span class="pre">from_xml()</span></code> and <code class="docutils literal notranslate"><span class="pre">from_json()</span></code>) as abstract, to force derived classes to
+implement them. Events that derive from this abstract base class and implement these
+methods would be able to work with their corresponding types.</p>
+<p>But what if a particular class does not need the XML method, and can only be constructed
+from a JSON? It would still carry the from_xml() method from the interface, and since it
+does not need it, it will have to pass. This is not very flexible as it creates coupling and
+forces clients of the interface to work with methods that they do not need.</p>
+</div>
+<div class="section" id="the-smaller-the-interface-the-better">
+<h2>4.2. The smaller the interface, the better<a class="headerlink" href="#the-smaller-the-interface-the-better" title="Permalink to this headline">¶</a></h2>
+<p>It would be better to separate this into two different interfaces, one for each method:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch4_isp_good_interface.png"><img alt="../../_images/ch4_isp_good_interface.png" src="../../_images/ch4_isp_good_interface.png" style="width: 40%;" /></a>
+</div>
+<p>With this design, objects that derive from <code class="docutils literal notranslate"><span class="pre">XMLEventParser</span></code> and implement the
+<code class="docutils literal notranslate"><span class="pre">from_xml()</span></code> method will know how to be constructed from an XML, and the same for a
+JSON file, but most importantly, we maintain the orthogonality of two independent
+functions, and preserve the flexibility of the system without losing any functionality that
+can still be achieved by composing new smaller objects.</p>
+<p>There is some resemblance to the SRP, but the main difference is that here we are talking
+about interfaces, so it is an abstract definition of behavior. There is no reason to change
+because there is nothing there until the interface is actually implemented. However, failure
+to comply with this principle will create an interface that will be coupled with orthogonal
+functionality, and this derived class will also fail to comply with the SRP (it will have more
+than one reason to change).</p>
+</div>
+<div class="section" id="how-small-should-an-interface-be">
+<h2>4.3. How small should an interface be?<a class="headerlink" href="#how-small-should-an-interface-be" title="Permalink to this headline">¶</a></h2>
+<p>The point made in the previous section is valid, but it also needs a warning: avoid a
+dangerous path if it’s misunderstood or taken to the extreme.</p>
+<p>A base class (abstract or not) defines an interface for all the other classes to extend it. The
+fact that this should be as small as possible has to be understood in terms of cohesion: it
+should do one thing. That doesn’t mean it must necessarily have one method. In the
+previous example, it was by coincidence that both methods were doing totally disjoint
+things, hence it made sense to separate them into different classes.</p>
+<p>But it could be the case that more than one method rightfully belongs to the same class.
+Imagine that you want to provide a mixin class that abstracts certain logic in a context
+manager so that all classes derived from that mixin gain that context manager logic for free.
+As we already know, a context manager entails two methods: <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and <code class="docutils literal notranslate"><span class="pre">__exit__</span></code>.
+They must go together, or the outcome will not be a valid context manager at all!</p>
+<p>Failure to place both methods in the same class will result in a broken component that is
+not only useless, but also misleadingly dangerous. Hopefully, this exaggerated example
+works as a counter-balance to the one in the previous section, and together the reader can
+get a more accurate picture about designing interfaces.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

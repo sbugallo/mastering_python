@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Annotations &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Annotations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/docstrings_and_annotations/annotations.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="annotations">
+<h1>2. Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h1>
+<p>The basic idea is to hint to the readres of the code about what to expect as values of arguments in functions.
+Annotations enable type hinting.</p>
+<p>Annotations let you specify the expected type of some variables that have been defined. It is actually not
+only about the types, but any kind of metadata that can help you get a better idea of what that variable
+actually represents.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Point</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
+
+<span class="k">def</span> <span class="nf">locate</span> <span class="p">(</span><span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Point</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;...&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Here, we use <code class="docutils literal notranslate"><span class="pre">float</span></code> to indicate the expected types of input parameters. This is merely informative for the
+reader, Python will not check these types nor enforce them. We can also specify the expected type of the
+returned value of the function. In this case, <code class="docutils literal notranslate"><span class="pre">Point</span></code> is a user-defined class, so it will mean that whatever
+is returned will be an instance of <code class="docutils literal notranslate"><span class="pre">Point</span></code>.</p>
+<p>With the introduction of annotations, a new special attribute is also included, and it is <code class="docutils literal notranslate"><span class="pre">__annotations__</span></code>.
+This will give us access to a dictionary that maps the n ame of the annotations with their corresponding
+values, which are those we have defined for them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locate</span><span class="o">.</span><span class="n">__annotations__</span>
+<span class="go">{&#39;latitude&#39;: float, &#39;longitude&#39;: float, &#39;return&#39;: __main__.Point}</span>
+</pre></div>
+</div>
+<p>The idea of type hinting is to have extra tools to check and assess the correct use of types throughout the
+code and to hint to the user in case any incompatibilities are detected.</p>
+<p>Starting with Python 3.5, the new typing module was introduced, and this significantly improved how hwe define
+the types and the annotations in our Python code. The basic idea is that now the semantics extend to more
+meaningful concepts. For example, you could have a function that worked with lists of tuples in one of its
+parameters, and you would have put one of these two types as the annotation, or even a string explaining it.
+But with this module, it is possible to tell Python that it expects an iterable or a sequence. You can even
+identify the type or the values on it.</p>
+<p>There is one extra improvement made in regards to annotations starting from Python 3.6. It is possible to
+annotate variables directly, not just function parameters and return types. The idea is that you can declare
+the types of some variables defined without necessarily assigning a value to them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>class Point:
+    lat: float
+    lon: float
+
+&gt;&gt;&gt; Point.__annotations__
+{&#39;lat&#39;: &lt;class &#39;float&#39;&gt;, &#39;lon&#39;: &lt;class &#39;float&#39;&gt;}
+</pre></div>
+</div>
+<div class="section" id="do-annotations-replace-docstrings">
+<h2>2.1. Do annotations replace docstrings?<a class="headerlink" href="#do-annotations-replace-docstrings" title="Permalink to this headline">¶</a></h2>
+<p>The short answer is no, and this is because they complement each other. It is true that a part of the
+information previously contained on the docstring can now be moved to the annotations. But this should only
+leave more room for a better documentation on the docstring. In particular, for dynamic and nested data types,
+it is always a good idea to provide examples of the expected data so that we can get a better idea of what we
+are dealing with.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">data_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If the response is OK, return its payload.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    response: A dict like::</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;status&quot;: 200, # &lt;int&gt;</span>
+<span class="sd">            &quot;timestamp&quot;: &quot;...&quot;, # &lt;date time&gt;</span>
+<span class="sd">            &quot;payload&quot;: {...} # &lt;dict&gt;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result: A dict like::</span>
+<span class="sd">        {&quot;data&quot;: {...}}</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError: if the HTTP status is not 200.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;payload&quot;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Now, we have a complete idea of what is expected to be received and returned by this function.
+The documentation serves as valuable input, not only for understanding and getting an idea of what is being
+passed around, but also as a valuable source for unit tests. We can derive data like this to use as input, and
+we know what would be the correct and incorrect values to use on the tests.</p>
+<p>The benefit is that now we know what the possible values of the keys are, as well as their types, and we have
+a more concrete interpretation of what the data looks like. The cost is that, as we mentioned earlier, it
+takes up a lot of lines and it needs to be verbose and detailed to be effective.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

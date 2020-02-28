@@ -1,0 +1,605 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Use case &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Use case</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/clean_architecture/use_case.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="use-case">
+<h1>3. Use case<a class="headerlink" href="#use-case" title="Permalink to this headline">¶</a></h1>
+<p>As an example of how we might organize the components of our application, and how the
+previous concepts might work in practice, we present the following simple example.</p>
+<p>The use case is that there is an application for delivering food, and this application has a
+specific service for tracking the status of each delivery at its different stages. We are going
+to focus only on this particular service, regardless of how the rest of the application might
+appear. The service has to be really simple: a REST API that, when asked about the status
+of a particular order, will return a JSON response with a descriptive message.</p>
+<p>We are going to assume that the information about each particular order is stored in a
+database, but this detail should not matter at all.</p>
+<p>Our service has two main concerns for now: getting the information about a particular
+order (from wherever this might be stored), and presenting this information in a useful way
+to the clients (in this case, delivering the results in JSON format, exposed as a web service).</p>
+<p>As the application has to be maintainable and extensible, we want to keep these two
+concerns as hidden as possible and focus on the main logic. Therefore, these two details are
+abstracted and encapsulated into Python packages that the main application with the core
+logic will use, as shown in the following diagram:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch10_use_case_diagram.png"><img alt="../../_images/ch10_use_case_diagram.png" src="../../_images/ch10_use_case_diagram.png" style="width: 40%;" /></a>
+</div>
+<div class="section" id="the-code">
+<h2>3.1. The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
+<p>The idea of creating Python packages in this example is to illustrate how abstracted and
+isolated components can be made, in order to work effectively. In reality, there is no actual
+need for these to be Python packages; we could just create the right abstractions as part of
+the “delivery service” project, and, while the correct isolation is preserved, it will work
+without any issues.</p>
+<p>Creating packages makes more sense when there is logic that is going to be repeated and is
+expected to be used across many other applications (that will import from those packages)
+because we want to favor code reuse. In this particular case, there are no such
+requirements, so it might be beyond the scope of the design, but such distinction still makes
+more clear the idea of a “pluggable architecture” or component, something that is really a
+wrapper abstracting technical details we don’t really want to deal with, much less depend
+upon.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">storage</span></code> package is in charge of retrieving the data that is required, and presenting
+this to the next layer (the delivery service) in a convenient format, something that is suitable
+for the business rules. The main application should now know where this data came from,
+what its format is, and so on. This is the entire reason why we have such an abstraction in
+between so the application doesn’t use a row or an ORM entity directly, but rather
+something workable.</p>
+<div class="section" id="domain-models">
+<h3>3.1.1. Domain models<a class="headerlink" href="#domain-models" title="Permalink to this headline">¶</a></h3>
+<p>The following definitions apply to classes for business rules. Notice that they are meant to
+be pure business objects, not bound to anything in particular. They aren’t models of an
+ORM, or objects of an external framework, and so on. The application should work with
+these objects (or objects with the same criteria).</p>
+<p>In each case, the dosctring documents the purpose of each class, according to the business
+rule:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+
+<span class="k">class</span> <span class="nc">DispatchedOrder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An order that was just created and notified to start its delivery.&quot;&quot;&quot;</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;dispatched&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">when</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_when</span> <span class="o">=</span> <span class="n">when</span>
+
+    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;Order was dispatched on {self._when.isoformat()}&quot;</span>
+        <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">OrderInTransit</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An order that is currently being sent to the customer.&quot;&quot;&quot;</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;in transit&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_location</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_location</span> <span class="o">=</span> <span class="n">current_location</span>
+
+    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;The order is in progress (current location: {self._current_location})&quot;</span>
+        <span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">OrderDelivered</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An order that was already delivered to the customer.&quot;&quot;&quot;</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;delivered&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delivered_at</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delivered_at</span> <span class="o">=</span> <span class="n">delivered_at</span>
+
+    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;Order delivered on {self._delivered_at.isoformat()}&quot;</span>
+        <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">DeliveryOrder</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delivery_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DispatchedOrder</span><span class="p">,</span> <span class="n">OrderInTransit</span><span class="p">,</span> <span class="n">OrderDelivered</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delivery_id</span> <span class="o">=</span> <span class="n">delivery_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">status</span>
+
+    <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delivery_id</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="o">.</span><span class="n">message</span><span class="p">()}</span>
+</pre></div>
+</div>
+<p>From this code, we can already get an idea of what the application will look like: we want
+to have a <code class="docutils literal notranslate"><span class="pre">DeliveryOrder</span></code> object, which will have its own status (as an internal
+collaborator), and once we have that, we will call its <code class="docutils literal notranslate"><span class="pre">message()</span></code> method to return this
+information to the user.</p>
+</div>
+<div class="section" id="calling-from-the-application">
+<h3>3.1.2. Calling from the application<a class="headerlink" href="#calling-from-the-application" title="Permalink to this headline">¶</a></h3>
+<p>Here is how these objects are going to be used in the application. Notice how this depends
+on the previous packages ( web and storage ), but not the other way round:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">storage</span> <span class="kn">import</span> <span class="n">DBClient</span><span class="p">,</span> <span class="n">DeliveryStatusQuery</span><span class="p">,</span> <span class="n">OrderNotFoundError</span>
+<span class="kn">from</span> <span class="nn">web</span> <span class="kn">import</span> <span class="n">NotFound</span><span class="p">,</span> <span class="n">View</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">register_route</span>
+
+
+<span class="k">class</span> <span class="nc">DeliveryView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+    <span class="n">async</span> <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">delivery_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">dsq</span> <span class="o">=</span> <span class="n">DeliveryStatusQuery</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">delivery_id</span><span class="p">),</span> <span class="n">await</span> <span class="n">DBClient</span><span class="p">())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">dsq</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">OrderNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">message</span><span class="p">()</span>
+
+<span class="n">register_route</span><span class="p">(</span><span class="n">DeliveryView</span><span class="p">,</span> <span class="s2">&quot;/status/&lt;delivery_id:int&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the previous section, the domain objects were shown and here the code for the
+application is displayed. Aren’t we missing something? Sure, but is it something we really
+need to know now? Not necessarily.</p>
+<p>The code inside the storage and web packages was deliberately left out. Also, and this was done on purpose, the names of
+such packages were chosen so as not to reveal any technical detail: <code class="docutils literal notranslate"><span class="pre">storage</span></code> and <code class="docutils literal notranslate"><span class="pre">web</span></code>.</p>
+<p>Look again at the code in the previous listing. Can you tell which frameworks are being
+used? Does it say whether the data comes from a text file, a database (if so, of what type?
+SQL? NoSQL?), or another service (the web, for instance)? Assume that it comes from a
+relational database. Is there any clue to how this information is retrieved? Manual SQL
+queries? Through an ORM? What about the web? Can we guess what frameworks are used?</p>
+<p>The fact that we cannot answer any of those questions is probably a good sign. Those are
+details, and details ought to be encapsulated. We can’t answer those questions unless we
+take a look at what’s inside those packages.</p>
+<p>There is another way of answering the previous questions, and it comes in the form of a
+question itself: why do we need to know that? Looking at the code, we can see that there is
+a <code class="docutils literal notranslate"><span class="pre">DeliveryOrder</span></code>, created with an identifier of a delivery, and that it has a <code class="docutils literal notranslate"><span class="pre">get()</span></code> method,
+which returns an object representing the status of the delivery. If all of this information is
+correct, that’s all we should care about. What difference does it make how is it done?</p>
+<p>The abstractions we created make our code declarative. In declarative programming, we
+declare the problem we want to solve, not how we want to solve it. It’s the opposite
+of imperative, in which we have to make all the steps required explicit in order to get
+something (for instance connect to the database, run this query, parse the result, load it into
+this object, and so on). In this case, we are declaring that we just want to know the status of
+the delivery given by some identifier.</p>
+<p>These packages are in charge of dealing with the details and presenting what the
+application needs in a convenient format, namely objects of the kind presented in the
+previous section. We just have to know that the storage package contains an object that,
+given an ID for a delivery and a storage client (this dependency is being injected into this
+example for simplicity, but other alternatives are also possible), it will
+retrieve <code class="docutils literal notranslate"><span class="pre">DeliveryOrder</span></code> which we can then ask to compose the message.</p>
+<p>This architecture provides convenience and makes it easier to adapt to changes, as it
+protects the kernel of the business logic from the external factors that can change.</p>
+<p>Imagine we want to change how the information is retrieved. How hard would that be? The
+application relies on an API, like the following one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dsq</span> <span class="o">=</span> <span class="n">DeliveryStatusQuery</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">delivery_id</span><span class="p">),</span> <span class="n">await</span> <span class="n">DBClient</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>So it would be about just changing how the <code class="docutils literal notranslate"><span class="pre">get()</span></code> method works, adapting it to the new
+implementation detail. All we need is for this new object to return <code class="docutils literal notranslate"><span class="pre">DeliveryOrder</span></code> on
+its <code class="docutils literal notranslate"><span class="pre">get()</span></code> method and that would be all. We can change the query, the ORM, the database,
+and so on, and, in all cases, the code in the application does not need to change!</p>
+</div>
+<div class="section" id="adapters">
+<h3>3.1.3. Adapters<a class="headerlink" href="#adapters" title="Permalink to this headline">¶</a></h3>
+<p>Still, without looking at the code in the packages, we can conclude that they work as
+interfaces for the technical details of the application.</p>
+<p>In fact, since we are seeing the application from a high-level perspective, without needing
+to look at the code, we can imagine that inside those packages there must be an
+implementation of the adapter design pattern. One or more of these objects is adapting an external implementation to the
+API defined by the application. This way, dependencies that want to work with the application
+must conform to the API, and an adapter will have to be made.</p>
+<p>Notice how the view is constructed. It inherits from a class named <code class="docutils literal notranslate"><span class="pre">View</span></code> that comes from our <code class="docutils literal notranslate"><span class="pre">web</span></code>
+package. We can deduce that this <code class="docutils literal notranslate"><span class="pre">View</span></code> is, in turn, a class derived from one of the web
+frameworks that might be being used, creating an adapter by inheritance. The important
+thing to note is that once this is done, the only object that matters is our <code class="docutils literal notranslate"><span class="pre">View</span></code> class, because,
+in a way, we are creating our own framework, which is based on adapting an existing one
+(but again changing the framework will mean just changing the adapters, not the entire
+application).</p>
+</div>
+</div>
+<div class="section" id="the-services">
+<h2>3.2. The services<a class="headerlink" href="#the-services" title="Permalink to this headline">¶</a></h2>
+<p>To create the service, we are going to launch the Python application inside a Docker
+container. Starting from a base image, the container will have to install the dependencies
+for the application to run, which also has dependencies at the operating system level.</p>
+<p>This is actually a choice because it depends on how the dependencies are used. If a package
+we use requires other libraries on the operating system to compile at installation time, we
+can avoid this simply by building a wheel for our platform of the library and installing this
+directly. If the libraries are needed at runtime, then there is no choice but to make them part
+of the image of the container.</p>
+<p>Now, we discuss one of the many ways of preparing a Python application to be run inside a
+Docker container. This is one of numerous alternatives for packaging a Python project into
+a container. First, we take a look at what the structure of the directories looks like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
+├── Dockerfile
+├── libs
+│     ├── README.rst
+│     ├── storage
+│     └── web
+├── Makefile
+├── README.rst
+├── setup.py
+└── statusweb
+      ├── __init__.py
+      └── service.py
+</pre></div>
+</div>
+<p>The libs directory can be ignored since it’s just the place where the dependencies are
+placed (it’s displayed here to keep them in mind when they are referenced in the setup.py
+file, but they could be placed in a different repository and installed remotely via <code class="docutils literal notranslate"><span class="pre">pip</span></code>).</p>
+<p>We have <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> with some helper commands, then the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file, and the
+application itself inside the <code class="docutils literal notranslate"><span class="pre">statusweb</span></code> directory. A common difference between packaging
+applications and libraries is that while the latter specify their dependencies in
+the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file, the former has a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file from where dependencies are
+installed via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code>. Normally, we would do this in the
+<code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>, but in order to keep things simpler in this particular example, we will assume
+that taking the dependencies from the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file is enough. This is because, besides this
+consideration, there are a lot more considerations to be taken into account when dealing
+with dependencies, such as freezing the version of the packages, tracking indirect
+dependencies, using extra tools such as <code class="docutils literal notranslate"><span class="pre">pipenv</span></code>, and more topics that are beyond the scope
+of the chapter. In addition, it is also customary to make the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file read
+from <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> for consistency.</p>
+<p>Now we have the content of the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file, which states some details of the application:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span><span class="p">,</span> <span class="n">setup</span>
+
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;README.rst&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">longdesc</span><span class="p">:</span>
+    <span class="n">long_description</span> <span class="o">=</span> <span class="n">longdesc</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">install_requires</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;web&quot;</span><span class="p">,</span> <span class="s2">&quot;storage&quot;</span><span class="p">]</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;delistatus&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Check the status of a delivery order&quot;</span><span class="p">,</span>
+    <span class="n">long_description</span><span class="o">=</span><span class="n">long_description</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Dev team&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(),</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="n">install_requires</span><span class="p">,</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;console_scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;status-service = statusweb.service:main&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The first thing we notice is that the application declares its dependencies, which are the
+packages we created and placed under <code class="docutils literal notranslate"><span class="pre">libs/</span></code>, namely <code class="docutils literal notranslate"><span class="pre">web</span></code> and <code class="docutils literal notranslate"><span class="pre">storage</span></code>, abstracting and
+adapting to some external components. These packages, in turn, will have dependencies, so
+we will have to make sure the container installs all the required libraries when the image is
+being created so that they can install successfully, and then this package afterward.</p>
+<p>The second thing we notice is the definition of the <code class="docutils literal notranslate"><span class="pre">entry_points</span></code> keyword argument
+passed to the <code class="docutils literal notranslate"><span class="pre">setup</span></code> function. This is not strictly mandatory, but it’s a good idea to create an
+entry point. When the package is installed in a virtual environment, it shares this directory
+along with all its dependencies. A virtual environment is a structure of directories with the
+dependencies of a given project. It has many subdirectories, but the most important ones
+are:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;virtual-env-root&gt;</span>/lib/<span class="nt">&lt;python-version&gt;</span>/site-packages
+<span class="nt">&lt;virtual-env-root&gt;</span>/bin
+</pre></div>
+</div>
+<p>The first one contains all the libraries installed in that virtual environment. If we were to
+create a virtual environment with this project, that directory would contain the <code class="docutils literal notranslate"><span class="pre">web</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">storage</span></code> packages, along with all its dependencies, plus some extra basic ones and the
+current project itself.</p>
+<p>The second, <code class="docutils literal notranslate"><span class="pre">/bin/</span></code>, contains the binary files and commands available when that virtual
+environment is active. By default, it would just be the version of Python, <code class="docutils literal notranslate"><span class="pre">pip</span></code>, and some
+other basic commands. When we create an entry point, a binary with that declared name is
+placed there, and, as a result, we have that command available to run when the
+environment is active. When this command is called, it will run the function that is
+specified with all the context of the virtual environment. That means it is a binary we can
+call directly without having to worry about whether the virtual environment is active, or
+whether the dependencies are installed in the path that is currently running.</p>
+<p>The definition is the following one: <code class="docutils literal notranslate"><span class="pre">&quot;status-service</span> <span class="pre">=</span> <span class="pre">statusweb.service:main&quot;</span></code></p>
+<p>The left-hand side of the equals sign declares the name of the entry point. In this case, we
+will have a command named <code class="docutils literal notranslate"><span class="pre">status-service</span></code> available. The right-hand side declares how
+that command should be run. It requires the package where the function is defined,
+followed by the function name after <code class="docutils literal notranslate"><span class="pre">:</span></code>. In this case, it will run the main function declared in
+<code class="docutils literal notranslate"><span class="pre">statusweb/service.py</span></code>.</p>
+<p>This is followed by a definition of the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>:</p>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="s"> python:3.6.6-alpine3.6</span>
+<span class="k">RUN</span> apk add --update <span class="se">\</span>
+    python-dev <span class="se">\</span>
+    gcc <span class="se">\</span>
+    musl-dev <span class="se">\</span>
+    make
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">ADD</span> . /app
+<span class="k">RUN</span> pip install /app/libs/web /app/libs/storage
+<span class="k">RUN</span> pip install /app
+<span class="k">EXPOSE</span><span class="s"> 8080</span>
+<span class="k">CMD</span> <span class="p">[</span><span class="s2">&quot;/usr/local/bin/status-service&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The image is built based on a lightweight Python image, and then the operating system
+dependencies are installed so that our libraries can be installed. Following the previous
+consideration, this Dockerfile simply copies the libraries, but this might as well be
+installed from a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file accordingly. After all the <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code>
+commands are ready, it copies the application in the working directory, and the entry point
+from Docker (the <code class="docutils literal notranslate"><span class="pre">CMD</span></code> command, not to be confused with the Python one) calls the entry
+point of the package where we placed the function that launches the process.</p>
+<p>All the configuration is passed by environment variables, so the code for our service will
+have to comply with this norm.</p>
+<p>In a more complex scenario involving more services and dependencies, we will not just run
+the image of the created container, but instead declare a <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file with
+the definitions of all the services, base images, and how they are linked and interconnected.</p>
+<p>Now that we have the container running, we can launch it and run a small test on it to get
+an idea of how it works:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl http://localhost:8080/status/1
+<span class="o">{</span><span class="s2">&quot;id&quot;</span>:1,<span class="s2">&quot;status&quot;</span>:<span class="s2">&quot;dispatched&quot;</span>,<span class="s2">&quot;msg&quot;</span>:<span class="s2">&quot;Order was dispatched on</span>
+<span class="s2">2018-08-01T22:25:12+00:00&quot;</span><span class="o">}</span>
+</pre></div>
+</div>
+<div class="section" id="analysis">
+<h3>3.3. Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<p>There are many conclusions to be drawn from the previous implementation. While it might
+seem like a good approach, there are cons that come with the benefits; after all, no
+architecture or implementation is perfect. This means that a solution such as this one cannot
+be good for all cases, so it will pretty much depend on the circumstances of the project, the
+team, the organization, and more.</p>
+<p>While it’s true that the main idea of the solution is to abstract details as much as possible, as
+we shall see some parts cannot be fully abstracted away, and also the contracts between the
+layers imply an abstraction leak.</p>
+</div>
+<div class="section" id="the-dependency-flow">
+<h3>3.3.1. The dependency flow<a class="headerlink" href="#the-dependency-flow" title="Permalink to this headline">¶</a></h3>
+<p>Notice that dependencies flow in only one direction, as they move closer to the kernel,
+where the business rules lie. This can be traced by looking at the import statements. The
+application imports everything it needs from <code class="docutils literal notranslate"><span class="pre">storage</span></code>, for example, and in no part is this
+inverted.</p>
+<p>Breaking this rule would create coupling. The way the code is arranged now means that
+there is a weak dependency between the application and <code class="docutils literal notranslate"><span class="pre">storage</span></code>. The API is such that we
+need an object with a <code class="docutils literal notranslate"><span class="pre">get()</span></code> method, and any storage that wants to connect to the
+application needs to implement this object according to this specification. The dependencies
+are therefore inverted: it’s up to every storage to implement this interface, in order to
+create an object according to what the application is expecting.</p>
+</div>
+<div class="section" id="limitations">
+<h3>3.3.2. Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<p>Not everything can be abstracted away. In some cases, it’s simply not possible, and in
+others, it might not be convenient. Let’s start with the convenience aspect.</p>
+<p>In this example, there is an adapter of the web framework of choice to a clean API to be
+presented to the application. In a more complex scenario, such a change might not be
+possible. Even with this abstraction, parts of the library were still visible to the application.
+Adapting an entire framework might not only be hard but also not possible in some cases.
+It’s not entirely a problem to be completely isolated from the web framework because,
+sooner or later, we will need some of its features or technical details.</p>
+<p>The important takeaway here is not the adapter, but the idea of hiding technical details as
+much as possible. That means, that the best thing that was displayed on the listing for the
+code of the application was not the fact that there was an adapter between our version of
+the web framework and the actual one, but instead the fact that the latter was not
+mentioned by name in any part of the visible code. The service was made clear that <code class="docutils literal notranslate"><span class="pre">web</span></code>
+was just a dependency (a detail being imported), and revealed the intention behind what it
+was supposed to do. The goal is to reveal the intention (as in the code) and to defer details
+as much as possible.</p>
+<p>As to what things cannot be isolated, those are the elements that are closest to the code. In
+this case, the web application was using the objects operating within them in an
+asynchronous fashion. That is a hard constraint we cannot circumvent. It’s true that
+whatever is inside the storage package can be changed, refactored, and modified, but
+whatever these modifications might be, it still needs to preserve the interface, and that
+includes the asynchronous interface.</p>
+</div>
+<div class="section" id="testability">
+<h3>3.3.3. Testability<a class="headerlink" href="#testability" title="Permalink to this headline">¶</a></h3>
+<p>Again, much like with the code, the architecture can benefit from separating pieces into
+smaller components. The fact that dependencies are now isolated and controlled by
+separate components leaves us with a cleaner design for the main application, and now it’s
+easier to ignore the boundaries to focus on testing the core of the application.</p>
+<p>We could create a patch for the dependencies, and write unit tests that are simpler (they
+won’t need a database), or to launch an entire web service, for instance. Working with pure
+domain objects means it will be easier to understand the code and the unit tests. Even the
+adapters will not need that much testing because their logic should be very simple.</p>
+</div>
+<div class="section" id="intention-revealing">
+<h3>3.3.4. Intention revealing<a class="headerlink" href="#intention-revealing" title="Permalink to this headline">¶</a></h3>
+<p>These details included keeping functions short, concerns separated, dependencies isolated,
+and assigning the right meaning to abstractions in every part of the code. Intention
+revealing was a critical concept for our code: every name has to be wisely chosen, clearly
+communicating what it’s supposed to do. Every function should tell a story.</p>
+<p>A good architecture should reveal the intent of the system it entails. It should not mention
+the tools it’s built with; those are details, and as we discussed at length, details should be
+hidden, encapsulated.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

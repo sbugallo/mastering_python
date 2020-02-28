@@ -12,13 +12,15 @@ Index
 ..  toctree::
     :maxdepth: 2
 
-    chapters/1_docstrings_and_annotations/index
-    chapters/2_pythonic_code/index
-    chapters/3_general_traits/index
-    chapters/4_solid_principles/index
-    chapters/5_decorators/index
-    chapters/6_descriptors/index
-    chapters/7_generators/index
-    chapters/8_unit_testing/index
-    chapters/9_design_patterns/index
-    chapters/10_clean_architecture/index
+    chapters/how_python_works/index
+    chapters/development_environments/index
+    chapters/docstrings_and_annotations/index
+    chapters/pythonic_code/index
+    chapters/general_traits/index
+    chapters/solid_principles/index
+    chapters/decorators/index
+    chapters/descriptors/index
+    chapters/generators/index
+    chapters/unit_testing/index
+    chapters/design_patterns/index
+    chapters/clean_architecture/index

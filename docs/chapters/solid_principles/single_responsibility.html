@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Single responsibility principle &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Single responsibility principle</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/solid_principles/single_responsibility.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="single-responsibility-principle">
+<h1>1. Single responsibility principle<a class="headerlink" href="#single-responsibility-principle" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>single responsibility principle (SRP)</strong> states that a software component (in general, a
+class) must have only one responsibility. The fact that the class has a sole responsibility
+means that it is in charge of doing just one concrete thing, and as a consequence of that, we
+can conclude that it must have only one reason to change.</p>
+<p>Only if one thing on the domain problem changes will the class have to be updated. If we
+have to make modifications to a class, for different reasons, it means the abstraction is
+incorrect, and that the class has too many responsibilities.T</p>
+<p>This design principle helps us build more cohesive abstractions; objects that do one thing, and just one
+thing, well, following the Unix philosophy. What we want to avoid in all cases is having objects with multiple
+responsibilities (often called <strong>god-objects</strong>, because they know too much, or more than they
+should). These objects group different (mostly unrelated) behaviors, thus making them
+harder to maintain.</p>
+<p>Again, the smaller the class, the better.</p>
+<p>The SRP is closely related to the idea of cohesion in software design, which we already
+explored, when we discussed separation of concerns in software. What we strive to achieve here is that classes
+are designed in such a way that most of their properties and their attributes are used by its methods, most of
+the time. When this happens, we know they are related concepts, and therefore it makes sense
+to group them under the same abstraction.</p>
+<p>In a way, this idea is somehow similar to the concept of normalization on relational
+database design. When we detect that there are partitions on the attributes or methods of
+the interface of an object, they might as well be moved somewhere else—it is a sign that
+they are two or more different abstractions mixed into one.</p>
+<p>There is another way of looking at this principle. If, when looking at a class, we find
+methods that are mutually exclusive and do not relate to each other, they are the different
+responsibilities that have to be broken down into smaller classes.</p>
+<div class="section" id="a-class-with-too-many-responsibilities">
+<h2>1.1. A class with too many responsibilities<a class="headerlink" href="#a-class-with-too-many-responsibilities" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we are going to create the case for an application that is in charge of
+reading information about events from a source (this could be log files, a database, or many
+more sources), and identifying the actions corresponding to each particular log.
+A design that fails to conform to the SRP would look like this:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch4_bad_srp_class.png"><img alt="../../_images/ch4_bad_srp_class.png" src="../../_images/ch4_bad_srp_class.png" style="width: 20%;" /></a>
+</div>
+<p>Without considering the implementation, the code for the class might look in the following
+listing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SystemMonitor</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">load_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the events from a source, to be processed.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">identify_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse the source raw data into events (domain objects).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">stream_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send the parsed events to an external agent.&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>The problem with this class is that it defines an interface with a set of methods that
+correspond to actions that are orthogonal: each one can be done independently of the rest.</p>
+<p>This design flaw makes the class rigid, inflexible, and error-prone because it is hard to
+maintain. In this example, each method represents a responsibility of the class. Each
+responsibility entails a reason why the class might need to be modified. In this case, each
+method represents one of the various reasons why the class will have to be modified.</p>
+<p>Consider the loader method, which retrieves the information from a particular source.
+Regardless of how this is done (we can abstract the implementation details here), it is clear
+that it will have its own sequence of steps, for instance connecting to the data source,
+loading the data, parsing it into the expected format, and so on. If any of this changes (for
+example, we want to change the data structure used for holding the data), the
+SystemMonitor class will need to change. Ask yourself whether this makes sense. Does a
+system monitor object have to change because we changed the representation of the data?
+No.</p>
+<p>The same reasoning applies to the other two methods. If we change how we fingerprint
+events, or how we deliver them to another data source, we will end up making changes to
+the same class.</p>
+<p>It should be clear by now that this class is rather fragile, and not very maintainable. There
+are lots of different reasons that will impact on changes in this class. Instead, we want
+external factors to impact our code as little as possible. The solution, again, is to create
+smaller and more cohesive abstractions.</p>
+</div>
+<div class="section" id="distributing-responsibilities">
+<h2>1.2. Distributing responsibilities<a class="headerlink" href="#distributing-responsibilities" title="Permalink to this headline">¶</a></h2>
+<p>To make the solution more maintainable, we separate every method into a different class.
+This way, each class will have a single responsibility:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/ch4_good_srp_class.png"><img alt="../../_images/ch4_good_srp_class.png" src="../../_images/ch4_good_srp_class.png" style="width: 40%;" /></a>
+</div>
+<p>The same behavior is achieved by using an object that will interact with instances of these
+new classes, using those objects as collaborators, but the idea remains that each class
+encapsulates a specific set of methods that are independent of the rest. The idea now is that
+changes on any of these classes do not impact the rest, and all of them have a clear and
+specific meaning. If we need to change something on how we load events from the data
+sources, the alert system is not even aware of these changes, so we do not have to modify
+anything on the system monitor (as long as the contract is still preserved), and the data
+target is also unmodified.</p>
+<p>Changes are now local, the impact is minimal, and each class is easier to maintain.</p>
+<p>The new classes define interfaces that are not only more maintainable but also reusable.
+Imagine that now, in another part of the application, we also need to read the activity from
+the logs, but for different purposes. With this design, we can simply use objects of type
+<code class="docutils literal notranslate"><span class="pre">ActivityReader</span></code> (which would actually be an interface, but for the purposes of this
+section, that detail is not relevant and will be explained later for the next principles). This
+would make sense, whereas it would not have made sense in the previous design, because
+attempts to reuse the only class we had defined would have also carried extra methods
+(such as <code class="docutils literal notranslate"><span class="pre">identify_events()</span></code>, or <code class="docutils literal notranslate"><span class="pre">stream_events()</span></code>) that were not needed at all.</p>
+<p>One important clarification is that the principle does not mean at all that each class must
+have a single method. Any of the new classes might have extra methods, as long as they
+correspond to the same logic that that class is in charge of handling.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

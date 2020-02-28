@@ -1,0 +1,869 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Frameworks and tools for testing &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Frameworks and tools for testing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/unit_testing/frameworks.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="frameworks-and-tools-for-testing">
+<h1>2. Frameworks and tools for testing<a class="headerlink" href="#frameworks-and-tools-for-testing" title="Permalink to this headline">¶</a></h1>
+<p>There are a lot of tools we can use for writing out unit tests, all of them with pros and cons
+and serving different purposes. But among all of them, there are two that will most likely
+cover almost every scenario, and therefore we limit this section to just them.</p>
+<p>Along with testing frameworks and test running libraries, it’s often common to find projects
+that configure code coverage, which they use as a quality metric. Since coverage (when
+used as a metric) is misleading, after seeing how to create unit tests we’ll discuss why it’s
+not to be taken lightly.</p>
+<div class="section" id="frameworks-and-libraries-for-unit-testing">
+<h2>2.1. Frameworks and libraries for unit testing<a class="headerlink" href="#frameworks-and-libraries-for-unit-testing" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will discuss two frameworks for writing and running unit tests. The first
+one, <code class="docutils literal notranslate"><span class="pre">unittest</span></code>, is available in the standard library of Python, while the second
+one, <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, has to be installed externally via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<p>When it comes to covering testing scenarios for our code, <code class="docutils literal notranslate"><span class="pre">unittest</span></code> alone will most likely
+suffice, since it has plenty of helpers. However, for more complex systems on which we
+have multiple dependencies, connections to external systems, and probably the need to
+patch objects, and define fixtures parameterize test cases, then <code class="docutils literal notranslate"><span class="pre">pytest</span></code> looks like a more
+complete option.</p>
+<p>We will use a small program as an example to show you how could it be tested using both
+options which in the end will help us to get a better picture of how the two of them
+compare.</p>
+<p>The example demonstrating testing tools is a simplified version of a version control tool
+that supports code reviews in merge requests. We will start with the following criteria:</p>
+<ul class="simple">
+<li><p>A merge request is rejected if at least one person disagrees with the changes.</p></li>
+<li><p>If nobody has disagreed, and the merge request is good for at least two other developers, it’s approved.</p></li>
+<li><p>In any other case, its status is pending.</p></li>
+</ul>
+<p>And here is what the code might look like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="k">class</span> <span class="nc">MergeRequestStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">APPROVED</span> <span class="o">=</span> <span class="s2">&quot;approved&quot;</span>
+    <span class="n">REJECTED</span> <span class="o">=</span> <span class="s2">&quot;rejected&quot;</span>
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">&quot;pending&quot;</span>
+
+<span class="k">class</span> <span class="nc">MergeRequest</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;downvotes&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;upvotes&quot;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span>
+        <span class="k">return</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+
+    <span class="k">def</span> <span class="nf">upvote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by_user</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;downvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;upvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">downvote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by_user</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;upvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;downvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="unittest">
+<h3>2.1.1 unittest<a class="headerlink" href="#unittest" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">unittest</span></code> module is a great option with which to start writing unit tests because it
+provides a rich API to write all kinds of testing conditions, and since it’s available in the
+standard library, it’s quite versatile and convenient.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">unittest</span></code> module is based on the concepts of <code class="docutils literal notranslate"><span class="pre">JUnit</span></code> (from Java), which in turn is also
+based on the original ideas of unit testing that come from Smalltalk, so it’s object-oriented in
+nature. For this reason, tests are written through objects, where the checks are verified by
+methods, and it’s common to group tests by scenarios in classes.</p>
+<p>To start writing unit tests, we have to create a test class that inherits from
+<code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code>, and define the conditions we want to stress on its methods. These
+methods should start with <code class="docutils literal notranslate"><span class="pre">test_*</span></code>, and can internally use any of the methods inherited
+from <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> to check conditions that must hold true.</p>
+<p>Some examples of conditions we might want to verify for our case are as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TestMergeRequestStatus</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_simple_rejected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+        <span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">(</span><span class="s2">&quot;maintainer&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">merge_request</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_just_created_is_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">MergeRequest</span><span class="p">()</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_pending_awaiting_review</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+        <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;core-dev&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">merge_request</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_approved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+        <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+        <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev2&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">merge_request</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The API for unit testing provides many useful methods for comparison, the most common
+one being <code class="docutils literal notranslate"><span class="pre">assertEquals(&lt;actual&gt;,</span> <span class="pre">&lt;expected&gt;[,</span> <span class="pre">message])</span></code>, which can be used to
+compare the result of the operation against the value we were expecting, optionally using a
+message that will be shown in the case of an error.</p>
+<p>Another useful testing method allows us to check whether a certain exception was raised or
+not. When something exceptional happens, we raise an exception in our code to prevent
+continuous processing under the wrong assumptions, and also to inform the caller that
+something is wrong with the call as it was performed. This is the part of the logic that ought
+to be tested, and that’s what this method is for.</p>
+<p>Imagine that we are now extending our logic a little bit further to allow users to close their
+merge requests, and once this happens, we don’t want any more votes to take place (it
+wouldn’t make sense to evaluate a merge request once this was already closed). To prevent
+this from happening, we extend our code and we raise an exception on the unfortunate
+event when someone tries to cast a vote on a closed merge request.</p>
+<p>After adding two new statuses (<code class="docutils literal notranslate"><span class="pre">OPEN</span></code> and <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code>), and a new <code class="docutils literal notranslate"><span class="pre">close()</span></code> method, we
+modify the previous methods for the voting to handle this check first:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MergeRequest</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">OPEN</span>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">CLOSED</span>
+        <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">_cannot_vote_if_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">CLOSED</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MergeRequestException</span><span class="p">(</span><span class="s2">&quot;can&#39;t vote on a closed merge request&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">upvote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by_user</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cannot_vote_if_closed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;downvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;upvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">downvote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by_user</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cannot_vote_if_closed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;upvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;downvotes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">by_user</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, we want to check that this validation indeed works. For this, we’re going to use
+the <code class="docutils literal notranslate"><span class="pre">asssertRaises</span></code> and <code class="docutils literal notranslate"><span class="pre">assertRaisesRegex</span></code> methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_cannot_upvote_on_closed_merge_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">MergeRequestException</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">,</span> <span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_cannot_downvote_on_closed_merge_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="n">MergeRequestException</span><span class="p">,</span> <span class="s2">&quot;can&#39;t vote on a closed merge request&quot;</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">,</span> <span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The former will expect that the provided exception is raised when calling the callable in the
+second argument, with the arguments (<code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>) on the rest of the function,
+and if that’s not the case it will fail, saying that the exception that was expected to be raised,
+wasn’t. The latter does the same but it also checks that the exception that was raised,
+contains the message matching the regular expression that was provided as a parameter.
+Even if the exception is raised, but with a different message (not matching the regular
+expression), the test will fail.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Try to check for the error message, as not only will the exception, as an
+extra check, be more accurate and ensure that it is actually the exception
+we want that is being triggered, it will check whether another one of the
+same types got there by chance.</p>
+</div>
+<p>Now, we would like to test how the threshold acceptance for the merge request works, just
+by providing data samples of what the context looks like without needing the entire
+<code class="docutils literal notranslate"><span class="pre">MergeRequest</span></code> object. We want to test the part of the status property that is after the line
+that checks if it’s closed, but independently.</p>
+<p>The best way to achieve this is to separate that component into another class, use
+composition, and then move on to test this new abstraction with its own test suite:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AcceptanceThreshold</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">merge_request_context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="n">merge_request_context</span>
+
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;downvotes&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="s2">&quot;upvotes&quot;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span>
+        <span class="k">return</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+
+<span class="k">class</span> <span class="nc">MergeRequest</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">CLOSED</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+        <span class="k">return</span> <span class="n">AcceptanceThreshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">)</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>With these changes, we can run the tests again and verify that they pass, meaning that this
+small refactor didn’t break anything of the current functionality (unit tests ensure
+regression). With this, we can proceed with our goal to write tests that are specific to the
+new class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TestAcceptanceThreshold</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixture_data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()},</span>
+                <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;dev1&quot;</span><span class="p">}},</span>
+                <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="s2">&quot;dev1&quot;</span><span class="p">,</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()},</span>
+                <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;dev1&quot;</span><span class="p">,</span> <span class="s2">&quot;dev2&quot;</span><span class="p">}},</span>
+                <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_status_resolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">context</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixture_data</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">subTest</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">):</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">AcceptanceThreshold</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, in the <code class="docutils literal notranslate"><span class="pre">setUp()</span></code> method, we define the data fixture to be used throughout the tests. In
+this case, it’s not actually needed, because we could have put it directly on the method, but
+if we expect to run some code before any test is executed, this is the place to write it,
+because this method is called once before every test is run.</p>
+<p>By writing this new version of the code, the parameters under the code being tested are
+clearer and more compact, and at each case, it will report the results.</p>
+<p>To simulate that we’re running all of the parameters, the test iterates over all the data, and
+exercises the code with each instance. One interesting helper here is the use of <code class="docutils literal notranslate"><span class="pre">subTest</span></code>,
+which in this case we use to mark the test condition being called. If one of these iterations
+failed, <code class="docutils literal notranslate"><span class="pre">unittest</span></code> would report it with the corresponding value of the variables that were
+passed to the subTest (in this case, it was named context, but any series of keyword
+arguments would work just the same). For example, one error occurrence might look like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">FAIL</span><span class="p">:</span> <span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;downvotes&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s1">&#39;upvotes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dev1&#39;</span><span class="p">,</span> <span class="s1">&#39;dev2&#39;</span><span class="p">}})</span>
+<span class="o">----------------------------------------------------------------------</span>
+
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+    <span class="n">File</span> <span class="s2">&quot;&quot;</span> <span class="n">test_status_resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span>
+<span class="ne">AssertionError</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span><span class="p">:</span> <span class="s1">&#39;approved&#39;</span><span class="o">&gt;</span> <span class="o">!=</span>
+<span class="o">&lt;</span><span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span><span class="p">:</span> <span class="s1">&#39;rejected&#39;</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you choose to parameterize tests, try to provide the context of each
+instance of the parameters with as much information as possible to make
+debugging easier.</p>
+</div>
+</div>
+<div class="section" id="pytest">
+<h3>2.1.2. pytest<a class="headerlink" href="#pytest" title="Permalink to this headline">¶</a></h3>
+<p>Pytest is a great testing framework, and can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>. A
+difference with respect to <code class="docutils literal notranslate"><span class="pre">unittest</span></code> is that, while it’s still possible to classify test scenarios
+in classes and create object-oriented models of our tests, this is not actually mandatory, and
+it’s possible to write unit tests with less boilerplate by just checking the conditions we want
+to verify with the <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement.</p>
+<p>By default, making comparisons with an <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement will be enough for <code class="docutils literal notranslate"><span class="pre">pytest</span></code> to
+identify a unit test and report its result accordingly. More advanced uses such as those seen
+in the previous section are also possible, but they require using specific functions from the
+package.</p>
+<p>A nice feature is that the command <code class="docutils literal notranslate"><span class="pre">pytest</span></code> will run all the tests that it can discover, even
+if they were written with <code class="docutils literal notranslate"><span class="pre">unittest</span></code>. This compatibility makes it easier to transition gradually.</p>
+<div class="section" id="basic-test-cases-with-pytest">
+<h4>2.1.2.1. Basic test cases with pytest<a class="headerlink" href="#basic-test-cases-with-pytest" title="Permalink to this headline">¶</a></h4>
+<p>The conditions we tested in the previous section can be rewritten in simple functions with
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
+<p>Some examples with simple assertions are as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_simple_rejected</span><span class="p">():</span>
+    <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">(</span><span class="s2">&quot;maintainer&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">merge_request</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+
+<span class="k">def</span> <span class="nf">test_just_created_is_pending</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">MergeRequest</span><span class="p">()</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+
+<span class="k">def</span> <span class="nf">test_pending_awaiting_review</span><span class="p">():</span>
+    <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;core-dev&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">merge_request</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</pre></div>
+</div>
+<p>Boolean equality comparisons don’t require more than a simple <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement, whereas
+other kinds of checks like the ones for the exceptions do require that we use some functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_invalid_types</span><span class="p">():</span>
+    <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;invalid-object&quot;</span><span class="p">})</span>
+
+<span class="k">def</span> <span class="nf">test_cannot_vote_on_closed_merge_request</span><span class="p">():</span>
+    <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">MergeRequestException</span><span class="p">,</span> <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">,</span> <span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">MergeRequestException</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;can&#39;t vote on a closed merge request&quot;</span><span class="p">):</span>
+        <span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">(</span><span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">pytest.raises</span></code> is the equivalent of <code class="docutils literal notranslate"><span class="pre">unittest.TestCase.assertRaises</span></code>,
+and it also accepts that it be called both as a method and as a context manager. If we want
+to check the message of the exception, instead of a different method
+(like <code class="docutils literal notranslate"><span class="pre">assertRaisesRegex</span></code>), the same function has to be used, but as a context manager,
+and by providing the match parameter with the expression we would like to identify.
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> will also wrap the original exception into a custom one that can be expected (by
+checking some of its attributes such as <code class="docutils literal notranslate"><span class="pre">.value</span></code>, for instance) in case we want to check for
+more conditions, but this use of the function covers the vast majority of cases.</p>
+</div>
+<div class="section" id="parametrized-tests">
+<h4>2.1.2.2. Parametrized tests<a class="headerlink" href="#parametrized-tests" title="Permalink to this headline">¶</a></h4>
+<p>Running parametrized tests with <code class="docutils literal notranslate"><span class="pre">pytest</span></code> is better, not only because it provides a cleaner
+API, but also because each combination of the test with its parameters generates a new test
+case.</p>
+<p>To work with this, we have to use the <code class="docutils literal notranslate"><span class="pre">pytest.mark.parametrize</span></code> decorator on our test.
+The first parameter of the decorator is a string indicating the names of the parameters to
+pass to the test function, and the second has to be iterable with the respective values for
+those parameters.</p>
+<p>Notice how the body of the testing function is reduced to one line (after removing the
+internal for loop, and its nested context manager), and the data for each test case is
+correctly isolated from the body of the function, making it easier to extend and maintain:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="s2">&quot;context, expected_status&quot;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()},</span>
+        <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+    <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;dev1&quot;</span><span class="p">}},</span>
+        <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="s2">&quot;dev1&quot;</span><span class="p">,</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()},</span>
+        <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+    <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;downvotes&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span> <span class="s2">&quot;upvotes&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;dev1&quot;</span><span class="p">,</span> <span class="s2">&quot;dev2&quot;</span><span class="p">}},</span>
+        <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span>
+    <span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_acceptance_threshold_status_resolution</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">expected_status</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">AcceptanceThreshold</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected_status</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.parametrize</span></code> to eliminate repetition, keep the body
+of the test as cohesive as possible, and make the parameters (test inputs or
+scenarios) that the code must support explicitly.</p>
+</div>
+<div class="section" id="fixtures">
+<h4>2.1.2.3. Fixtures<a class="headerlink" href="#fixtures" title="Permalink to this headline">¶</a></h4>
+<p>One of the great things about <code class="docutils literal notranslate"><span class="pre">pytest</span></code> is how it facilitates creating reusable features so that
+we can feed our tests with data or objects in order to test more effectively and without
+repetition.</p>
+<p>For example, we might want to create a <code class="docutils literal notranslate"><span class="pre">MergeRequest</span></code> object in a particular state, and use
+that object in multiple tests. We define our object as a fixture by creating a function and
+applying the <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture</span> <span class="pre">decorator</span></code>. The tests that want to use that fixture will have
+to have a parameter with the same name as the function that’s defined, and <code class="docutils literal notranslate"><span class="pre">pytest</span></code> will
+make sure that it’s provided:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest.fixture</span>
+<span class="k">def</span> <span class="nf">rejected_mr</span><span class="p">():</span>
+    <span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">(</span><span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev2&quot;</span><span class="p">)</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev3&quot;</span><span class="p">)</span>
+    <span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">(</span><span class="s2">&quot;dev4&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">merge_request</span>
+
+<span class="k">def</span> <span class="nf">test_simple_rejected</span><span class="p">(</span><span class="n">rejected_mr</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">rejected_mr</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+
+<span class="k">def</span> <span class="nf">test_rejected_with_approvals</span><span class="p">(</span><span class="n">rejected_mr</span><span class="p">):</span>
+    <span class="n">rejected_mr</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev2&quot;</span><span class="p">)</span>
+    <span class="n">rejected_mr</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev3&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">rejected_mr</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span>
+
+<span class="k">def</span> <span class="nf">test_rejected_to_pending</span><span class="p">(</span><span class="n">rejected_mr</span><span class="p">):</span>
+    <span class="n">rejected_mr</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">rejected_mr</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span>
+
+<span class="k">def</span> <span class="nf">test_rejected_to_approved</span><span class="p">(</span><span class="n">rejected_mr</span><span class="p">):</span>
+    <span class="n">rejected_mr</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev1&quot;</span><span class="p">)</span>
+    <span class="n">rejected_mr</span><span class="o">.</span><span class="n">upvote</span><span class="p">(</span><span class="s2">&quot;dev2&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">rejected_mr</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span>
+</pre></div>
+</div>
+<p>Remember that tests affect the main code as well, so the principles of clean code apply to
+them as well. In this case, the Don’t Repeat Yourself (DRY) principle appears once again, and we can achieve
+it with the help of <code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures.</p>
+<p>Besides creating multiple objects or exposing data that will be used throughout the test
+suite, it’s also possible to use them to set up some conditions, for example, to globally patch
+some functions that we don’t want to be called, or when we want patch objects to be used
+instead.</p>
+</div>
+</div>
+</div>
+<div class="section" id="code-coverage">
+<h2>2.2. Code coverage<a class="headerlink" href="#code-coverage" title="Permalink to this headline">¶</a></h2>
+<p>Tests runners support coverage plugins (to be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>) that will provide useful
+information about what lines in the code have been executed while the tests were running.
+This information is of great help so that we know which parts of the code need to be
+covered by tests, as well identifying improvements to be made (both in the production code
+and in the tests). One of the most widely used libraries for this is <code class="docutils literal notranslate"><span class="pre">coverage</span></code>.</p>
+<p>While they are of great help (and we highly recommend that you use them and configure
+your project to run coverage in the CI when tests are run), they can also be misleading;
+particularly in Python, we can get a false impression if we don’t pay close attention to the
+coverage report.</p>
+<div class="section" id="setting-up-rest-coverage">
+<h3>2.2.1. Setting up rest coverage<a class="headerlink" href="#setting-up-rest-coverage" title="Permalink to this headline">¶</a></h3>
+<p>In the case of <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, we have to install the <code class="docutils literal notranslate"><span class="pre">pytest-cov</span></code> package. Once installed, when the tests are
+run, we have to tell the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> runner that <code class="docutils literal notranslate"><span class="pre">pytest-cov</span></code> will also run, and which package (or packages)
+should be covered (among other parameters and configurations).</p>
+<p>This package supports multiple configurations, like different sorts of output formats, and
+it’s easy to integrate it with any CI tool, but among all these features a highly recommended
+option is to set the flag that will tell us which lines haven’t been covered by tests yet,
+because this is what’s going to help us diagnose our code and allow us to start writing more
+tests.</p>
+<p>To show you an example of what this would look like, use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest <span class="se">\</span>
+--cov-report term-missing <span class="se">\</span>
+--cov<span class="o">=</span>coverage_1 <span class="se">\</span>
+test_coverage_1.py
+</pre></div>
+</div>
+<p>This will produce an output similar to the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>test_coverage_1.py ................ <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+----------- coverage: platform linux, python <span class="m">3</span>.6.5-final-0 -----------
+Name
+Stmts Miss Cover Missing
+---------------------------------------------
+coverage_1.py <span class="m">38</span>
+<span class="m">1</span> <span class="m">97</span>%
+<span class="m">53</span>
+</pre></div>
+</div>
+<p>Here, it’s telling us that there is a line that doesn’t have unit tests so that we can take a look
+and see how to write a unit test for it. This is a common scenario where we realize that to
+cover those missing lines, we need to refactor the code by creating smaller methods. As a
+result, our code will look much better, as in the example we saw at the beginning of this
+chapter.</p>
+<p>The problem lies in the inverse situation: can we trust the high coverage? Does it mean our
+code is correct? Unfortunately, having good test coverage is necessary but in sufficient
+condition for clean code. Not having tests for parts of the code is clearly something bad.
+Having tests is actually very good (and we can say this for the tests that do exist), and
+actually asserts real conditions that they are a guarantee of quality for that part of the code.
+However, we cannot say that is all that is required; despite having a high level of coverage,
+even more tests are required.</p>
+</div>
+<div class="section" id="caveats-of-test-coverage">
+<h3>2.2.2. Caveats of test coverage<a class="headerlink" href="#caveats-of-test-coverage" title="Permalink to this headline">¶</a></h3>
+<p>Python is interpreted and, at a very high-level, coverage tools take advantage of this to
+identify the lines that were interpreted (run) while the tests were running. It will then
+report this at the end. The fact that a line was interpreted does not mean that it was
+properly tested, and this is why we should be careful about reading the final coverage
+report and trusting what it says.</p>
+<p>This is actually true for any language. The fact that a line was exercised does not mean at all
+that it was stressed with all its possible combinations. The fact that all branches run
+successfully with the provided data only means that the code supported that combination,
+but it doesn’t tell us anything about any other possible combinations of parameters that
+would make the program crash.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use coverage as a tool to find blind spots in the code, but not as a metric
+or target goal.</p>
+</div>
+</div>
+</div>
+<div class="section" id="mock-objects">
+<h2>2.3. Mock objects<a class="headerlink" href="#mock-objects" title="Permalink to this headline">¶</a></h2>
+<p>There are cases where our code is not the only thing that will be present in the context of
+our tests. After all, the systems we design and build have to do something real, and that
+usually means connecting to external services (databases, storage services, external APIs,
+cloud services, and so on). Because they need to have those side-effects, they’re inevitable.
+As much as we abstract our code, program towards interfaces, and isolate code from
+external factors in order to minimize side-effects, they will be present in our tests, and we
+need an effective way to handle that.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Mock</span></code> objects are one of the best tactics to defend against undesired side-effects. Our code
+might need to perform an HTTP request or send a notification email, but we surely don’t
+want that to happen in our unit tests. Besides, unit tests should run quickly, as we want to
+run them quite often (all the time, actually), and this means we cannot afford latency.
+Therefore, real unit tests don’t use any actual service: they don’t connect to any database,
+they don’t issue HTTP requests, and basically, they do nothing other than exercise the logic
+of the production code.</p>
+<p>We need tests that do such things, but they aren’t units. Integration tests are supposed to
+test functionality with a broader perspective, almost mimicking the behavior of a user. But
+they aren’t fast. Because they connect to external systems and services, they take longer to
+run and are more expensive. In general, we would like to have lots of unit tests that run
+really quickly in order to run them all the time, and have integration tests run less often (for
+instance, on any new merge request).</p>
+<p>While mock objects are useful, abusing their use ranges between a code smell or an anti-
+pattern is the first caveat we would like to mention before going into the details of it.</p>
+<div class="section" id="a-fair-warning-about-patching-and-mocks">
+<h3>2.3.1. A fair warning about patching and mocks<a class="headerlink" href="#a-fair-warning-about-patching-and-mocks" title="Permalink to this headline">¶</a></h3>
+<p>We said before that unit tests help us write better code, because the moment we want to
+start testing parts of the code, we usually have to write them to be testable, which often
+means they are also cohesive, granular, and small. These are all good traits to have in a
+software component.</p>
+<p>Another interesting gain is that testing will help us notice code smells in parts where we
+thought our code was correct. One of the main warnings that our code has code smells is
+whether we find ourselves trying to monkey-patch (or mock) a lot of different things just to
+cover a simple test case.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">unittest</span></code> module provides a tool for patching our objects at <code class="docutils literal notranslate"><span class="pre">unittest.mock.patch</span></code>.
+Patching means that the original code (given by a string denoting its location at import
+time), will be replaced by something else, other than its original code, being the default a
+mock object. This replaces the code at run-time, and has the disadvantage that we are losing
+contact with the original code that was there in the first place, making our tests a little more
+shallow. It also carries performance considerations, because of the overhead that imposes
+modifying objects in the interpreter at run-time, and it’s something that might end up
+update if we refactor our code and move things around.</p>
+<p>Using monkey-patching or mocks in our tests might be acceptable, and by itself it doesn’t
+represent an issue. On the other hand, abuse in monkey-patching is indeed a flag that
+something has to be improved in our code.</p>
+</div>
+<div class="section" id="using-mock-objects">
+<h3>2.3.2. Using mock objects<a class="headerlink" href="#using-mock-objects" title="Permalink to this headline">¶</a></h3>
+<p>In unit testing terminology, there are several types of object that fall into the category
+named <strong>test doubles</strong>. A test double is a type of object that will take the place of a real one in
+our test suite for different kinds of reasons (maybe we don’t need the actual production
+code, but just a dummy object would work, or maybe we can’t use it because it requires
+access to services or it has side-effects that we don’t want in our unit tests, and so on).</p>
+<p>There are different types of test double, such as dummy objects, stubs, spies, or mocks.
+Mocks are the most general type of object, and since they’re quite flexible and versatile, they
+are appropriate for all cases without needing to go into much detail about the rest of them.
+It is for this reason that the standard library also includes an object of this kind, and it is
+common in most Python programs. That’s the one we are going to be using
+here: <code class="docutils literal notranslate"><span class="pre">unittest.mock.Mock</span></code>.</p>
+<p>A <strong>mock</strong> is a type of object created to a specification (usually resembling the object of a
+production class) and some configured responses (that is, we can tell the mock what it
+should return upon certain calls, and what its behavior should be). The Mock object will
+then record, as part of its internal status, how it was called (with what parameters, how
+many times, and so on), and we can use that information to verify the behavior of our
+application at a later stage.</p>
+<p>In the case of Python, the Mock object that’s available from the standard library provides a
+nice API to make all sorts of behavioral assertions, such as checking how many times the
+mock was called, with what parameters, and so on.</p>
+<div class="section" id="types-of-mocks">
+<h4>2.3.2.1 Types of mocks<a class="headerlink" href="#types-of-mocks" title="Permalink to this headline">¶</a></h4>
+<p>The standard library provides <code class="docutils literal notranslate"><span class="pre">Mock</span></code> and <code class="docutils literal notranslate"><span class="pre">MagicMock</span></code> objects in the <code class="docutils literal notranslate"><span class="pre">unittest.mock</span></code>
+module. The former is a test double that can be configured to return any value and will
+keep track of the calls that were made to it. The latter does the same, but it also supports
+magic methods. This means that, if we have written idiomatic code that uses magic
+methods (and parts of the code we are testing will rely on that), it’s likely that we will have
+to use a <code class="docutils literal notranslate"><span class="pre">MagicMock</span></code> instance instead of just a <code class="docutils literal notranslate"><span class="pre">Mock</span></code>.</p>
+<p>Trying to use <code class="docutils literal notranslate"><span class="pre">Mock</span></code> when our code needs to call magic methods will result in an error. See
+the following code for an example of this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GitBranch</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commits</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">commits</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commit_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commits</span><span class="p">[</span><span class="n">commit_id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commits</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">author_by_id</span><span class="p">(</span><span class="n">commit_id</span><span class="p">,</span> <span class="n">branch</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">branch</span><span class="p">[</span><span class="n">commit_id</span><span class="p">][</span><span class="s2">&quot;author&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We want to test this function; however, another test needs to call
+the <code class="docutils literal notranslate"><span class="pre">author_by_id</span></code> function. For some reason, since we’re not testing that function, any
+value provided to that function (and returned) will be good:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_find_commit</span><span class="p">():</span>
+    <span class="n">branch</span> <span class="o">=</span> <span class="n">GitBranch</span><span class="p">([{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;dev1&quot;</span><span class="p">}])</span>
+    <span class="k">assert</span> <span class="n">author_by_id</span><span class="p">(</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;dev1&quot;</span>
+
+<span class="k">def</span> <span class="nf">test_find_any</span><span class="p">():</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">author_by_id</span><span class="p">(</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">Mock</span><span class="p">())</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+    <span class="c1"># ... rest of the tests..</span>
+</pre></div>
+</div>
+<p>As anticipated, this will not work:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">author_by_id</span><span class="p">(</span><span class="n">commit_id</span><span class="p">,</span> <span class="n">branch</span><span class="p">):</span>
+    <span class="o">&gt;</span> <span class="k">return</span> <span class="n">branch</span><span class="p">[</span><span class="n">commit_id</span><span class="p">][</span><span class="s2">&quot;author&quot;</span><span class="p">]</span>
+    <span class="n">E</span> <span class="ne">TypeError</span><span class="p">:</span> <span class="s1">&#39;Mock&#39;</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">subscriptable</span>
+</pre></div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">MagicMock</span></code> instead will work. We can even configure the magic method of this type
+of mock to return something we need in order to control the execution of our test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_find_any</span><span class="p">():</span>
+    <span class="n">mbranch</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">mbranch</span><span class="o">.</span><span class="fm">__getitem__</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">author_by_id</span><span class="p">(</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">mbranch</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-use-case-for-test-doubles">
+<h4>2.3.2.2. A use case for test doubles<a class="headerlink" href="#a-use-case-for-test-doubles" title="Permalink to this headline">¶</a></h4>
+<p>To see a possible use of mocks, we need to add a new component to our application that
+will be in charge of notifying the merge request of the status of the build . When a build
+is finished, this object will be called with the ID of the merge request and the status of the
+build, and it will update the status of the merge request with this information by
+sending an HTTP POST request to a particular fixed endpoint:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">STATUS_ENDPOINT</span>
+
+
+<span class="k">class</span> <span class="nc">BuildStatus</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build_date</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">merge_request_id</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="n">build_status</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">merge_request_id</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;built_at&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">build_date</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">STATUS_ENDPOINT</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">build_status</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+<p>This class has many side-effects, but one of them is an important external dependency
+which is hard to surmount. If we try to write a test over it without modifying anything, it
+will fail with a connection error as soon as it tries to perform the HTTP connection.</p>
+<p>As a testing goal, we just want to make sure that the information is composed correctly, and
+that library requests are being called with the appropriate parameters. Since this is an
+external dependency, we don’t test requests; just checking that it’s called correctly will be
+enough.</p>
+<p>Another problem we will face when trying to compare data being sent to the library is that
+the class is calculating the current timestamp, which is impossible to predict in a unit test.
+Patching <code class="docutils literal notranslate"><span class="pre">datetime</span></code> directly is not possible, because the module is written in C. There are
+some external libraries that can do that (<code class="docutils literal notranslate"><span class="pre">freezegun</span></code>, for example), but they come with a
+performance penalty, and for this example would be overkill. Therefore, we opt to
+wrapping the functionality we want in a static method that we will be able to patch.</p>
+<p>Now that we have established the points that need to be replaced in the code, let’s write the
+unit test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unittest</span> <span class="kn">import</span> <span class="n">mock</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">STATUS_ENDPOINT</span>
+<span class="kn">from</span> <span class="nn">mock_2</span> <span class="kn">import</span> <span class="n">BuildStatus</span>
+
+<span class="nd">@mock.patch</span><span class="p">(</span><span class="s2">&quot;mock_2.requests&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_build_notification_sent</span><span class="p">(</span><span class="n">mock_requests</span><span class="p">):</span>
+    <span class="n">build_date</span> <span class="o">=</span> <span class="s2">&quot;2018-01-01T00:00:01&quot;</span>
+    <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;mock_2.BuildStatus.build_date&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">build_date</span><span class="p">):</span>
+        <span class="n">BuildStatus</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+
+    <span class="n">expected_payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="s2">&quot;built_at&quot;</span><span class="p">:</span> <span class="n">build_date</span><span class="p">}</span>
+    <span class="n">mock_requests</span><span class="o">.</span><span class="n">post</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">STATUS_ENDPOINT</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">expected_payload</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First, we use <code class="docutils literal notranslate"><span class="pre">mock.patch</span></code> as a decorator to replace the <code class="docutils literal notranslate"><span class="pre">requests</span></code> module. The result of this
+function will create a mock object that will be passed as a parameter to the test
+(named <code class="docutils literal notranslate"><span class="pre">mock_requests</span></code> in this example). Then, we use this function again, but this time as
+a context manager to change the return value of the method of the class that computes the
+date of the build, replacing the value with one we control, that we will use in the assertion.</p>
+<p>Once we have all of this in place, we can call the class method with some parameters, and
+then we can use the <code class="docutils literal notranslate"><span class="pre">mock</span></code> object to check how it was called. In this case, we are using the
+method to see if <code class="docutils literal notranslate"><span class="pre">requests.post</span></code> was indeed called with the parameters as we wanted
+them to be composed.</p>
+<p>This is a nice feature of mocks: not only do they put some boundaries around all external
+components (in this case to prevent actually sending some notifications or issuing HTTP
+requests), but they also provide a useful API to verify the calls and their parameters.</p>
+<p>While, in this case, we were able to test the code by setting the respective mock objects in
+place, it’s also true that we had to patch quite a lot in proportion to the total lines of code for
+the main functionality. There is no rule about the ratio of pure productive code being tested
+versus how many parts of that code we have to mock, but certainly, by using common
+sense, we can see that, if we had to patch quite a lot of things in the same parts, something
+is not clearly abstracted, and it looks like a code smell.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

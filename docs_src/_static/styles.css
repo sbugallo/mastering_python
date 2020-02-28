@@ -70,6 +70,9 @@
     max-width: none;
     min-height: 100vh;
 }
+.wy-menu-vertical a{
+    text-align: left;
+}
 
 p, li {
     text-align: justify !important;

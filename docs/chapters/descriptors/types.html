@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Types of descriptors &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Types of descriptors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/descriptors/types.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="types-of-descriptors">
+<h1>2. Types of descriptors<a class="headerlink" href="#types-of-descriptors" title="Permalink to this headline">¶</a></h1>
+<p>Based on the methods we have just explored, we can make an important distinction among
+descriptors in terms of how they work. Understanding this distinction plays an important
+role in working effectively with descriptors, and will also help to avoid caveats or common
+errors at runtime.</p>
+<p>If a descriptor implements the <code class="docutils literal notranslate"><span class="pre">__set__</span></code> or <code class="docutils literal notranslate"><span class="pre">__delete__</span></code> methods, it is called a <strong>data
+descriptor</strong>. Otherwise, a descriptor that solely implements <code class="docutils literal notranslate"><span class="pre">__get__</span></code> is a <strong>non-data
+descriptor</strong>. Notice that <code class="docutils literal notranslate"><span class="pre">__set_name__</span></code> does not affect this classification at all.</p>
+<p>When trying to resolve an attribute of an object, a data descriptor will always take
+precedence over the dictionary of the object, whereas a non-data descriptor will not. This
+means that in a non-data descriptor if the object has a key on its dictionary with the same
+name as the descriptor, this one will always be called, and the descriptor itself will never
+run. Conversely, in a data descriptor, even if there is a key in the dictionary with the same
+name as the descriptor, this one will never be used since the descriptor itself will always
+end up being called.</p>
+<p>The following two sections explain this in more detail, with examples, in order to get a
+deeper idea of what to expect from each type of descriptor.</p>
+<div class="section" id="non-data-descriptors">
+<h2>2.1. Non-data descriptors<a class="headerlink" href="#non-data-descriptors" title="Permalink to this headline">¶</a></h2>
+<p>We will start with a descriptor that only implements the <code class="docutils literal notranslate"><span class="pre">__get__</span></code> method, and see how
+it is used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NonDataDescriptor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="mi">42</span>
+
+<span class="k">class</span> <span class="nc">ClientClass</span><span class="p">:</span>
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">NonDataDescriptor</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>As usual, if we ask for the descriptor, we get the result of its <code class="docutils literal notranslate"><span class="pre">__get__</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">ClientClass</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<p>But if we change the descriptor attribute to something else, we lose access to this value,
+and get what was assigned to it instead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="mi">43</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">43</span>
+</pre></div>
+</div>
+<p>Now, if we delete the descriptor, and ask for it again, let’s see what we get:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<p>Let’s rewind what just happened. When we first created the client object, the
+descriptor attribute lay in the class, not the instance, so if we ask for the dictionary of the
+client object, it will be empty:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+<p>And then, when we request the <code class="docutils literal notranslate"><span class="pre">.descriptor</span></code> attribute, it doesn’t find any key in
+<code class="docutils literal notranslate"><span class="pre">client.__dict__</span></code> named “descriptor”, so it goes to the class, where it will find it, but
+only as a descriptor, hence why it returns the result of the <code class="docutils literal notranslate"><span class="pre">__get__</span></code> method.</p>
+<p>But then, we change the value of the <code class="docutils literal notranslate"><span class="pre">.descriptor</span></code> attribute to something else, and what
+this does is set this into the dictionary of the instance, meaning that this time it won’t be
+empty:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="go">{&#39;descriptor&#39;: 99}</span>
+</pre></div>
+</div>
+<p>So, when we ask for the <code class="docutils literal notranslate"><span class="pre">.descriptor</span></code> attribute here, it will look for it in the object (and
+this time it will find it, because there is a key named descriptor in the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute
+of the object, as the vars result is showing us), and return it without having to look for it in
+the class. For this reason, the descriptor protocol is never invoked, and the next time we ask
+for this attribute, it will instead return the value we have overridden it with (99).</p>
+<p>Afterward, we delete this attribute by calling <code class="docutils literal notranslate"><span class="pre">del</span></code>, and what this does is remove the key
+“descriptor” from the dictionary of the object, leaving us back in the first scenario, where
+it’s going to default to the class where the descriptor protocol will be activated:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="go">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<p>This means that if we set the attribute of the descriptor to something else, we might be
+accidentally breaking it. Why? Because the descriptor doesn’t handle the delete action
+(some of them don’t need to).</p>
+<p>This is called a non-data descriptor because it doesn’t implement the <code class="docutils literal notranslate"><span class="pre">__set__</span></code> magic
+method, as we will see in the next example.</p>
+</div>
+<div class="section" id="data-descriptors">
+<h2>2.2. Data descriptors<a class="headerlink" href="#data-descriptors" title="Permalink to this headline">¶</a></h2>
+<p>Now, let’s look at the difference of using a data descriptor. For this, we are going to create
+another simple descriptor that implements the <code class="docutils literal notranslate"><span class="pre">__set__</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DataDescriptor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="mi">42</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;setting </span><span class="si">%s</span><span class="s2">.descriptor to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;descriptor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="k">class</span> <span class="nc">ClientClass</span><span class="p">:</span>
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">DataDescriptor</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Let’s see what the value of the descriptor returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">ClientClass</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<p>Now, let’s try to change this value to something else, and see what it returns instead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<p>The value returned by the descriptor didn’t change. But when we assign a different value
+to it, it must be set to the dictionary of the object (as it was previously):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="go">{&#39;descriptor&#39;: 99}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;descriptor&quot;</span><span class="p">]</span>
+<span class="go">99</span>
+</pre></div>
+</div>
+<p>So, the <code class="docutils literal notranslate"><span class="pre">__set__()</span></code> method was called, and indeed it did set the value to the dictionary of
+the object, only this time, when we request this attribute, instead of using the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>
+attribute of the dictionary, the descriptor takes precedence (because it’s an overriding
+descriptor ).</p>
+<p>One more thing: deleting the attribute will not work anymore:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">client</span><span class="o">.</span><span class="n">descriptor</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">AttributeError</span>: <span class="n">__delete__</span>
+</pre></div>
+</div>
+<p>The reason is as follows: given that now, the descriptor always takes place, calling
+<code class="docutils literal notranslate"><span class="pre">del</span></code> on an object doesn’t try to delete the attribute from the dictionary (<code class="docutils literal notranslate"><span class="pre">__dict__</span></code>) of the
+object, but instead it tries to call the <code class="docutils literal notranslate"><span class="pre">__delete__()</span></code> method of the descriptor (which is
+not implemented in this example, hence the attribute error).</p>
+<p>This is the difference between data and non-data descriptors. If the descriptor implements
+<code class="docutils literal notranslate"><span class="pre">__set__()</span></code>, then it will always take precedence, no matter what attributes are present in
+the dictionary of the object. If this method is not implemented, then the dictionary will be
+looked up first, and then the descriptor will run.</p>
+<p>An interesting observation you might have noticed is this line on the set method:
+<code class="docutils literal notranslate"><span class="pre">instance.__dict__[&quot;descriptor&quot;]</span> <span class="pre">=</span> <span class="pre">value</span></code>. There are a lot of things to question about that line, but let’s
+break it down into parts.</p>
+<p>First, why is it altering just the name of a “descriptor” attribute? This is just a
+simplification for this example, but, as it transpires when working with descriptors, it
+doesn’t know at this point the name of the parameter it was assigned to, so we just used the
+one from the example, knowing that it was going to be “descriptor”.</p>
+<p>In a real example, you would do one of two things: either receive the name as a parameter
+and store it internally in the <code class="docutils literal notranslate"><span class="pre">init</span></code> method, so that this one will just use the internal
+attribute, or, even better, use the <code class="docutils literal notranslate"><span class="pre">__set_name__</span></code> method.</p>
+<p>Why is it accessing the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute of the instance directly? Another good question,
+which also has at least two explanations. First, you might be thinking why not just do the
+following: <code class="docutils literal notranslate"><span class="pre">setattr(instance,</span> <span class="pre">&quot;descriptor&quot;,</span> <span class="pre">value)</span></code>. Remember that this method (<code class="docutils literal notranslate"><span class="pre">__set__</span></code>)
+is called when we try to assign something to the
+attribute that is a descriptor. So, using <code class="docutils literal notranslate"><span class="pre">setattr()</span></code> will call this descriptor again,
+which, in turn, will call it again, and so on and so forth. This will end up in an infinite
+recursion.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not use <code class="docutils literal notranslate"><span class="pre">setattr()</span></code> or the assignment expression directly on the descriptor inside the <code class="docutils literal notranslate"><span class="pre">__set__</span></code> method because that will trigger an infinite recursion.</p>
+</div>
+<p>Why, then, is the descriptor not able to book-keep the values of the properties for all of its
+objects?</p>
+<p>The client class already has a reference to the descriptor. If we add a reference from the
+descriptor to the client object, we are creating circular dependencies, and these objects
+will never be garbage-collected. Since they are pointing at each other, their reference counts
+will never drop below the threshold for removal.</p>
+<p>A possible alternative here is to use weak references, with the <code class="docutils literal notranslate"><span class="pre">weakref</span></code> module, and create
+a weak reference key dictionary if we want to do that. This implementation is explained
+later on, but we prefer to use this idiom, since it is fairly common and accepted when writing descriptors.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. The null object pattern &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                28/02/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. The null object pattern</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/design_patterns/null_object_pattern.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-null-object-pattern">
+<h1>3. The null object pattern<a class="headerlink" href="#the-null-object-pattern" title="Permalink to this headline">¶</a></h1>
+<p>The null object pattern is an idea that relates to the good practices that were mentioned in
+previously. Here, we are formalizing them, and giving more context
+and analysis to this idea.</p>
+<p>The principle is rather simple: functions or methods must return objects of a consistent
+type. If this is guaranteed, then clients of our code can use the objects that are returned with
+polymorphism, without having to run extra checks on them.</p>
+<p>In the previous examples, we explored how the dynamic nature of Python made things
+easier for most design patterns. In some cases, they disappear entirely, and in others, they
+are much easier to implement. The main goal of design patterns as they were originally
+thought of is that methods or functions should not explicitly name the class of the object
+that they need in order to work. For this reason, they propose the creation of interfaces and
+a way of rearranging the objects to make them fit these interfaces in order to modify the
+design. But most of the time, this is not needed in Python, and we can just pass different
+objects, and as long as they respect the methods they must have, then the solution will
+work.</p>
+<p>On the other hand, the fact that objects don’t necessarily have to comply with an interface
+requires us to be more careful as to the things that are returning from such methods and
+functions. In the same way that our functions didn’t make any assumptions about what
+they were receiving, it’s fair to assume that clients of our code will not make any
+assumptions either (it is our responsibility to provide objects that are compatible). This can
+be enforced or validated with design by contract. Here, we will explore a simple pattern
+that will help us avoid these kinds of problems.</p>
+<p>Consider the chain or responsibility design pattern explored in the previous section. We
+saw how flexible it is and its many advantages, such as decoupling responsibilities into
+smaller objects. One of the problems it has is that we never actually know what object will
+end up processing the message, if any. In particular, in our example, if there was no
+suitable object to process the log line, then the method would simply return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>We don’t know how users will use the data we passed, but we do know that they are
+expecting a dictionary. Therefore, the following error might occur:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;NoneType&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;keys&#39;</span>
+</pre></div>
+</div>
+<p>In this case, the fix is rather simple: the default value of the <code class="docutils literal notranslate"><span class="pre">process()</span></code> method should be
+an empty dictionary rather than <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Ensure that you return objects of a consistent type.</p>
+</div>
+<p>But what if the method didn’t return a dictionary, but a custom object of our domain?</p>
+<p>To solve this problem, we should have a class that represents the empty state for that object
+and return it. If we have a class that represents users in our system, and a function that
+queries users by their ID, then in the case that a user is not found, it should do one of the
+following two things:</p>
+<ul class="simple">
+<li><p>Raise an exception</p></li>
+<li><p>Return an object of the <code class="docutils literal notranslate"><span class="pre">UserUnknown</span></code> type</p></li>
+</ul>
+<p>But in no case should it return <code class="docutils literal notranslate"><span class="pre">None</span></code>. The phrase <code class="docutils literal notranslate"><span class="pre">None</span></code> doesn’t represent what just
+happened, and the caller might legitimately try to ask methods to it, and it will fail with
+<code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>.</p>
+<p>We have discussed exceptions and their pros and cons earlier on, so we should mention
+that this <code class="docutils literal notranslate"><span class="pre">null</span></code> object should just have the same methods as the original user and do nothing
+for each one of them.</p>
+<p>The advantage of using this structure is that not only are we avoiding an error at runtime
+but also that this object might be useful. It could make the code easier to test, and it can
+even, for instance, help in debugging (maybe we could put logging into the methods to
+understand why that state was reached, what data was provided to it, and so on).</p>
+<p>By exploiting almost all of the magic methods of Python, it would be possible to create a
+generic null object that does absolutely nothing, no matter how it is called, but which can
+be called from almost any client. Such an object would slightly resemble a Mock object. It is
+not advisable to go down that path because of the following reasons:</p>
+<ul class="simple">
+<li><p>It loses meaning with the domain problem. Back in our example, having an object of the <code class="docutils literal notranslate"><span class="pre">UnknownUser</span></code> type makes sense, and gives the caller a clear idea that something went wrong with the query.</p></li>
+<li><p>It doesn’t respect the original interface. This is problematic. Remember that the point is that an <code class="docutils literal notranslate"><span class="pre">UnknownUser</span></code> is a user, and therefore it must have the same methods. If the caller accidentally asks for a method that is not there, then, in that case, it should raise an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> exception, and that would be good. With the generic <code class="docutils literal notranslate"><span class="pre">null</span></code> object that can do anything and respond to anything, we would be losing this information, and bugs might creep in. If we opt for creating a <code class="docutils literal notranslate"><span class="pre">Mock</span></code> object with <code class="docutils literal notranslate"><span class="pre">spec=User</span></code>, then this anomaly would be caught, but again, using a <code class="docutils literal notranslate"><span class="pre">Mock</span></code> object to represent what is actually an empty state harms the intention revealing the degree of the code.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This pattern is a good practice that allows us to maintain polymorphism in our objects.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
