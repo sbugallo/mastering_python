@@ -11,7 +11,7 @@ but that doesn't form the essence of a design pattern.
 That's the theoretical aspect of a design pattern, the fact that it is an abstract idea that
 expresses concepts about the layout of the objects in the solution. There are plenty of other
 books and several other resources about object-oriented design, and design patterns in
-particular, so in this book, we are going to focus on those implementation details for
+particular, so we are going to focus on those implementation details for
 Python.
 
 Given the nature of Python, some of the classical design patterns aren't actually needed.

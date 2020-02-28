@@ -29,7 +29,7 @@ perspective of a system.
 
 Inside an application, there are multiple components. Their code is divided into other
 subcomponents, such as modules or packages, and the modules into classes or functions,
-and the classes into methods. Throughout the book, the emphasis has been on keeping
+and the classes into methods. The emphasis has been on keeping
 these components as small as possible, particularly in the case of functions, they
 should do one thing, and be small.
 
