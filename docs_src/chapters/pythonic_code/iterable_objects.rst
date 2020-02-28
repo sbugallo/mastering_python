@@ -1,4 +1,4 @@
-4. Iterable objects
+5. Iterable objects
 *******************
 In Python, we have objects that can be iterated by default: lists, tuples, sets and dictionaries. However, the built-in
 iterable objects are not the only kind that we can have in a for loop. We could also create our own iterable, with the
@@ -14,7 +14,7 @@ level are the following two things, in order:
 Therefore, as a fallback mechanism, sequences can be iterated, and so there are two ways of customizing our objects to
 be able to work on for loops.
 
-4.1. Creating iterable objects
+5.1. Creating iterable objects
 ++++++++++++++++++++++++++++++
 
 When we try to iterate an object, Python will call the ``iter()`` function over it. One of the first things this
@@ -118,7 +118,7 @@ again. This is called a container iterable.
 
 ..note:: In general, it is a good idea to work with container iterables when dealing with generators.
 
-4.2. Creating sequences
+5.2. Creating sequences
 +++++++++++++++++++++++
 
 Maybe our object does not define the ``__iter__()`` method, but we still want to be able to iterate over it. If

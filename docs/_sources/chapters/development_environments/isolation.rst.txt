@@ -254,7 +254,7 @@ command:
 This will create a new file named ``Vagrantfile`` in the current working directory. The best
 place to store this file is usually the root of the related project sources. This file is already a
 valid configuration that will create a new VM using the default provider and base box
-image. The default ``Vagrantfile`` content that's created with the vagrant ``init`` command
+image. The default ``Vagrantfile`` content that's created with the ``vagrant init`` command
 contains a lot of comments that will guide you through the complete configuration process.
 
 The following is a minimal example of ``Vagrantfile`` for the Python 3.7 development
@@ -556,17 +556,17 @@ directory. An example of such a file for our previous project could be as follow
 
     version: '3'
     services:
-     webserver:
-     # this tell Compose to build image from
-     # local (.) directory
-     build: .
-     # this is equivalent to "-p" option of
-     # the "docker build" command
-     ports:
-     - "80:80"
-     # this is equivalent to "-t" option of
-     # the "docker build" command
-     tty: true
+         webserver:
+             # this tell Compose to build image from
+             # local (.) directory
+             build: .
+             # this is equivalent to "-p" option of
+             # the "docker build" command
+             ports:
+                - "80:80"
+             # this is equivalent to "-t" option of
+             # the "docker build" command
+             tty: true
 
 If you create such a docker-compose.yml file in your project, then your whole application
 environment can be started and stopped with two simple commands:

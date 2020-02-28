@@ -1,4 +1,4 @@
-7. Callable objects
+8. Callable objects
 *******************
 
 It is possible (and often convenient) to define objects that can act as functions. One of the most common applications

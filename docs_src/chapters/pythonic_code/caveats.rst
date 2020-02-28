@@ -1,8 +1,8 @@
-8. Caveats in Python
-********************
+11. Caveats in Python
+*********************
 
-8.1. Mutable default arguments
-++++++++++++++++++++++++++++++
+11.1. Mutable default arguments
++++++++++++++++++++++++++++++++
 
 Simply put, don't use mutable objects as the default arguments of functions. If you use mutable objects as default
 arguments, you will get results that are not the expected ones. Consider the following erroneous function definition:
@@ -54,8 +54,8 @@ every time None appears:
 
         return f"{name} ({age})"
 
-8.2. Extending built-in types
-+++++++++++++++++++++++++++++
+11.2. Extending built-in types
+++++++++++++++++++++++++++++++
 
 The correct way of extending built-in types such as lists, strings, and dictionaries is by means of the collections
 module.

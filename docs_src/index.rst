@@ -14,7 +14,6 @@ Index
 
     chapters/how_python_works/index
     chapters/development_environments/index
-    chapters/docstrings_and_annotations/index
     chapters/pythonic_code/index
     chapters/general_traits/index
     chapters/solid_principles/index

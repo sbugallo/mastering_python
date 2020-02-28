@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>4. Iterable objects &mdash; Mastering Python</title>
+  <title>5. Iterable objects &mdash; Mastering Python</title>
   
 
   
@@ -91,7 +91,6 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
@@ -146,7 +145,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>4. Iterable objects</li>
+      <li>5. Iterable objects</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,7 +165,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="iterable-objects">
-<h1>4. Iterable objects<a class="headerlink" href="#iterable-objects" title="Permalink to this headline">¶</a></h1>
+<h1>5. Iterable objects<a class="headerlink" href="#iterable-objects" title="Permalink to this headline">¶</a></h1>
 <p>In Python, we have objects that can be iterated by default: lists, tuples, sets and dictionaries. However, the built-in
 iterable objects are not the only kind that we can have in a for loop. We could also create our own iterable, with the
 logic we define for iteration.</p>
@@ -180,7 +179,7 @@ level are the following two things, in order:</p>
 <p>Therefore, as a fallback mechanism, sequences can be iterated, and so there are two ways of customizing our objects to
 be able to work on for loops.</p>
 <div class="section" id="creating-iterable-objects">
-<h2>4.1. Creating iterable objects<a class="headerlink" href="#creating-iterable-objects" title="Permalink to this headline">¶</a></h2>
+<h2>5.1. Creating iterable objects<a class="headerlink" href="#creating-iterable-objects" title="Permalink to this headline">¶</a></h2>
 <p>When we try to iterate an object, Python will call the <code class="docutils literal notranslate"><span class="pre">iter()</span></code> function over it. One of the first things this
 function checks for is the presence of the <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> method on that object, which, if present, will be executed.</p>
 <p>The following code creates an object that allows iterating over a range of dates, producing one day at a time on every
@@ -269,7 +268,7 @@ again. This is called a container iterable.</p>
 <p>..note:: In general, it is a good idea to work with container iterables when dealing with generators.</p>
 </div>
 <div class="section" id="creating-sequences">
-<h2>4.2. Creating sequences<a class="headerlink" href="#creating-sequences" title="Permalink to this headline">¶</a></h2>
+<h2>5.2. Creating sequences<a class="headerlink" href="#creating-sequences" title="Permalink to this headline">¶</a></h2>
 <p>Maybe our object does not define the <code class="docutils literal notranslate"><span class="pre">__iter__()</span></code> method, but we still want to be able to iterate over it. If
 <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> is not defined on the object, the <code class="docutils literal notranslate"><span class="pre">iter()</span></code> function will look for the presence of <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, and if
 this is not found, it will raise TypeError.</p>

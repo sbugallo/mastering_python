@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2. Context managers &mdash; Mastering Python</title>
+  <title>3. Context managers &mdash; Mastering Python</title>
   
 
   
@@ -91,7 +91,6 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
@@ -146,7 +145,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>2. Context managers</li>
+      <li>3. Context managers</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,7 +165,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="context-managers">
-<h1>2. Context managers<a class="headerlink" href="#context-managers" title="Permalink to this headline">¶</a></h1>
+<h1>3. Context managers<a class="headerlink" href="#context-managers" title="Permalink to this headline">¶</a></h1>
 <p>Context managers are quite useful since they correctly respond to a pattern. The pattern is actually every situation
 where we want to run some code, and has preconditions and postconditions, meaning that we want to run things before and
 after a certain main action.</p>
@@ -249,7 +248,7 @@ should never pass silently.</p>
 <p>Keep in mind not to accidentally return True on the <code class="docutils literal notranslate"><span class="pre">__exit__</span></code>. If you do, make sure that this is exactly what you
 want, and that there is a good reason for it.</p>
 <div class="section" id="implementing-context-managers">
-<h2>2.1. Implementing context managers<a class="headerlink" href="#implementing-context-managers" title="Permalink to this headline">¶</a></h2>
+<h2>3.1. Implementing context managers<a class="headerlink" href="#implementing-context-managers" title="Permalink to this headline">¶</a></h2>
 <p>In general, we can implement context managers implementing the <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and <code class="docutils literal notranslate"><span class="pre">__exit__</span></code> magic methods, and then
 that object will be able to support the context manager protocol. While this is the most common way for context managers
 to be implemented, it is not the only one.</p>

@@ -1,4 +1,4 @@
-6. Dynamic attributes for objects
+7. Dynamic attributes for objects
 *********************************
 
 It is possible to control the way attributes are obtained from objects by means of the ``__getattr__`` magic method.

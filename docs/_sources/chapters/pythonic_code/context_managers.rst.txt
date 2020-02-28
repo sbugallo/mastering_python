@@ -1,4 +1,4 @@
-2. Context managers
+3. Context managers
 *******************
 
 Context managers are quite useful since they correctly respond to a pattern. The pattern is actually every situation
@@ -100,7 +100,7 @@ should never pass silently.
 Keep in mind not to accidentally return True on the ``__exit__``. If you do, make sure that this is exactly what you
 want, and that there is a good reason for it.
 
-2.1. Implementing context managers
+3.1. Implementing context managers
 ++++++++++++++++++++++++++++++++++
 
 In general, we can implement context managers implementing the ``__enter__`` and ``__exit__`` magic methods, and then

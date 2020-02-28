@@ -1,4 +1,4 @@
-3. Properties, attributes and different types of methods for objects
+4. Properties, attributes and different types of methods for objects
 ********************************************************************
 
 All of the properties and functions of an object are public in Python, which is different from other languages where
@@ -9,7 +9,7 @@ mark some attributes as private or protected.
 There is no strict enforcement, but there are some conventions. An attribute that starts with an underscore is meant to
 be private to that object, and we expect that no external agent calls it (but again, there is nothing preventing this).
 
-3.1. Underscores in Python
+4.1. Underscores in Python
 ++++++++++++++++++++++++++
 
 Consider the following example to illustrate this:
@@ -84,7 +84,7 @@ and respect the Pythonic convention that it is a private attribute.
 
 .. note:: Do not use double underscores.
 
-3.2 Properties
+4.2 Properties
 ++++++++++++++
 
 When the object needs to just hold values, we can use regular attributes. Sometimes, we might want to do some

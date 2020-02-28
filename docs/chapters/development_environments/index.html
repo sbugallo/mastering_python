@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Docstrings and annotations" href="../docstrings_and_annotations/index.html" />
+    <link rel="next" title="Pythonic code" href="../pythonic_code/index.html" />
     <link rel="prev" title="How does Python work?" href="../how_python_works/index.html" /> 
 </head>
 
@@ -118,7 +118,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
@@ -189,7 +188,7 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="../docstrings_and_annotations/index.html" class="btn btn-neutral float-right" title="Docstrings and annotations" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../pythonic_code/index.html" class="btn btn-neutral float-right" title="Pythonic code" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../how_python_works/index.html" class="btn btn-neutral float-left" title="How does Python work?" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -507,7 +506,7 @@ command:</p>
 <p>This will create a new file named <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> in the current working directory. The best
 place to store this file is usually the root of the related project sources. This file is already a
 valid configuration that will create a new VM using the default provider and base box
-image. The default <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> content that’s created with the vagrant <code class="docutils literal notranslate"><span class="pre">init</span></code> command
+image. The default <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> content that’s created with the <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">init</span></code> command
 contains a lot of comments that will guide you through the complete configuration process.</p>
 <p>The following is a minimal example of <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> for the Python 3.7 development
 environment based on the Ubuntu operating system, with some sensible defaults that,
@@ -773,17 +772,17 @@ and allows you to describe multi-container applications using the YAML syntax.</
 directory. An example of such a file for our previous project could be as follows:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
 <span class="nt">services</span><span class="p">:</span>
- <span class="nt">webserver</span><span class="p">:</span>
- <span class="c1"># this tell Compose to build image from</span>
- <span class="c1"># local (.) directory</span>
- <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
- <span class="c1"># this is equivalent to &quot;-p&quot; option of</span>
- <span class="c1"># the &quot;docker build&quot; command</span>
- <span class="nt">ports</span><span class="p">:</span>
- <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
- <span class="c1"># this is equivalent to &quot;-t&quot; option of</span>
- <span class="c1"># the &quot;docker build&quot; command</span>
- <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+     <span class="nt">webserver</span><span class="p">:</span>
+         <span class="c1"># this tell Compose to build image from</span>
+         <span class="c1"># local (.) directory</span>
+         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+         <span class="c1"># this is equivalent to &quot;-p&quot; option of</span>
+         <span class="c1"># the &quot;docker build&quot; command</span>
+         <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+         <span class="c1"># this is equivalent to &quot;-t&quot; option of</span>
+         <span class="c1"># the &quot;docker build&quot; command</span>
+         <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>If you create such a docker-compose.yml file in your project, then your whole application
@@ -1153,7 +1152,7 @@ previous section. The most notable examples are as follows:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../docstrings_and_annotations/index.html" class="btn btn-neutral float-right" title="Docstrings and annotations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../pythonic_code/index.html" class="btn btn-neutral float-right" title="Pythonic code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../how_python_works/index.html" class="btn btn-neutral float-left" title="How does Python work?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

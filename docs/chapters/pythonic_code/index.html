@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="General traits of good code" href="../general_traits/index.html" />
-    <link rel="prev" title="Docstrings and annotations" href="../docstrings_and_annotations/index.html" /> 
+    <link rel="prev" title="Modern Python Development Environments" href="../development_environments/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,32 +93,68 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pythonic code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#indexes-and-slices">1. Indexes and slices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creating-your-own-sequences">1.1. Creating your own sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strings-and-bytes">1. Strings and bytes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-details">1.1. Implementation details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#string-concatenation">1.2. String concatenation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#constant-folding-the-peephole-optimizer-and-the-ast-optimizer">1.2.1. Constant folding, the peephole optimizer, and the AST optimizer</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#context-managers">2. Context managers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#implementing-context-managers">2.1. Implementing context managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#string-formatting-with-f-strings">1.3. String formatting with f-strings</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#properties-attributes-and-different-types-of-methods-for-objects">3. Properties, attributes and different types of methods for objects</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#underscores-in-python">3.1. Underscores in Python</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#properties">3.2 Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#indexes-and-slices">2. Indexes and slices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-your-own-sequences">2.1. Creating your own sequences</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#iterable-objects">4. Iterable objects</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creating-iterable-objects">4.1. Creating iterable objects</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#creating-sequences">4.2. Creating sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#context-managers">3. Context managers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-context-managers">3.1. Implementing context managers</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#container-objects">5. Container objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dynamic-attributes-for-objects">6. Dynamic attributes for objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#callable-objects">7. Callable objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#caveats-in-python">8. Caveats in Python</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#mutable-default-arguments">8.1. Mutable default arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#extending-built-in-types">8.2. Extending built-in types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#properties-attributes-and-different-types-of-methods-for-objects">4. Properties, attributes and different types of methods for objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#underscores-in-python">4.1. Underscores in Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#properties">4.2 Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#iterable-objects">5. Iterable objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-iterable-objects">5.1. Creating iterable objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-sequences">5.2. Creating sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#container-objects">6. Container objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lists-and-tuples">6.1. Lists and tuples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">6.1.1. Implementation details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-comprehensions">6.1.2. List comprehensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-idioms">6.1.3. Other idioms</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dictionaries">6.2. Dictionaries</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">6.2.1. Implementation details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#weaknesses-and-alternatives">6.2.2. Weaknesses and alternatives</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sets">6.3. Sets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">6.3.1. Implementation details</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#supplemental-data-types-and-containers">6.4. Supplemental data types and containers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#specialized-data-containers-from-the-collections-module">6.4.1. Specialized data containers from the collections module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#symbolic-enumeration-with-the-enum-module">6.4.2. Symbolic enumeration with the enum module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-containers">6.5. Custom containers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-attributes-for-objects">7. Dynamic attributes for objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#callable-objects">8. Callable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docstrings">9. Docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotations">10. Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#do-annotations-replace-docstrings">10.1. Do annotations replace docstrings?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#caveats-in-python">11. Caveats in Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mutable-default-arguments">11.1. Mutable default arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extending-built-in-types">11.2. Extending built-in types</a></li>
 </ul>
 </li>
 </ul>
@@ -195,7 +231,7 @@
         <a href="../general_traits/index.html" class="btn btn-neutral float-right" title="General traits of good code" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../docstrings_and_annotations/index.html" class="btn btn-neutral float-left" title="Docstrings and annotations" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../development_environments/index.html" class="btn btn-neutral float-left" title="Modern Python Development Environments" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -206,8 +242,245 @@
             
   <div class="section" id="pythonic-code">
 <h1>Pythonic code<a class="headerlink" href="#pythonic-code" title="Permalink to this headline">¶</a></h1>
+<p>Python provides a great set of data types. This is true for both numeric types and also
+collections. Regarding the numeric types, there is nothing special about their syntax. There
+are, of course, some differences for defining literals of every type and some (maybe) not
+well-known details regarding operators, but there isn’t a lot that could surprise you in
+Python regarding the syntax for numeric types. Things change when it comes to collections
+and strings. Despite the there should be only one way to do something mantra, the Python
+developer is really left with plenty of choices. Some of the code patterns that seem intuitive
+and simple to beginners are often considered non-Pythonic by experienced programmers,
+because they are either inefficient or simply too verbose.</p>
+<p>Such Pythonic patterns for solving common problems (many programmers call these
+idioms) may often seem like only aesthetics. You couldn’t be more wrong in thinking that.
+Most of the idioms are driven by the fact that Python is implemented internally and how
+the built-in structures and modules work. Knowing more about such details is essential for
+a good understanding of the language. Unfortunately, the community itself is not free from
+myths and stereotypes about how things in Python work. Only by digging deeper by
+yourself will you be able to tell which of the popular statements about Python are really
+true.</p>
+<div class="section" id="strings-and-bytes">
+<h2>1. Strings and bytes<a class="headerlink" href="#strings-and-bytes" title="Permalink to this headline">¶</a></h2>
+<p>The topic of strings may provide some confusion for programmers that used to program
+only in Python 2. In Python 3, there is only one datatype capable of storing textual
+information. It is <code class="docutils literal notranslate"><span class="pre">str</span></code>, or simply string. It is an immutable sequence that stores Unicode
+code points. This is the major difference from Python 2, where <code class="docutils literal notranslate"><span class="pre">str</span></code> represented byte strings:
+something that is now handled by the <code class="docutils literal notranslate"><span class="pre">bytes</span></code> objects (but not exactly in the same way).</p>
+<p>Strings in Python are sequences. This single fact should be enough to include them in a
+section covering other container types. But they differ from other container types in one
+important detail. Strings have very specific limitations on what type of data they can store,
+and that is Unicode text.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bytes</span></code>, and its mutable alternative, <code class="docutils literal notranslate"><span class="pre">bytearray</span></code>, differs from <code class="docutils literal notranslate"><span class="pre">str</span></code> by allowing only bytes as
+a sequence value, and bytes in Python are integers in the <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">256</span></code> range. This may
+be a bit confusing at the beginning, because, when printed, they may look very similar to
+strings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="nb">bytes</span><span class="p">([</span><span class="mi">102</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">111</span><span class="p">]))</span>
+<span class="go">b&#39;foo&#39;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">bytes</span></code> and <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> types allow you to work with raw binary data that may not
+always have to be textual (for example, audio/video files, images, and network packets).
+The true nature of these types is revealed when they are converted into other sequence
+types, such as list or tuple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;foo bar&#39;</span><span class="p">)</span>
+<span class="go">[102, 111, 111, 32, 98, 97, 114]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;foo bar&#39;</span><span class="p">)</span>
+<span class="go">(102, 111, 111, 32, 98, 97, 114)</span>
+</pre></div>
+</div>
+<p>A lot of Python 3 controversy was about breaking the backwards compatibility for string
+literals and how Python deals with Unicode. Starting from Python 3.0, every string literal
+without any prefix is Unicode. So, literals enclosed by single quotes (<code class="docutils literal notranslate"><span class="pre">'</span></code>), double quotes (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>),
+or groups of three quotes (single or double) without any prefix represent the <code class="docutils literal notranslate"><span class="pre">str</span></code> data type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="s2">&quot;some string&quot;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;str&#39;&gt;</span>
+</pre></div>
+</div>
+<p>In Python 2, the Unicode literals required a <code class="docutils literal notranslate"><span class="pre">u</span></code> prefix (like <code class="docutils literal notranslate"><span class="pre">u&quot;some</span> <span class="pre">string&quot;</span></code>). This prefix is
+still allowed for backwards compatibility (starting from Python 3.3), but does not hold any
+syntactic meaning in Python 3.</p>
+<p>Byte literals were already presented in some of the previous examples, but let’s explicitly
+present their syntax for the sake of consistency. Bytes literals are enclosed by single quotes,
+double quotes, or triple quotes, but must be preceded with a <code class="docutils literal notranslate"><span class="pre">b</span></code> or <code class="docutils literal notranslate"><span class="pre">B</span></code> prefix:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;some bytes&quot;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;bytes&#39;&gt;</span>
+</pre></div>
+</div>
+<p>Note that Python does not provide a syntax for <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> literals. If you want to create
+a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> value, you need to use a <code class="docutils literal notranslate"><span class="pre">byte``s</span> <span class="pre">literal</span> <span class="pre">and</span> <span class="pre">a</span> <span class="pre">``bytearray()</span></code> type constructor:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bytearray</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;some bytes&#39;</span><span class="p">)</span>
+<span class="go">bytearray(b&#39;some bytes&#39;)</span>
+</pre></div>
+</div>
+<p>It is important to remember that Unicode strings contain abstract text that is independent
+from the byte representation. This makes them unable to be saved on the disk or sent over
+the network without encoding them to binary data. There are two ways to encode string
+objects into byte sequences:</p>
+<ul class="simple">
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">str.encode(encoding,</span> <span class="pre">errors)</span></code> method, which encodes the string using a registered codec for encoding. Codec is specified using the encoding argument, and, by default, it is ‘utf-8’. The second argument, errors, specifies the error handling scheme. It can be ‘strict’ (default), ‘ignore’ , ‘replace’ , ‘xmlcharrefreplace’, or any other registered handler (refer to the built-in codecs module documentation).</p></li>
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">bytes(source,</span> <span class="pre">encoding,</span> <span class="pre">errors</span></code>) constructor, which creates a new bytes sequence. When the source is of the <code class="docutils literal notranslate"><span class="pre">str</span></code> type, then the encoding argument is obligatory and it does not have a default value. The usage of the encoding and errors arguments is the same as for the <code class="docutils literal notranslate"><span class="pre">str.encode()</span></code> method.</p></li>
+</ul>
+<p>Binary data represented by <code class="docutils literal notranslate"><span class="pre">bytes</span></code> can be converted into a string in an analogous way:</p>
+<ul class="simple">
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">bytes.decode(encoding,</span> <span class="pre">errors)</span></code> method, which decodes the bytes using the codec registered for encoding. The arguments of this method have the same meaning and defaults as the arguments of <code class="docutils literal notranslate"><span class="pre">str.encode()</span></code>.</p></li>
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">str(source,</span> <span class="pre">encoding,</span> <span class="pre">error)</span></code> constructor, which creates a new string instance. Similar to the <code class="docutils literal notranslate"><span class="pre">bytes()</span></code> constructor, the encoding argument in the <code class="docutils literal notranslate"><span class="pre">str()</span></code> call has no default value and must be provided if the bytes sequence is used as a source.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Due to changes made in Python 3, some people tend to refer to
+the <code class="docutils literal notranslate"><span class="pre">bytes</span></code> instances as byte strings. This is mostly due to historic reasons:
+<code class="docutils literal notranslate"><span class="pre">bytes</span></code> in Python 3 is the sequence type that is the closest one to
+the <code class="docutils literal notranslate"><span class="pre">str</span></code> type from Python 2 (but not the same). Still, the <code class="docutils literal notranslate"><span class="pre">bytes</span></code> instance is
+a sequence of bytes and also does not need to represent textual data. So, in
+order to avoid any confusion, it is advised to always refer to them as
+either bytes or byte sequence, despite their similarities to strings. The
+concept of strings is reserved for textual data in Python 3, and this is now
+always <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+</div>
+<div class="section" id="implementation-details">
+<h3>1.1. Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h3>
+<p>Python strings are immutable. This is also true for byte sequences. This is an important fact,
+because it has both advantages and disadvantages. It also affects the way strings should be
+handled in Python efficiently. Thanks to immutability, strings can be used as dictionary
+keys or set collection elements because, once initialized, they will never change their
+value. On the other hand, whenever a modified string is required (even with only tiny
+modification), a completely new instance needs to be created. Fortunately, <code class="docutils literal notranslate"><span class="pre">bytearray</span></code>, as a
+mutable version of <code class="docutils literal notranslate"><span class="pre">bytes</span></code>, does not have such an issue. Byte arrays can be modified inplace
+(without creating new objects) through item assignments and can be dynamically
+resized, exactly like lists: using appends, pops, inserts, and so on.</p>
+</div>
+<div class="section" id="string-concatenation">
+<h3>1.2. String concatenation<a class="headerlink" href="#string-concatenation" title="Permalink to this headline">¶</a></h3>
+<p>The fact that Python strings are immutable imposes some problems when multiple string
+instances need to be joined together. As we stated previously, concatenating immutable
+sequences results in the creation of a new sequence object. Consider that a new string is
+built by repeated concatenation of multiple strings, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">substrings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;These &quot;</span><span class="p">,</span> <span class="s2">&quot;are &quot;</span><span class="p">,</span> <span class="s2">&quot;strings &quot;</span><span class="p">,</span> <span class="s2">&quot;to &quot;</span><span class="p">,</span> <span class="s2">&quot;concatenate.&quot;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="k">for</span> <span class="n">substring</span> <span class="ow">in</span> <span class="n">substrings</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="n">substring</span>
+</pre></div>
+</div>
+<p>This will result in quadratic runtime costs in the total string length. In other words, it is
+highly inefficient. For handling such situations, the <code class="docutils literal notranslate"><span class="pre">str.join()</span></code> method is available. It
+accepts iterables of strings as the argument and returns joined strings. The call to <code class="docutils literal notranslate"><span class="pre">join()</span></code> of
+the str type can be done in two forms:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># using empty literal</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">substrings</span><span class="p">)</span>
+
+<span class="c1"># using &quot;unbound&quot; method call</span>
+<span class="nb">str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">substrings</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first form of the <code class="docutils literal notranslate"><span class="pre">join()</span></code> call is the most common idiom. The string that provides this
+method will be used as a separator between concatenated substrings. Consider the
+following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;some&#39;</span><span class="p">,</span> <span class="s1">&#39;comma&#39;</span><span class="p">,</span> <span class="s1">&#39;separated&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">])</span>
+<span class="go">&#39;some,comma,separated,values&#39;</span>
+</pre></div>
+</div>
+<p>It is worth remembering that just because it is faster (especially for large lists), it does not
+mean that the <code class="docutils literal notranslate"><span class="pre">join()</span></code> method should be used in every situation where two strings need to
+be concatenated. Despite being a widely recognized idiom, it does not improve code
+readability. And readability counts! There are also some situations where <code class="docutils literal notranslate"><span class="pre">join()</span></code> may not
+perform as well as ordinary concatenation with a + operator. Here are some examples:</p>
+<ul class="simple">
+<li><p>If the number of substrings is very small and they are not contained already by some iterable variable (existing list or tuple of strings): in some cases the overhead of creating a new sequence just to perform concatenation can overshadow the gain of using <code class="docutils literal notranslate"><span class="pre">join()</span></code>.</p></li>
+<li><p>When concatenating short literals: thanks to some interpreter-level optimizations, such as constant folding in CPython, some complex literals (not only strings), such as <code class="docutils literal notranslate"><span class="pre">'a'</span> <span class="pre">+</span> <span class="pre">'b'</span> <span class="pre">+'c'</span></code>, can be translated into a shorter form at compile time (here <code class="docutils literal notranslate"><span class="pre">'abc'</span></code>). Of course, this is enabled only for constants (literals) that are relatively short.</p></li>
+</ul>
+<p>Ultimately, if the number of strings to concatenate is known beforehand, the best
+readability is ensured by proper string formatting either using the <code class="docutils literal notranslate"><span class="pre">str.format()</span></code> method,
+the <code class="docutils literal notranslate"><span class="pre">%</span></code> operator, or f-string formatting. In code sections where the performance is not critical
+or the gain from optimizing string concatenation is very little, string formatting is
+recommended as the best alternative to concatenation.</p>
+<div class="section" id="constant-folding-the-peephole-optimizer-and-the-ast-optimizer">
+<h4>1.2.1. Constant folding, the peephole optimizer, and the AST optimizer<a class="headerlink" href="#constant-folding-the-peephole-optimizer-and-the-ast-optimizer" title="Permalink to this headline">¶</a></h4>
+<p>CPython uses various techniques to optimize your code. The first optimization takes place
+as soon as source code is transformed into the form of the abstract syntax tree, just before it
+is compiled into byte code. CPython can recognize specific patterns in the abstract syntax
+tree and make direct modifications to it. The other kind of optimizations are handled by the
+peephole optimizer. It implements a number of common optimizations directly on Python’s
+byte code. As we mentioned earlier, constant folding is one such feature. It allows the
+interpreter to convert complex literal expressions (such as <code class="docutils literal notranslate"><span class="pre">&quot;one&quot;</span> <span class="pre">+</span> <span class="pre">&quot;</span> <span class="pre">&quot;</span> <span class="pre">+</span> <span class="pre">&quot;thing&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span> <span class="pre">*</span> <span class="pre">79</span></code>, or <code class="docutils literal notranslate"><span class="pre">60</span> <span class="pre">*</span> <span class="pre">1000</span></code>) into a single literal that does not require any additional operations
+(concatenation or multiplication) at runtime.</p>
+<p>Until Python 3.5, all constant folding was done in CPython only by the peephole optimizer.
+For strings, the resulting constants were limited in length by a hardcoded value. In Python
+3.5, this value was equal to 20. In Python 3.7, most of the constant folding optimizations are
+handled earlier on the abstract syntax tree level. These particular details are a curiosity
+rather than a thing that can be relied on in your day-to-day programming. Information
+about other interesting optimizations performed by AST and peephole optimizers can be
+found in the <em>Python/ast_opt.c</em> and <em>Python/peephole.c</em> files of Python’s source code.</p>
+</div>
+</div>
+<div class="section" id="string-formatting-with-f-strings">
+<h3>1.3. String formatting with f-strings<a class="headerlink" href="#string-formatting-with-f-strings" title="Permalink to this headline">¶</a></h3>
+<p>F-strings are one of the most beloved new Python features that came with Python 3.6. It’s
+also one of the most controversial features of that release. The f-strings or formatted string
+literals that were introduced by the PEP 498 document add a new way to format strings in
+Python. Before Python 3.6, there were two basic ways to format strings:</p>
+<ul class="simple">
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">%</span></code> formatting for example <code class="docutils literal notranslate"><span class="pre">&quot;Some</span> <span class="pre">string</span> <span class="pre">with</span> <span class="pre">included</span> <span class="pre">%</span> <span class="pre">value&quot;</span> <span class="pre">%</span> <span class="pre">&quot;other&quot;</span></code></p></li>
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">str.format()</span></code> method for example <code class="docutils literal notranslate"><span class="pre">&quot;Some</span> <span class="pre">string</span> <span class="pre">with</span> <span class="pre">included</span> <span class="pre">{other}</span> <span class="pre">value&quot;.format(other=&quot;other&quot;)</span></code></p></li>
+</ul>
+<p>Formatted string literals are denoted with the <code class="docutils literal notranslate"><span class="pre">f</span></code> prefix, and their syntax is closest to the
+<code class="docutils literal notranslate"><span class="pre">str.format()</span></code> method, as they use a similar markup for denoting replacement fields in
+the text that has to be formatted. In the <code class="docutils literal notranslate"><span class="pre">str.format()</span></code> method, the text substitutions refer
+to arguments and keyword arguments that are passed to the formatting method. You can
+use either anonymous substitutions that will translate to consecutive argument indexes,
+explicit argument indexes, or keyword names.</p>
+<p>This means that the same string can be formatted in different ways:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">version_info</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;This is Python {}.{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">version_info</span><span class="p">)</span>
+<span class="go">&#39;This is Python 3.7&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;This is Python {0}.{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">version_info</span><span class="p">)</span>
+<span class="go">&#39;This is Python 3.7&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;This is Python {major}.{minor}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">major</span><span class="o">=</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span><span class="p">)</span>
+<span class="go">&#39;This is Python 3.7&#39;</span>
+</pre></div>
+</div>
+<p>What makes f-strings special is that replacement fields can be any Python expression, and it
+will be evaluated at runtime. Inside of strings, you have access to any variable that is
+available in the same namespace as the formatted literal. With f-strings, the preceding
+examples could be written in the following way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">version_info</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="s2">&quot;This is Python {version_info.major}.{version_info.minor}&quot;</span>
+<span class="go">&#39;This is Python 3.7&#39;</span>
+</pre></div>
+</div>
+<p>The ability to use expressions as replacement fields make formatting code simpler and
+shorter. You can also use the same formatting specifiers of replacement fields (for padding,
+aligning, signs, and so on) as the <code class="docutils literal notranslate"><span class="pre">str.format()</span></code> method, and the syntax is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="s2">&quot;{replacement_field_expression:format_specifier}&quot;</span>
+</pre></div>
+</div>
+<p>The following is a simple example of code that prints the first ten powers of the number 10
+using f-strings and aligns results using string formatting with padding:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;10^{x} == {10**x:10d}&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">10^0 == 1</span>
+<span class="go">10^1 == 10</span>
+<span class="go">10^2 == 100</span>
+<span class="go">10^3 == 1000</span>
+<span class="go">10^4 == 10000</span>
+<span class="go">10^5 == 100000</span>
+<span class="go">10^6 == 1000000</span>
+<span class="go">10^7 == 10000000</span>
+<span class="go">10^8 == 100000000</span>
+<span class="go">10^9 == 1000000000</span>
+</pre></div>
+</div>
+<p>The full formatting specification of the Python string is almost like a separate minilanguage
+inside Python. The best reference for it is the official documentation which you
+can find under <a class="reference external" href="https://docs.python.org/3/library/string.html">https://docs.python.org/3/library/string.html</a>.
+Another useful internet resource for that topic is <a class="reference external" href="https://pyformat.info/">https://pyformat.info/</a>, which presents
+the most important elements of this specification using practical examples.</p>
+</div>
+</div>
 <div class="section" id="indexes-and-slices">
-<h2>1. Indexes and slices<a class="headerlink" href="#indexes-and-slices" title="Permalink to this headline">¶</a></h2>
+<h2>2. Indexes and slices<a class="headerlink" href="#indexes-and-slices" title="Permalink to this headline">¶</a></h2>
 <p>In Python, some data structures or types support accesing it’s elements by index. The first element is placed in the
 index number zero. How would you access the last element of a list?</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numbers</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -250,7 +523,7 @@ last example includes a third parameter, which is the step.</p>
 </pre></div>
 </div>
 <div class="section" id="creating-your-own-sequences">
-<h3>1.1. Creating your own sequences<a class="headerlink" href="#creating-your-own-sequences" title="Permalink to this headline">¶</a></h3>
+<h3>2.1. Creating your own sequences<a class="headerlink" href="#creating-your-own-sequences" title="Permalink to this headline">¶</a></h3>
 <p>The functionality we just discussed works thanks to a magic method called <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>. This is the method that is
 called when something like <code class="docutils literal notranslate"><span class="pre">object[key]</span></code> is called, passing the key as a parameter. A sequence is an object that
 implements both <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> and <code class="docutils literal notranslate"><span class="pre">__len__</span></code>, and for this reason, it can be iterated over.</p>
@@ -278,7 +551,7 @@ on the list object:</p>
 </div>
 </div>
 <div class="section" id="context-managers">
-<h2>2. Context managers<a class="headerlink" href="#context-managers" title="Permalink to this headline">¶</a></h2>
+<h2>3. Context managers<a class="headerlink" href="#context-managers" title="Permalink to this headline">¶</a></h2>
 <p>Context managers are quite useful since they correctly respond to a pattern. The pattern is actually every situation
 where we want to run some code, and has preconditions and postconditions, meaning that we want to run things before and
 after a certain main action.</p>
@@ -361,7 +634,7 @@ should never pass silently.</p>
 <p>Keep in mind not to accidentally return True on the <code class="docutils literal notranslate"><span class="pre">__exit__</span></code>. If you do, make sure that this is exactly what you
 want, and that there is a good reason for it.</p>
 <div class="section" id="implementing-context-managers">
-<h3>2.1. Implementing context managers<a class="headerlink" href="#implementing-context-managers" title="Permalink to this headline">¶</a></h3>
+<h3>3.1. Implementing context managers<a class="headerlink" href="#implementing-context-managers" title="Permalink to this headline">¶</a></h3>
 <p>In general, we can implement context managers implementing the <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and <code class="docutils literal notranslate"><span class="pre">__exit__</span></code> magic methods, and then
 that object will be able to support the context manager protocol. While this is the most common way for context managers
 to be implemented, it is not the only one.</p>
@@ -433,7 +706,7 @@ conversion, hence making it safe to ignore it.</p>
 </div>
 </div>
 <div class="section" id="properties-attributes-and-different-types-of-methods-for-objects">
-<h2>3. Properties, attributes and different types of methods for objects<a class="headerlink" href="#properties-attributes-and-different-types-of-methods-for-objects" title="Permalink to this headline">¶</a></h2>
+<h2>4. Properties, attributes and different types of methods for objects<a class="headerlink" href="#properties-attributes-and-different-types-of-methods-for-objects" title="Permalink to this headline">¶</a></h2>
 <p>All of the properties and functions of an object are public in Python, which is different from other languages where
 properties can be public, private, or protected. That is, there is no point in preventing caller objects from invoking
 any attributes an object has. This is another difference with respect to other programming languages in which you can
@@ -441,7 +714,7 @@ mark some attributes as private or protected.</p>
 <p>There is no strict enforcement, but there are some conventions. An attribute that starts with an underscore is meant to
 be private to that object, and we expect that no external agent calls it (but again, there is nothing preventing this).</p>
 <div class="section" id="underscores-in-python">
-<h3>3.1. Underscores in Python<a class="headerlink" href="#underscores-in-python" title="Permalink to this headline">¶</a></h3>
+<h3>4.1. Underscores in Python<a class="headerlink" href="#underscores-in-python" title="Permalink to this headline">¶</a></h3>
 <p>Consider the following example to illustrate this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Connector</span><span class="p">:</span>
 
@@ -507,7 +780,7 @@ and respect the Pythonic convention that it is a private attribute.</p>
 </div>
 </div>
 <div class="section" id="properties">
-<h3>3.2 Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>
+<h3>4.2 Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>
 <p>When the object needs to just hold values, we can use regular attributes. Sometimes, we might want to do some
 computations based on the state of the object and the values of other attributes. Most of the time, properties are a
 good choice for this.</p>
@@ -586,7 +859,7 @@ methods that are called by different statements.</p>
 </div>
 </div>
 <div class="section" id="iterable-objects">
-<h2>4. Iterable objects<a class="headerlink" href="#iterable-objects" title="Permalink to this headline">¶</a></h2>
+<h2>5. Iterable objects<a class="headerlink" href="#iterable-objects" title="Permalink to this headline">¶</a></h2>
 <p>In Python, we have objects that can be iterated by default: lists, tuples, sets and dictionaries. However, the built-in
 iterable objects are not the only kind that we can have in a for loop. We could also create our own iterable, with the
 logic we define for iteration.</p>
@@ -600,7 +873,7 @@ level are the following two things, in order:</p>
 <p>Therefore, as a fallback mechanism, sequences can be iterated, and so there are two ways of customizing our objects to
 be able to work on for loops.</p>
 <div class="section" id="creating-iterable-objects">
-<h3>4.1. Creating iterable objects<a class="headerlink" href="#creating-iterable-objects" title="Permalink to this headline">¶</a></h3>
+<h3>5.1. Creating iterable objects<a class="headerlink" href="#creating-iterable-objects" title="Permalink to this headline">¶</a></h3>
 <p>When we try to iterate an object, Python will call the <code class="docutils literal notranslate"><span class="pre">iter()</span></code> function over it. One of the first things this
 function checks for is the presence of the <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> method on that object, which, if present, will be executed.</p>
 <p>The following code creates an object that allows iterating over a range of dates, producing one day at a time on every
@@ -689,7 +962,7 @@ again. This is called a container iterable.</p>
 <p>..note:: In general, it is a good idea to work with container iterables when dealing with generators.</p>
 </div>
 <div class="section" id="creating-sequences">
-<h3>4.2. Creating sequences<a class="headerlink" href="#creating-sequences" title="Permalink to this headline">¶</a></h3>
+<h3>5.2. Creating sequences<a class="headerlink" href="#creating-sequences" title="Permalink to this headline">¶</a></h3>
 <p>Maybe our object does not define the <code class="docutils literal notranslate"><span class="pre">__iter__()</span></code> method, but we still want to be able to iterate over it. If
 <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> is not defined on the object, the <code class="docutils literal notranslate"><span class="pre">iter()</span></code> function will look for the presence of <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, and if
 this is not found, it will raise TypeError.</p>
@@ -751,7 +1024,622 @@ In general, the iteration is preferable (and generators even more), but keep in 
 </div>
 </div>
 <div class="section" id="container-objects">
-<h2>5. Container objects<a class="headerlink" href="#container-objects" title="Permalink to this headline">¶</a></h2>
+<h2>6. Container objects<a class="headerlink" href="#container-objects" title="Permalink to this headline">¶</a></h2>
+<p>Python provides a good selection of built-in data containers that allow you to efficiently
+solve many problems if you choose them wisely. Types that you should already know of
+are those that have dedicated literals:</p>
+<ul class="simple">
+<li><p>Lists</p></li>
+<li><p>Tuples</p></li>
+<li><p>Dictionaries</p></li>
+<li><p>Sets</p></li>
+</ul>
+<p>Python is, of course, not limited to these four containers, and it extends the list of possible
+choices through its standard library. In many cases, solutions to some problems may be as
+simple as making a good choice for the data structure to hold your data.</p>
+<div class="section" id="lists-and-tuples">
+<h3>6.1. Lists and tuples<a class="headerlink" href="#lists-and-tuples" title="Permalink to this headline">¶</a></h3>
+<p>Two of the most basic collection types in Python are lists and tuples, and they both
+represent sequences of objects. The basic difference between them should be obvious for
+anyone who has spent more than a few hours with Python; lists are dynamic, so they can
+change their size, while tuples are immutable (cannot be modified after they are created).</p>
+<p>Lists and tuples in Python have various optimizations that make allocations/deallocations
+of small objects fast. They are also the recommended datatypes for structures where the
+position of the element is information by itself. For example, a tuple may be a good choice
+for storing a pair of (x, y) coordinates. Implementation details regarding tuples are not
+interesting. The only important thing about them in the scope of this chapter is
+that tuple is immutable and thus hashable. A detailed explanation of this section will be
+covered later in the Dictionaries section. More interesting than tuples is its dynamic
+counterpart: lists. In the next section, we will discuss how it really works, and how to deal
+with it efficiently.</p>
+<div class="section" id="id1">
+<h4>6.1.1. Implementation details<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>Many programmers easily confuse Python’s <code class="docutils literal notranslate"><span class="pre">list</span></code> type with the concept of linked lists
+which are found often in standard libraries of other languages, such as C, C++, or Java. In
+fact, CPython lists are not lists at all. In CPython, lists are implemented as variable length
+arrays. This should be also true for other implementations, such as Jython and IronPython,
+although such implementation details are often not documented in these projects. The
+reasons for such confusion is clear. This datatype is named <code class="docutils literal notranslate"><span class="pre">list</span></code> and also has an interface
+that could be expected from any linked list implementation.</p>
+<p>Why it is important and what does it mean? Lists are one of the most popular data
+structures, and the way in which they are used greatly affects every application’s
+performance. CPython is the most popular and used implementation, so knowing its
+internal implementation details is crucial.</p>
+<p>Lists in Python are contiguous arrays of references to other objects. The pointer to this array
+and the length is stored in the list’s head structure. This means that every time an item is
+added or removed, the array of references needs to be resized (reallocated). Fortunately, in
+Python, these arrays are created with exponential over allocation, so not every operation
+requires an actual resize of the underlying array. This is how the amortized cost of
+appending and popping elements can be low in terms of complexity. Unfortunately, some
+other operations that are considered cheap in ordinary linked lists have relatively high
+computational complexity in Python:</p>
+<ul class="simple">
+<li><p>Inserting an item at an arbitrary place using the <code class="docutils literal notranslate"><span class="pre">list.insert</span></code> method has complexity O(n).</p></li>
+<li><p>Deleting an item using <code class="docutils literal notranslate"><span class="pre">list.delete</span></code> or using the del operator har has complexity O(n)</p></li>
+</ul>
+<p>At least retrieving or setting an element using an index is an operation where cost is
+independent of the list’s size, and the complexity of these operations is always O(1).</p>
+<p>Let’s define <code class="docutils literal notranslate"><span class="pre">n</span></code> as the length of a list. Here is a full table of average time complexities for
+most of the list operations:
+====================================  ==========
+Operation                             Complexity
+====================================  ==========
+Copy                                  O(n)
+Append                                O(1)
+Insert                                O(n)
+Get item                              O(1)
+Set item                              O(1)
+Delete item                           O(n)
+Iteration                             O(n)
+Get slice of length <code class="docutils literal notranslate"><span class="pre">k</span></code>             O(k)
+Del slice                             O(n)
+Set slice of length <code class="docutils literal notranslate"><span class="pre">k</span></code>             O(k+n)
+Extend                                O(k)
+Multiply by <code class="docutils literal notranslate"><span class="pre">k</span></code>                     O(nk)
+Test existence (<code class="docutils literal notranslate"><span class="pre">element</span> <span class="pre">in</span> <span class="pre">list</span></code>)  O(n)
+<code class="docutils literal notranslate"><span class="pre">min()/max()</span></code>                       O(n)
+Get length                            O(1)
+====================================  ==========</p>
+<p>For situations where a real linked list or doubly linked list is required, Python provides
+a <code class="docutils literal notranslate"><span class="pre">deque</span></code> type in the <code class="docutils literal notranslate"><span class="pre">collections</span></code> built-in module. This is a data structure that allows us to
+append and pop elements at each side with O(1) complexity. This is a generalization of
+stacks and queues, and should work fine anywhere where a doubly linked list is required.</p>
+</div>
+<div class="section" id="list-comprehensions">
+<h4>6.1.2. List comprehensions<a class="headerlink" href="#list-comprehensions" title="Permalink to this headline">¶</a></h4>
+<p>As you probably know, writing a piece of code such as this can be tedious:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">evens</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">evens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">evens</span>
+<span class="go">[0, 2, 4, 6, 8]</span>
+</pre></div>
+</div>
+<p>This may work for C, but it actually makes things slower for Python for the following
+reasons:</p>
+<ul class="simple">
+<li><p>It makes the interpreter work on each loop to determine what part of the sequence has to be changed</p></li>
+<li><p>It makes you keep a counter to track what element has to be processed</p></li>
+<li><p>It requires additional function lookups to be performed at every iteration because <code class="docutils literal notranslate"><span class="pre">append()</span></code> is a list’s method</p></li>
+</ul>
+<p>A list comprehension is a better pattern for these kind of situations. It allows us to define a
+list by using a single line of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="go">[0, 2, 4, 6, 8]</span>
+</pre></div>
+</div>
+<p>This form of writing is much shorter and involves fewer elements. In a bigger program, this
+means less bugs and code that is easier to understand. This is the reason why many
+experienced Python programmers will consider such forms as being more readable.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>There is a myth among some Python programmers that list
+comprehensions can be a workaround for the fact that the internal array
+representing the list object must be resized with every few additions.
+Some say that the array will be allocated once in just the right size.
+Unfortunately, this isn’t true.</p>
+<p>The interpreter, during evaluation of the comprehension, can’t know how
+big the resulting container will be, and it can’t preallocate the final size of
+the array for it. Due to this, the internal array is reallocated in the same
+pattern as it would be in the for loop. Still, in many cases, list creation
+using comprehensions is both cleaner and faster than using ordinary
+loops.</p>
+</div>
+</div>
+<div class="section" id="other-idioms">
+<h4>6.1.3. Other idioms<a class="headerlink" href="#other-idioms" title="Permalink to this headline">¶</a></h4>
+<p>Another typical example of a Python idiom is the use of <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code>. This built-in
+function provides a convenient way to get an index when a sequence is iterated inside of a
+loop. Consider the following piece of code as an example of tracking the element index
+without the <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">...</span>
+<span class="go">0 one</span>
+<span class="go">1 two</span>
+<span class="go">2 three</span>
+</pre></div>
+</div>
+<p>This can be replaced with the following code, which is shorter and definitely cleaner:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">0 one</span>
+<span class="go">1 two</span>
+<span class="go">2 three</span>
+</pre></div>
+</div>
+<p>If you need to aggregate elements of multiple lists (or any other iterables) in the one-by-one
+fashion, you can use the built-in <code class="docutils literal notranslate"><span class="pre">zip()</span></code>. This is a very common pattern for uniform iteration
+over two same-sized iterables:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">(1, 4)</span>
+<span class="go">(2, 5)</span>
+<span class="go">(3, 6)</span>
+</pre></div>
+</div>
+<p>Note that the results of <code class="docutils literal notranslate"><span class="pre">zip()</span></code> can be reversed by another <code class="docutils literal notranslate"><span class="pre">zip()</span></code> call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">(1, 2, 3)</span>
+<span class="go">(4, 5, 6)</span>
+</pre></div>
+</div>
+<p>One important thing you need to remember about the <code class="docutils literal notranslate"><span class="pre">zip()</span></code> function is that it expects
+input iterables to be the same size. If you provide arguments of different lengths, then it
+will trim the output to the shortest argument, as shown in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">(1, 1)</span>
+<span class="go">(2, 2)</span>
+</pre></div>
+</div>
+<p>Another popular syntax element is sequence unpacking. It is not limited to lists and tuples,
+and will work with any sequence type (even strings and byte sequences). It allows us to
+unpack a sequence of elements into another set of variables as long as there are as many
+variables on the left-hand side of the assignment operator as the number of elements in the
+sequence. If you paid attention to the code snippets, then you might have already noticed
+this idiom when we were discussing the <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code> function.</p>
+<p>The following is a dedicated example of that syntax element:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">third</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">&#39;foo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second</span>
+<span class="go">&#39;bar&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">third</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+<p>Unpacking also allows us to capture multiple elements in a single variable using starred
+expressions as long as it can be interpreted unambiguously. Unpacking can also be
+performed on nested sequences. This can come in handy, especially when iterating on some
+complex data structures built out of multiple sequences. Here are some examples of more
+complex sequence unpacking:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rest</span>
+<span class="go">[2, 3]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">inner</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inner</span>
+<span class="go">[1, 2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">last</span>
+<span class="go">3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span>
+<span class="go">(1, 2, 3, 4)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="dictionaries">
+<h3>6.2. Dictionaries<a class="headerlink" href="#dictionaries" title="Permalink to this headline">¶</a></h3>
+<p>Dictionaries are one of most versatile data structures in Python. The <code class="docutils literal notranslate"><span class="pre">dict</span></code> type allows you
+to map a set of unique keys to values, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39; one&#39;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39; two&#39;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39; three&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Dictionary literals are a very basic thing, and you should already know about them. Python
+allows programmers to also create a new dictionary using comprehensions, similar to the
+list comprehensions mentioned earlier. Here is a very simple example that maps numbers
+in a range from 0 to 99 to their squares:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">squares</span> <span class="o">=</span> <span class="p">{</span><span class="n">number</span><span class="p">:</span> <span class="n">number</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>What is important is that the same benefits of using list comprehensions apply to dictionary
+comprehensions. So, in many cases, they are more efficient, shorter, and cleaner. For more
+complex code, when many <code class="docutils literal notranslate"><span class="pre">if</span></code> statements or function calls are required to create a
+dictionary, the simple <code class="docutils literal notranslate"><span class="pre">for</span></code> loop may be a better choice, especially if it improves readability.</p>
+<p>For Python programmers new to Python 3, there is one important note about iterating over
+dictionary elements. The <code class="docutils literal notranslate"><span class="pre">keys()</span></code>, <code class="docutils literal notranslate"><span class="pre">values()</span></code>, and <code class="docutils literal notranslate"><span class="pre">items()</span></code> dictionary methods are no
+longer return lists. Also, their counterparts, <code class="docutils literal notranslate"><span class="pre">iterkeys()</span></code>, <code class="docutils literal notranslate"><span class="pre">itervalues()</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">iteritems()</span></code>, which returned iterators instead, are missing in Python 3. Now,
+the <code class="docutils literal notranslate"><span class="pre">keys()</span></code>, <code class="docutils literal notranslate"><span class="pre">values()</span></code>, and <code class="docutils literal notranslate"><span class="pre">items()</span></code> methods return special view objects:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">keys()</span></code>: This returns the dict_keys object which provides a view on all keys of the dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">values()</span></code>: This returns the dict_values object which provides a view on all values of the dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">items()</span></code>: This returns the dict_items object, providing views on all (key, value) two-tuples of the dictionary</p></li>
+</ul>
+<p>View objects provide a view on the dictionary content in a dynamic way so that every time
+the dictionary changes, the views will reflect these changes, as shown in this example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Doe&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">items</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">items</span>
+<span class="go">dict_items([(&#39;name&#39;, &#39;John&#39;), (&#39;last_name&#39;, &#39;Doe&#39;), (&#39;age&#39;, 42)])</span>
+</pre></div>
+</div>
+<p>View objects join the behavior of lists returned by the implementation of old methods with
+iterators that have been returned by their ´´iter´´ counterparts. Views do not need to
+redundantly store all values in memory (like lists do), but are still allowed to access their
+length (using the ´´len()´´ function) and testing for membership (using the ´´in´´ keyword).
+Views are, of course, iterable.</p>
+<p>The last important thing about views is that both view objects returned by
+the <code class="docutils literal notranslate"><span class="pre">keys()</span></code> and <code class="docutils literal notranslate"><span class="pre">values()</span></code> methods ensure the same order of keys and values. In Python 2,
+you could not modify the dictionary content between these two calls if you wanted to
+ensure the same order of retrieved keys and values. <code class="docutils literal notranslate"><span class="pre">dict_keys</span></code> and <code class="docutils literal notranslate"><span class="pre">dict_values</span></code> are now
+dynamic, so even if the content of the dictionary changes between
+the <code class="docutils literal notranslate"><span class="pre">keys()</span></code> and <code class="docutils literal notranslate"><span class="pre">values()</span></code> calls, the order of iteration is consistent between these two
+views.</p>
+<div class="section" id="id2">
+<h4>6.2.1. Implementation details<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>CPython uses hash tables with pseudo-random probing as an underlying data structure for
+dictionaries. It seems like a very deep implementation detail, but it is very unlikely to
+change in the near future, so it is also a very interesting fact for the Python programmer.</p>
+<p>Due to this implementation detail, only objects that are hashable can be used as a
+dictionary key. An object is hashable if it has a hash value that never changes during its
+lifetime, and can be compared to different objects. Every Python built-in type that is
+immutable is also hashable. Mutable types, such as list, dictionaries, and sets, are not
+hashable, and so they cannot be used as dictionary keys. Protocol that defines if a type is
+hashable consists of two methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__hash__</span></code>: This provides the hash value (as an integer) that is needed by the internal <code class="docutils literal notranslate"><span class="pre">dict</span></code> implementation. For objects that are instances of user-defined classes, it is derived from their <code class="docutils literal notranslate"><span class="pre">id()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__eq__</span></code>: This compares if two objects have the same value. All objects that are instances of user-defined classes compare as unequal by default, except for themselves.</p></li>
+</ul>
+<p>Two objects that are compared as equal must have the same hash value. The reverse does
+not need to be true. This means that collisions of hashes are possible: two objects with the
+same hash may not be equal. It is allowed, and every Python implementation must be able
+to resolve hash collisions. CPython uses open addressing to resolve them. The
+probability of collisions greatly affects dictionary performance, and, if it is high, the
+dictionary will not benefit from its internal optimizations.</p>
+<p>While three basic operations, adding, getting, and deleting an item, have an average time
+complexity equal to O(1), their amortized worst case complexities are a lot higher. It is O(n),
+where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the current dictionary size. Additionally, if user-defined class objects are used as
+dictionary keys and they are hashed improperly (with a high risk of collisions), this will
+have a huge negative impact on the dictionary’s performance. The full table of CPython’s
+time complexities for dictionaries is as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 30%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operation</p></th>
+<th class="head"><p>Average complexity</p></th>
+<th class="head"><p>Amortized worst case complexity</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Get item</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Set item</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-even"><td><p>Delete item</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Copy</p></td>
+<td><p>O(n)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-even"><td><p>Iteration</p></td>
+<td><p>O(n)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+</tbody>
+</table>
+<p>It is also important to know that the <code class="docutils literal notranslate"><span class="pre">n</span></code> number in worst case complexities for copying and
+iterating the dictionary is the maximum size that the dictionary ever achieved, rather than
+the size at the time of operation. In other words, iterating over the dictionary that once was
+huge but greatly shrunk in time may take a surprisingly long time. In some cases, it may be
+better to create a new dictionary object from a dictionary that needs to be shrunk if it has to
+be iterated often instead of just removing elements from it.</p>
+</div>
+<div class="section" id="weaknesses-and-alternatives">
+<h4>6.2.2. Weaknesses and alternatives<a class="headerlink" href="#weaknesses-and-alternatives" title="Permalink to this headline">¶</a></h4>
+<p>For a very long time, one of the most common pitfalls regarding dictionaries was expecting
+that they preserve the order of elements in which new keys were added. The situation has
+changed a bit in Python 3.6, and the problem was finally solved in Python 3.7 on the level
+of language specification.</p>
+<p>But, before we dig deeper into the situation of Python 3.6 and later releases, we need to
+make a small detour and examine the problem as if we were still stuck in the past, when the
+only Python releases available were older than 3.6. In the past, you could have a situation
+where the consecutive dictionary keys also had hashes that were consecutive values too.
+And, for a very long time, this was the only situation when you could expect that you
+would iterate over dictionary elements in the same order as they were added to the
+dictionary. The easiest way to present this is by using integer numbers, as hashes of integer
+numbers are the same as their value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">number</span><span class="p">:</span> <span class="bp">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([0, 1, 2, 3, 4])</span>
+</pre></div>
+</div>
+<p>Using other datatypes that hash differently could show that the order is not preserved.
+Here is an example that was executed in CPython 3.5:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">):</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;1&#39;, &#39;2&#39;, &#39;4&#39;, &#39;0&#39;, &#39;3&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">):</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;2&#39;, &#39;3&#39;, &#39;1&#39;, &#39;4&#39;, &#39;0&#39;])</span>
+</pre></div>
+</div>
+<p>As shown in the preceding code, for CPython 3.5 (and also earlier versions), the resulting
+order is both dependent on the hashing of the object and also on the order in which the
+elements were added. This is definitely not what can be relied on, because it can vary with
+different Python implementations.</p>
+<p>So, what about Python 3.6 and later releases? Starting from Python 3.6, the CPython
+interpreter uses a new compact dictionary representation that has a noticeably smaller
+memory footprint and also preserves order as a side effect of that new implementation. In
+Python 3.6, the order preserving nature of dictionaries was only an implementation detail,
+but in Python 3.7, it has been officially declared in the Python language specification. So,
+starting from Python 3.7, you can finally rely on the item insertion order of dictionaries.</p>
+<p>In parallel to the CPython implementation of dictionaries, Python 3.6 introduced another
+change in the syntax that is related to the order of items in dictionaries. As defined in the
+PEP 486 “Preserving the order of <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> in a function” document, the order of keyword
+arguments collected using the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> syntax must be the same as presented in function
+call. This behavior can be clearly presented with the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fun</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fun</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">{&#39;c&#39;: 1, &#39;b&#39;: 2, &#39;a&#39;: 3}</span>
+</pre></div>
+</div>
+<p>However the preceding changes can be used effectively only in the newest releases of
+Python. So, what should you do if you have a library that must work on older versions of
+Python too, and some parts of its code requires order-preserving dictionaries? The best
+option is to be clear about your expectations regarding dictionary ordering and use a type
+that explicitly preserves the order of elements.</p>
+<p>Fortunately, the Python standard library provides an ordered dictionary type
+called <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> in the <code class="docutils literal notranslate"><span class="pre">collections</span></code> module. The constructor of this type accepts
+<code class="docutils literal notranslate"><span class="pre">iterable</span></code> as the initialization argument. Each element of that argument should be a pair of a
+dictionary key and value, as in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OrderedDict</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">odict_keys([&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;])</span>
+</pre></div>
+</div>
+<p>It also has some additional features, such as popping items from both ends using
+the <code class="docutils literal notranslate"><span class="pre">popitem()</span></code> method, or moving the specified element to one of the ends using
+the`` move_to_end()`` method. A full reference on that collection is available in the Python
+documentation (refer to
+<a class="reference external" href="https://docs.python.org/3/library/collections.html">https://docs.python.org/3/library/collections.html</a>). Even if
+you target only Python in version 3.7 or newer, which guarantees the preservation of the
+item insertion order, the <code class="docutils literal notranslate"><span class="pre">OrderedDict</span> <span class="pre">type</span></code> is still useful. It allows you to make your
+intention clear. If you define your variable with <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> instead of a plain dict, it
+becomes obvious that, in this particular case, the order of inserted items is important.</p>
+<p>The last interesting note is that, in very old code bases, you can find <code class="docutils literal notranslate"><span class="pre">dict</span></code> as a primitive set
+implementation that ensures uniqueness of elements. While this will give proper results,
+you should avoid such use of that type unless you target Python versions lower than 2.3.
+Using dictionaries in this way is wasteful in terms of resources. Python has a builtin <code class="docutils literal notranslate"><span class="pre">set</span></code>
+type that serves this purpose. In fact, it has very similar internal implementation to
+dictionaries in CPython, but offers some additional features, as well as specific set-related
+optimizations.</p>
+</div>
+</div>
+<div class="section" id="sets">
+<h3>6.3. Sets<a class="headerlink" href="#sets" title="Permalink to this headline">¶</a></h3>
+<p>Sets are a very robust data structure that are mostly useful in situations where the order of
+elements is not as important as their uniqueness. They are also useful if you need to
+efficiently check efficiency if the element is contained in a collection. Sets in Python are
+generalizations of mathematic sets, and are provided as built-in types in two flavors:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set()</span></code>: This is a mutable, non-ordered, finite collection of unique, immutable (hashable) objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frozenset()</span></code>: This is an immutable, hashable, non-ordered collection of unique, immutable (hashable) objects</p></li>
+</ul>
+<p>The immutability of <code class="docutils literal notranslate"><span class="pre">frozenset()</span></code> objects makes it possible for them to be included as
+dictionary keys and also other <code class="docutils literal notranslate"><span class="pre">set()</span></code> and <code class="docutils literal notranslate"><span class="pre">frozenset()</span></code> elements. A plain
+mutable <code class="docutils literal notranslate"><span class="pre">set()</span></code> object cannot be used within another <code class="docutils literal notranslate"><span class="pre">set()</span></code> or <code class="docutils literal notranslate"><span class="pre">frozenset()</span></code>. Attempting
+to do so will raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> exception, as in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">([</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])])</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr"> File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">unhashable type: &#39;set&#39;</span>
+</pre></div>
+</div>
+<p>On the other hand, the following <code class="docutils literal notranslate"><span class="pre">set</span></code> initializations are completely correct, and do not raise
+exceptions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">([</span><span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])])</span>
+<span class="go">{frozenset({1, 2, 3}), frozenset({2, 3, 4})}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">frozenset</span><span class="p">([</span><span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])])</span>
+<span class="go">frozenset({frozenset({1, 2, 3}), frozenset({2, 3, 4})})</span>
+</pre></div>
+</div>
+<p>Mutable sets can be created in three ways:</p>
+<ul class="simple">
+<li><p>Using a <code class="docutils literal notranslate"><span class="pre">set()</span></code> call that accepts optional iterables as the initialization argument, such as <code class="docutils literal notranslate"><span class="pre">set([0,</span> <span class="pre">1,</span> <span class="pre">2])</span></code></p></li>
+<li><p>Using a set comprehension such as <code class="docutils literal notranslate"><span class="pre">{element</span> <span class="pre">for</span> <span class="pre">element</span> <span class="pre">in</span> <span class="pre">range(3)}</span></code></p></li>
+<li><p>Using set literals such as <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">2,</span> <span class="pre">3}</span></code></p></li>
+</ul>
+<p>Note that using literals and comprehensions for sets requires extra caution, because they
+are very similar in form to dictionary literals and comprehensions. Also, there is no literal
+for empty set objects: empty curly brackets <code class="docutils literal notranslate"><span class="pre">{}</span></code> are reserved for empty dictionary literals.</p>
+<div class="section" id="id3">
+<h4>6.3.1. Implementation details<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Sets in CPython are very similar to dictionaries. As a matter of fact, they are implemented
+like dictionaries with dummy values, where only keys are actual collection elements. Sets
+also exploit this lack of values in mapping for additional optimizations.</p>
+<p>Thanks to this, sets allow very fast additions, deletions, and checks for element existence
+with the average time complexity equal to O(1). Still, since the implementation of sets in
+CPython relies on a similar hash table structure, the worst case complexity for these
+operations is still O(n), where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the current size of a set.</p>
+<p>Other implementation details also apply. The item to be included in a set must be hashable,
+and, if instances of user-defined classes in the set are hashed poorly, this will have a
+negative impact on their performance.</p>
+<p>Despite their conceptual similarity to dictionaries, sets in Python 3.7 do not preserve the
+order of elements in specification, or as a detail of CPython implementation.
+Let’s take a look at the supplemental data types and containers.</p>
+</div>
+</div>
+<div class="section" id="supplemental-data-types-and-containers">
+<h3>6.4. Supplemental data types and containers<a class="headerlink" href="#supplemental-data-types-and-containers" title="Permalink to this headline">¶</a></h3>
+<p>In the previous subsections, we concentrated mostly on those data types that have
+dedicated literals in the Python syntax. These were also the types that are implemented at
+the interpreter-level. However, Python’s standard library offers a great collection of
+supplemental data types that can be effectively used in places where the basic built-in types
+show their shortcomings, or places where the nature of the data requires specialized
+handling (for example, in the presentation of time and dates).</p>
+<p>The most common are data containers that are found in the collections, and we have
+already briefly mentioned two of them: <code class="docutils literal notranslate"><span class="pre">deque</span></code> and <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code>. However, the landscape
+of data structures available for Python programmers is enormous and almost every module
+of the Python standard library defines some specialized types for handling the data of
+different problem domains.</p>
+<div class="section" id="specialized-data-containers-from-the-collections-module">
+<h4>6.4.1. Specialized data containers from the collections module<a class="headerlink" href="#specialized-data-containers-from-the-collections-module" title="Permalink to this headline">¶</a></h4>
+<p>Every data structure has its shortcomings. There is no single collection that can suit every
+problem, and four basic types of them (tuple, list, set, and dictionary) is still not a wide
+range of choices. These are the most basic and important collections that have a dedicated
+literal syntax. Fortunately, Python provides far more options in its standard library through
+the <code class="docutils literal notranslate"><span class="pre">collections</span></code> built-in module. Here are the most important universal data containers
+provided by this module:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">namedtuple()</span></code>: This is a factory function for creating tuple subclasses whose indexes can be accessed as named attributes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deque</span></code>: This is a double-ended queue, a list-like generalization of stacks and queues with fast appends and pops on both ends</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ChainMap</span></code>: This is a dictionary-like class to create a single view of multiple mappings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Counter</span></code>: This is a dictionary subclass for counting hashable objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code>: This is a dictionary subclass that preserves the order that the entries were added in</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defaultdict</span></code>: This is a dictionary subclass that can supply missing values using a user-defined factory function</p></li>
+</ul>
+</div>
+<div class="section" id="symbolic-enumeration-with-the-enum-module">
+<h4>6.4.2. Symbolic enumeration with the enum module<a class="headerlink" href="#symbolic-enumeration-with-the-enum-module" title="Permalink to this headline">¶</a></h4>
+<p>One of the special handy types found in the Python standard is the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> class from the
+<code class="docutils literal notranslate"><span class="pre">enum</span></code> module. This is a base class that allows you to define symbolic enumerations, similar
+in concept to the enumerated types found in many other programming languages (C, C++,
+C#, Java, and many more) that are often denoted with the <code class="docutils literal notranslate"><span class="pre">enum</span></code> keyword.</p>
+<p>In order to define your own enumeration in Python, you will need to subclass the <code class="docutils literal notranslate"><span class="pre">Enum</span></code>
+class and define all enumeration members as class attributes. The following is an example
+of a simple Python <code class="docutils literal notranslate"><span class="pre">enum</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="k">class</span> <span class="nc">Weekday</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">MONDAY</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">TUESDAY</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">WEDNESDAY</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">THURSDAY</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">FRIDAY</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">SATURDAY</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">SUNDAY</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+</div>
+<p>The Python documentation defines the following nomenclature for <code class="docutils literal notranslate"><span class="pre">enum</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enumeration</span></code> or <code class="docutils literal notranslate"><span class="pre">enum</span></code>: This is the subclass of <code class="docutils literal notranslate"><span class="pre">Enum</span></code> base class. Here, it would be <code class="docutils literal notranslate"><span class="pre">Weekday</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">member</span></code>: This is the attribute you define in the Enum subclass. Here, it would be <code class="docutils literal notranslate"><span class="pre">Weekday.MONDAY</span></code>, <code class="docutils literal notranslate"><span class="pre">Weekday.TUESDAY</span></code>, and so on.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: This is the name of the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> subclass attribute that defines the member. Here, it would be <code class="docutils literal notranslate"><span class="pre">MONDAY</span></code> for <code class="docutils literal notranslate"><span class="pre">Weekday.MONDAY</span></code>, <code class="docutils literal notranslate"><span class="pre">TUESDAY</span></code> for <code class="docutils literal notranslate"><span class="pre">Weekday.TUESDAY</span></code>, and so on.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: This is the value assigned to the Enum subclass attribute that defines the <code class="docutils literal notranslate"><span class="pre">member</span></code>. Here, for <code class="docutils literal notranslate"><span class="pre">Weekday.MONDAY</span></code> it would be one, for <code class="docutils literal notranslate"><span class="pre">Weekday.TUESDAY</span></code> it would be two, and so on.</p></li>
+</ul>
+<p>You can use any type as the <code class="docutils literal notranslate"><span class="pre">enum</span></code> member value. If the member value is not important in
+your code, you can even use the <code class="docutils literal notranslate"><span class="pre">auto()</span></code> type, which will be replaced with automatically
+generated values. Here is the previous example rewritten with the use of <code class="docutils literal notranslate"><span class="pre">auto</span></code> in it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+
+
+<span class="k">class</span> <span class="nc">Weekday</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+     <span class="n">MONDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">TUESDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">WEDNESDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">THURSDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">FRIDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">SATURDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">SUNDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Enumerations in Python are really useful in every place where some variable can take a
+finite number of values/choices. For instance, they can be used to define statues of objects,
+as shown in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+
+
+<span class="k">class</span> <span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+     <span class="n">PENDING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">PROCESSING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">PROCESSED</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Order</span><span class="p">:</span>
+     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+
+     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSED</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t process order that has been already processed&quot;</span><span class="p">)</span>
+
+         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSING</span>
+         <span class="o">...</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSED</span>
+</pre></div>
+</div>
+<p>Another use case for enumerations is storing selections of non-exclusive choices. This is
+something that is often implemented using bit flags and bit masks in languages where bit
+manipulation of numbers is very common, like C. In Python, this can be done in a more
+expressive and convenient way using <code class="docutils literal notranslate"><span class="pre">FlagEnum</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">auto</span>
+
+
+<span class="k">class</span> <span class="nc">Side</span><span class="p">(</span><span class="n">Flag</span><span class="p">):</span>
+     <span class="n">GUACAMOLE</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">TORTILLA</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">FRIES</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">BEER</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">POTATO_SALAD</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can combine such flags using bitwise operations (the <code class="docutils literal notranslate"><span class="pre">|</span></code> and <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> operators) and test for
+flag membership with the <code class="docutils literal notranslate"><span class="pre">in</span></code> keyword. Here are some examples for a <code class="docutils literal notranslate"><span class="pre">Side</span></code> enumeration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mexican_sides</span> <span class="o">=</span> <span class="n">Side</span><span class="o">.</span><span class="n">GUACAMOLE</span> <span class="o">|</span> <span class="n">Side</span><span class="o">.</span><span class="n">BEER</span> <span class="o">|</span> <span class="n">Side</span><span class="o">.</span><span class="n">TORTILLA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bavarian_sides</span> <span class="o">=</span> <span class="n">Side</span><span class="o">.</span><span class="n">BEER</span> <span class="o">|</span> <span class="n">Side</span><span class="o">.</span><span class="n">POTATO_SALAD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">common_sides</span> <span class="o">=</span> <span class="n">mexican_sides</span> <span class="o">&amp;</span> <span class="n">bavarian_sides</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Side</span><span class="o">.</span><span class="n">GUACAMOLE</span> <span class="ow">in</span> <span class="n">mexican_sides</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Side</span><span class="o">.</span><span class="n">TORTILLA</span> <span class="ow">in</span> <span class="n">bavarian_sides</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">common_sides</span>
+<span class="go">&lt;Side.BEER: 8&gt;</span>
+</pre></div>
+</div>
+<p>Symbolic enumerations share some similarity with dictionaries and named tuples because
+they all map names/keys to values. The main difference is that the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> definition is
+immutable and global. It should be used whenever there is a closed set of possible values
+that can’t change dynamically during program runtime, and especially if that set should be
+defined only once and globally. Dictionaries and named tuples are data containers. You can
+create as many instances of them as you like.</p>
+</div>
+</div>
+<div class="section" id="custom-containers">
+<h3>6.5. Custom containers<a class="headerlink" href="#custom-containers" title="Permalink to this headline">¶</a></h3>
 <p>Containers are objects that implement a <code class="docutils literal notranslate"><span class="pre">__contains__</span></code> method (that usually returns a Boolean value). This method is
 called in the presence of the <code class="docutils literal notranslate"><span class="pre">in</span></code> keyword of Python. Something like <code class="docutils literal notranslate"><span class="pre">element</span> <span class="pre">in</span> <span class="pre">container</span></code> becomes
 <code class="docutils literal notranslate"><span class="pre">container.__contains__(element)</span></code>.</p>
@@ -799,8 +1687,9 @@ intention of the code.</p>
 </pre></div>
 </div>
 </div>
+</div>
 <div class="section" id="dynamic-attributes-for-objects">
-<h2>6. Dynamic attributes for objects<a class="headerlink" href="#dynamic-attributes-for-objects" title="Permalink to this headline">¶</a></h2>
+<h2>7. Dynamic attributes for objects<a class="headerlink" href="#dynamic-attributes-for-objects" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to control the way attributes are obtained from objects by means of the <code class="docutils literal notranslate"><span class="pre">__getattr__</span></code> magic method.
 When we call something like <code class="docutils literal notranslate"><span class="pre">&lt;myobject&gt;.&lt;myattribute&gt;</span></code>, Python will look for <code class="docutils literal notranslate"><span class="pre">&lt;myattribute&gt;</span></code> in the dictionary of
 the object, calling <code class="docutils literal notranslate"><span class="pre">__getattribute__</span></code> on it. If this is not found (namely, the object does not have the attribute we
@@ -839,7 +1728,7 @@ raise AttributeError.</p>
 </div>
 </div>
 <div class="section" id="callable-objects">
-<h2>7. Callable objects<a class="headerlink" href="#callable-objects" title="Permalink to this headline">¶</a></h2>
+<h2>8. Callable objects<a class="headerlink" href="#callable-objects" title="Permalink to this headline">¶</a></h2>
 <p>It is possible (and often convenient) to define objects that can act as functions. One of the most common applications
 for this is to create better decorators, but it’s not limited to that.</p>
 <p>The magic method <code class="docutils literal notranslate"><span class="pre">__call__</span></code> will be called when we try to execute our object as if it were a regular function. Every
@@ -876,10 +1765,131 @@ times it has been called with the very same value:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="docstrings">
+<h2>9. Docstrings<a class="headerlink" href="#docstrings" title="Permalink to this headline">¶</a></h2>
+<p>Docstrings are basically documentation embedded in the source code. A <strong>docstring</strong> is basically a literal
+string, placed somewhere in the code, with the intention of documenting that part of the logic. This
+information it’s meant to represent explanation, not justification.</p>
+<p>Having comments in the code is a bad practice for multiple reasons. First, they represent our failure to
+express our ideas in the code. Second, it can be misleading. Worst than having to spend some time reading a
+complicated section is to read a comment on how it is supposed to work and figuring out that the code
+actually does something different.</p>
+<p>Sometimes, we cannot avoid having comments (maybe there is an error on a third-party library). In those cases,
+placing a small but descriptive comment might be acceptable.</p>
+<p>The reason why docstrings are a good thing to have in the code is that Python is dynamically typed. Python
+will not enforce, nor check, anything like the value for any function’s input parameters. Documenting the
+expected input and output of a function is a good practice that will help the readers of that function
+understand how it is supposed to work. This information is crucial for someone that hats to learn and
+understand how a new code works, and how they can take advantage of it.</p>
+<p>The docstring is not something separated or isolated from the code. It becomes part of the code, and you can
+access it. When an object has a docstring defined, this becomes part of it via its <code class="docutils literal notranslate"><span class="pre">__doc__</span></code> attribute:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Sample docstring&quot;&quot;&quot;</span>
+    <span class="k">return</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sample</span><span class="o">.</span><span class="vm">__doc__</span>
+<span class="s1">&#39;Sample docstring&#39;</span>
+</pre></div>
+</div>
+<p>There is, unfortunately, one downside to docstrings, and it is that, as it happens with all documentation, it
+requires manual and constant maintenance. As the code changes, it will have to be updated. Another problem is
+that for docstrings to be really useful, they have to be detailed, which requires multiple lines.</p>
+</div>
+<div class="section" id="annotations">
+<h2>10. Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h2>
+<p>The basic idea is to hint to the readres of the code about what to expect as values of arguments in functions.
+Annotations enable type hinting.</p>
+<p>Annotations let you specify the expected type of some variables that have been defined. It is actually not
+only about the types, but any kind of metadata that can help you get a better idea of what that variable
+actually represents.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Point</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
+
+<span class="k">def</span> <span class="nf">locate</span> <span class="p">(</span><span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Point</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;...&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Here, we use <code class="docutils literal notranslate"><span class="pre">float</span></code> to indicate the expected types of input parameters. This is merely informative for the
+reader, Python will not check these types nor enforce them. We can also specify the expected type of the
+returned value of the function. In this case, <code class="docutils literal notranslate"><span class="pre">Point</span></code> is a user-defined class, so it will mean that whatever
+is returned will be an instance of <code class="docutils literal notranslate"><span class="pre">Point</span></code>.</p>
+<p>With the introduction of annotations, a new special attribute is also included, and it is <code class="docutils literal notranslate"><span class="pre">__annotations__</span></code>.
+This will give us access to a dictionary that maps the n ame of the annotations with their corresponding
+values, which are those we have defined for them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locate</span><span class="o">.</span><span class="n">__annotations__</span>
+<span class="go">{&#39;latitude&#39;: float, &#39;longitude&#39;: float, &#39;return&#39;: __main__.Point}</span>
+</pre></div>
+</div>
+<p>The idea of type hinting is to have extra tools to check and assess the correct use of types throughout the
+code and to hint to the user in case any incompatibilities are detected.</p>
+<p>Starting with Python 3.5, the new typing module was introduced, and this significantly improved how hwe define
+the types and the annotations in our Python code. The basic idea is that now the semantics extend to more
+meaningful concepts. For example, you could have a function that worked with lists of tuples in one of its
+parameters, and you would have put one of these two types as the annotation, or even a string explaining it.
+But with this module, it is possible to tell Python that it expects an iterable or a sequence. You can even
+identify the type or the values on it.</p>
+<p>There is one extra improvement made in regards to annotations starting from Python 3.6. It is possible to
+annotate variables directly, not just function parameters and return types. The idea is that you can declare
+the types of some variables defined without necessarily assigning a value to them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>class Point:
+    lat: float
+    lon: float
+
+&gt;&gt;&gt; Point.__annotations__
+{&#39;lat&#39;: &lt;class &#39;float&#39;&gt;, &#39;lon&#39;: &lt;class &#39;float&#39;&gt;}
+</pre></div>
+</div>
+<div class="section" id="do-annotations-replace-docstrings">
+<h3>10.1. Do annotations replace docstrings?<a class="headerlink" href="#do-annotations-replace-docstrings" title="Permalink to this headline">¶</a></h3>
+<p>The short answer is no, and this is because they complement each other. It is true that a part of the
+information previously contained on the docstring can now be moved to the annotations. But this should only
+leave more room for a better documentation on the docstring. In particular, for dynamic and nested data types,
+it is always a good idea to provide examples of the expected data so that we can get a better idea of what we
+are dealing with.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">data_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If the response is OK, return its payload.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    response: A dict like::</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;status&quot;: 200, # &lt;int&gt;</span>
+<span class="sd">            &quot;timestamp&quot;: &quot;...&quot;, # &lt;date time&gt;</span>
+<span class="sd">            &quot;payload&quot;: {...} # &lt;dict&gt;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result: A dict like::</span>
+<span class="sd">        {&quot;data&quot;: {...}}</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError: if the HTTP status is not 200.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;payload&quot;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Now, we have a complete idea of what is expected to be received and returned by this function.
+The documentation serves as valuable input, not only for understanding and getting an idea of what is being
+passed around, but also as a valuable source for unit tests. We can derive data like this to use as input, and
+we know what would be the correct and incorrect values to use on the tests.</p>
+<p>The benefit is that now we know what the possible values of the keys are, as well as their types, and we have
+a more concrete interpretation of what the data looks like. The cost is that, as we mentioned earlier, it
+takes up a lot of lines and it needs to be verbose and detailed to be effective.</p>
+</div>
+</div>
 <div class="section" id="caveats-in-python">
-<h2>8. Caveats in Python<a class="headerlink" href="#caveats-in-python" title="Permalink to this headline">¶</a></h2>
+<h2>11. Caveats in Python<a class="headerlink" href="#caveats-in-python" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="mutable-default-arguments">
-<h3>8.1. Mutable default arguments<a class="headerlink" href="#mutable-default-arguments" title="Permalink to this headline">¶</a></h3>
+<h3>11.1. Mutable default arguments<a class="headerlink" href="#mutable-default-arguments" title="Permalink to this headline">¶</a></h3>
 <p>Simply put, don’t use mutable objects as the default arguments of functions. If you use mutable objects as default
 arguments, you will get results that are not the expected ones. Consider the following erroneous function definition:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">wrong_user_display</span><span class="p">(</span><span class="n">user_metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}):</span>
@@ -924,7 +1934,7 @@ every time None appears:</p>
 </div>
 </div>
 <div class="section" id="extending-built-in-types">
-<h3>8.2. Extending built-in types<a class="headerlink" href="#extending-built-in-types" title="Permalink to this headline">¶</a></h3>
+<h3>11.2. Extending built-in types<a class="headerlink" href="#extending-built-in-types" title="Permalink to this headline">¶</a></h3>
 <p>The correct way of extending built-in types such as lists, strings, and dictionaries is by means of the collections
 module.</p>
 <p>If you create a class that directly extends dict, for example, you will obtain results that are probably not what you
@@ -1007,7 +2017,7 @@ for strings, use <code class="docutils literal notranslate"><span class="pre">co
         <a href="../general_traits/index.html" class="btn btn-neutral float-right" title="General traits of good code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../docstrings_and_annotations/index.html" class="btn btn-neutral float-left" title="Docstrings and annotations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../development_environments/index.html" class="btn btn-neutral float-left" title="Modern Python Development Environments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

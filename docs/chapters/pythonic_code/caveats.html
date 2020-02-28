@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>8. Caveats in Python &mdash; Mastering Python</title>
+  <title>11. Caveats in Python &mdash; Mastering Python</title>
   
 
   
@@ -91,7 +91,6 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
@@ -146,7 +145,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>8. Caveats in Python</li>
+      <li>11. Caveats in Python</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,9 +165,9 @@
            <div itemprop="articleBody">
             
   <div class="section" id="caveats-in-python">
-<h1>8. Caveats in Python<a class="headerlink" href="#caveats-in-python" title="Permalink to this headline">¶</a></h1>
+<h1>11. Caveats in Python<a class="headerlink" href="#caveats-in-python" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="mutable-default-arguments">
-<h2>8.1. Mutable default arguments<a class="headerlink" href="#mutable-default-arguments" title="Permalink to this headline">¶</a></h2>
+<h2>11.1. Mutable default arguments<a class="headerlink" href="#mutable-default-arguments" title="Permalink to this headline">¶</a></h2>
 <p>Simply put, don’t use mutable objects as the default arguments of functions. If you use mutable objects as default
 arguments, you will get results that are not the expected ones. Consider the following erroneous function definition:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">wrong_user_display</span><span class="p">(</span><span class="n">user_metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}):</span>
@@ -213,7 +212,7 @@ every time None appears:</p>
 </div>
 </div>
 <div class="section" id="extending-built-in-types">
-<h2>8.2. Extending built-in types<a class="headerlink" href="#extending-built-in-types" title="Permalink to this headline">¶</a></h2>
+<h2>11.2. Extending built-in types<a class="headerlink" href="#extending-built-in-types" title="Permalink to this headline">¶</a></h2>
 <p>The correct way of extending built-in types such as lists, strings, and dictionaries is by means of the collections
 module.</p>
 <p>If you create a class that directly extends dict, for example, you will obtain results that are probably not what you

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>6. Dynamic attributes for objects &mdash; Mastering Python</title>
+  <title>7. Dynamic attributes for objects &mdash; Mastering Python</title>
   
 
   
@@ -91,7 +91,6 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
@@ -146,7 +145,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>6. Dynamic attributes for objects</li>
+      <li>7. Dynamic attributes for objects</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,7 +165,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="dynamic-attributes-for-objects">
-<h1>6. Dynamic attributes for objects<a class="headerlink" href="#dynamic-attributes-for-objects" title="Permalink to this headline">¶</a></h1>
+<h1>7. Dynamic attributes for objects<a class="headerlink" href="#dynamic-attributes-for-objects" title="Permalink to this headline">¶</a></h1>
 <p>It is possible to control the way attributes are obtained from objects by means of the <code class="docutils literal notranslate"><span class="pre">__getattr__</span></code> magic method.
 When we call something like <code class="docutils literal notranslate"><span class="pre">&lt;myobject&gt;.&lt;myattribute&gt;</span></code>, Python will look for <code class="docutils literal notranslate"><span class="pre">&lt;myattribute&gt;</span></code> in the dictionary of
 the object, calling <code class="docutils literal notranslate"><span class="pre">__getattribute__</span></code> on it. If this is not found (namely, the object does not have the attribute we

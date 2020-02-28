@@ -1,5 +1,5 @@
-2. Annotations
-**************
+10. Annotations
+***************
 
 The basic idea is to hint to the readres of the code about what to expect as values of arguments in functions.
 Annotations enable type hinting.
@@ -56,8 +56,8 @@ the types of some variables defined without necessarily assigning a value to the
     >>> Point.__annotations__
     {'lat': <class 'float'>, 'lon': <class 'float'>}
 
-2.1. Do annotations replace docstrings?
-+++++++++++++++++++++++++++++++++++++++
+10.1. Do annotations replace docstrings?
+++++++++++++++++++++++++++++++++++++++++
 
 The short answer is no, and this is because they complement each other. It is true that a part of the
 information previously contained on the docstring can now be moved to the annotations. But this should only

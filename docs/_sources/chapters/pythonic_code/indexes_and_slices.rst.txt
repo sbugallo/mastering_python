@@ -1,4 +1,4 @@
-1. Indexes and slices
+2. Indexes and slices
 *********************
 
 In Python, some data structures or types support accesing it's elements by index. The first element is placed in the
@@ -52,7 +52,7 @@ In all of these cases, when we pass intervals to a sequence, what is actually ha
     >>>  numbers[:3] == numbers[interval]
     True
 
-1.1. Creating your own sequences
+2.1. Creating your own sequences
 ++++++++++++++++++++++++++++++++
 
 The functionality we just discussed works thanks to a magic method called ``__getitem__``. This is the method that is

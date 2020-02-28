@@ -91,7 +91,6 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Modern Python Development Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
@@ -391,7 +390,7 @@ command:</p>
 <p>This will create a new file named <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> in the current working directory. The best
 place to store this file is usually the root of the related project sources. This file is already a
 valid configuration that will create a new VM using the default provider and base box
-image. The default <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> content that’s created with the vagrant <code class="docutils literal notranslate"><span class="pre">init</span></code> command
+image. The default <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> content that’s created with the <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">init</span></code> command
 contains a lot of comments that will guide you through the complete configuration process.</p>
 <p>The following is a minimal example of <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> for the Python 3.7 development
 environment based on the Ubuntu operating system, with some sensible defaults that,
@@ -657,17 +656,17 @@ and allows you to describe multi-container applications using the YAML syntax.</
 directory. An example of such a file for our previous project could be as follows:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
 <span class="nt">services</span><span class="p">:</span>
- <span class="nt">webserver</span><span class="p">:</span>
- <span class="c1"># this tell Compose to build image from</span>
- <span class="c1"># local (.) directory</span>
- <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
- <span class="c1"># this is equivalent to &quot;-p&quot; option of</span>
- <span class="c1"># the &quot;docker build&quot; command</span>
- <span class="nt">ports</span><span class="p">:</span>
- <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
- <span class="c1"># this is equivalent to &quot;-t&quot; option of</span>
- <span class="c1"># the &quot;docker build&quot; command</span>
- <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+     <span class="nt">webserver</span><span class="p">:</span>
+         <span class="c1"># this tell Compose to build image from</span>
+         <span class="c1"># local (.) directory</span>
+         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+         <span class="c1"># this is equivalent to &quot;-p&quot; option of</span>
+         <span class="c1"># the &quot;docker build&quot; command</span>
+         <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+         <span class="c1"># this is equivalent to &quot;-t&quot; option of</span>
+         <span class="c1"># the &quot;docker build&quot; command</span>
+         <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>If you create such a docker-compose.yml file in your project, then your whole application
