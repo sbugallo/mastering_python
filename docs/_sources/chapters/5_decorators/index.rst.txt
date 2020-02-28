@@ -1,5 +1,5 @@
-Using decorators to improve our code
-====================================
+Decorators
+==========
 
 .. include:: decorators.rst
 .. include:: effective_decorators.rst

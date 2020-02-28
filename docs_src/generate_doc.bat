@@ -1,2 +1,1 @@
-./make.bat html
-./make.bat latexpdf
+make.bat html & make.bat latexpdf

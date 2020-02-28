@@ -1,5 +1,5 @@
-Getting more out of our objects with descriptors
-================================================
+Descriptors
+===========
 
 Descriptors are another distinctive feature of Python that takes object-oriented
 programming to another level, and their potential allows users to build more powerful and

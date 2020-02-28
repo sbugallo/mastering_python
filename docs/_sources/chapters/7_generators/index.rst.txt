@@ -1,5 +1,5 @@
-Using generators
-================
+Generators
+==========
 
 .. include:: creating_generators.rst
 .. include:: iterating_idiomatically.rst

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using generators &mdash; Mastering Python</title>
+  <title>Generators &mdash; Mastering Python</title>
   
 
   
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Unit testing and refactoring" href="../8_unit_testing/index.html" />
-    <link rel="prev" title="Getting more out of our objects with descriptors" href="../6_descriptors/index.html" /> 
+    <link rel="prev" title="Descriptors" href="../6_descriptors/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                24/02/2020
+                28/02/2020
               </div>
             
           
@@ -94,10 +94,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../1_docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../2_pythonic_code/index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../3_general_traits/index.html">General traits of good code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">The SOLID principles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Using decorators to improve our code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Getting more out of our objects with descriptors</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Using generators</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generators</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#creating-generators">1. Creating generators</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#a-first-look-at-generators">1.1. A first look at generators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#generator-expressions">1.2. Generator expressions</a></li>
@@ -136,7 +136,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../8_unit_testing/index.html">Unit testing and refactoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Common design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../10_clean_architecture/index.html">Clean architecture</a></li>
 </ul>
 
@@ -183,7 +183,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>Using generators</li>
+      <li>Generators</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -202,7 +202,7 @@
         <a href="../8_unit_testing/index.html" class="btn btn-neutral float-right" title="Unit testing and refactoring" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../6_descriptors/index.html" class="btn btn-neutral float-left" title="Getting more out of our objects with descriptors" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../6_descriptors/index.html" class="btn btn-neutral float-left" title="Descriptors" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -211,8 +211,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="using-generators">
-<h1>Using generators<a class="headerlink" href="#using-generators" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="generators">
+<h1>Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="creating-generators">
 <h2>1. Creating generators<a class="headerlink" href="#creating-generators" title="Permalink to this headline">¶</a></h2>
 <p>Generators were introduced in Python a long time ago (PEP-255), with the idea of
@@ -253,8 +253,8 @@ we are settling on the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PurchasesStats</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">purchases</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">purchases</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">purchases</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
@@ -294,8 +294,8 @@ we are settling on the following:</p>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.min_price}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.max_price}</span><span class="s2">, </span><span class="si">{self.avg_price}</span><span class="s2">)&quot;</span>
+            <span class="n">f</span><span class="s2">&quot;{self.__class__.__name__}({self.min_price}, &quot;</span>
+            <span class="n">f</span><span class="s2">&quot;{self.max_price}, {self.avg_price})&quot;</span>
         <span class="p">)</span>
 </pre></div>
 </div>
@@ -377,7 +377,7 @@ and, <code class="docutils literal notranslate"><span class="pre">max()</span></
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">&lt;generator object &lt;genexpr&gt; at 0x7f95ece4dad0&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">0</span>
 <span class="go">1</span>
@@ -455,7 +455,7 @@ magic method <code class="docutils literal notranslate"><span class="pre">__next
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">start</span>
 
-    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">current</span>
@@ -513,7 +513,7 @@ it will be the return value in lieu of throwing <code class="docutils literal no
 objects are iterators. This way, instead of creating a class, we can define a function that
 <code class="docutils literal notranslate"><span class="pre">yield</span></code> the values as needed:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">start</span>
         <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
@@ -617,17 +617,17 @@ it? Close, but not quite.</p>
 <p>The answer is, whenever possible, flat the iteration to a single for loop.
 This is the kind of code we would like to avoid:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">search_nested_bad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">desired_value</span><span class="p">):</span>
-    <span class="n">coords</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">cell</span> <span class="o">==</span> <span class="n">desired_value</span><span class="p">:</span>
                 <span class="n">coords</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
                 <span class="k">break</span>
-        <span class="k">if</span> <span class="n">coords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">coords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">break</span>
 
-    <span class="k">if</span> <span class="n">coords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{desired_value}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coords</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{desired_value} not found&quot;</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;value </span><span class="si">%r</span><span class="s2"> found at [</span><span class="si">%i</span><span class="s2">, </span><span class="si">%i</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">desired_value</span><span class="p">,</span> <span class="o">*</span><span class="n">coords</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">coords</span>
@@ -644,9 +644,9 @@ has a simpler, more compact structure of iteration:</p>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">coord</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">coord</span> <span class="k">for</span> <span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_iterate_array2d</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="k">if</span> <span class="n">cell</span> <span class="o">==</span> <span class="n">desired_value</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{desired_value}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{desired_value} not found&quot;</span><span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;value </span><span class="si">{desired_value}</span><span class="s2"> found at </span><span class="si">{coords}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;value {desired_value} found at {coords}&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">coord</span>
 </pre></div>
 </div>
@@ -698,7 +698,7 @@ explore later on:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">start</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
 
-    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span>
         <span class="k">return</span> <span class="n">value</span>
@@ -747,7 +747,7 @@ shows a sequence object that implements <code class="docutils literal notranslat
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformation</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index </span><span class="si">{index}</span><span class="s2">: </span><span class="si">{result}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Index {index}: {result}&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -837,7 +837,7 @@ that holds a connection to a database, and runs queries over it, streaming data 
 fixed length (instead of reading everything that is available at once):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
         <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -870,13 +870,13 @@ this method for an exception that is handled by the coroutine, and when it’s n
     <span class="k">pass</span>
 
 <span class="k">def</span> <span class="nf">stream_data</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">CustomException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;controlled error </span><span class="si">{e}</span><span class="s2">, continuing&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;controlled error {e}, continuing&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unhandled error </span><span class="si">{e}</span><span class="s2">, stopping&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;unhandled error {e}, stopping&quot;</span><span class="p">)</span>
             <span class="n">db_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">break</span>
 </pre></div>
@@ -922,13 +922,13 @@ database.</p>
 different calls. Unfortunately, the <code class="docutils literal notranslate"><span class="pre">next()</span></code> function does not provide us with options for
 that. But luckily, we have <code class="docutils literal notranslate"><span class="pre">send()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
-    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">previous_page_size</span> <span class="o">=</span> <span class="mi">10</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="n">page_size</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">retrieved_data</span>
-            <span class="k">if</span> <span class="n">page_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">page_size</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">page_size</span> <span class="o">=</span> <span class="n">previous_page_size</span>
 
             <span class="n">previous_page_size</span> <span class="o">=</span> <span class="n">page_size</span>
@@ -984,10 +984,10 @@ point.</p>
 <p>Now that we understand how the previous code works, most Pythonistas would expect a
 simplified version of it (after all, Python is also about brevity and clean and compact code):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
-    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">page_size</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="n">page_size</span> <span class="o">=</span> <span class="p">(</span><span class="k">yield</span> <span class="n">retrieved_data</span><span class="p">)</span> <span class="ow">or</span> <span class="n">page_size</span>
             <span class="n">retrieved_data</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
@@ -1006,10 +1006,10 @@ authors devised an interesting decorator to achieve this. The idea of this
 decorator is to advance the coroutine, so the following definition works automatically:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@prepare_coroutine</span>
 <span class="k">def</span> <span class="nf">stream_db_records</span><span class="p">(</span><span class="n">db_handler</span><span class="p">):</span>
-    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">retrieved_data</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">page_size</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="n">page_size</span> <span class="o">=</span> <span class="p">(</span><span class="k">yield</span> <span class="n">retrieved_data</span><span class="p">)</span> <span class="ow">or</span> <span class="n">page_size</span>
             <span class="n">retrieved_data</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">read_n_records</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
@@ -1077,7 +1077,7 @@ value, and how it’s stored precisely inside the exception under the attribute 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">next</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 <span class="gp">... </span><span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt; returned value </span><span class="si">{e.value}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt; returned value {e.value}&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">&gt;&gt;&gt;&gt;&gt;&gt; returned value 3</span>
 </pre></div>
@@ -1150,9 +1150,9 @@ producing values in a sequence. Each one of these nested generators returns a va
 we will see how the top-level generator is able to effectively capture the return value since
 it’s calling the internal generators through <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> started at </span><span class="si">{start}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{name} started at {start}&quot;</span><span class="p">)</span>
     <span class="k">yield from</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> finished at </span><span class="si">{end}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{name} finished at {end}&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">end</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -1353,7 +1353,7 @@ constructed on top of them.</p>
         <a href="../8_unit_testing/index.html" class="btn btn-neutral float-right" title="Unit testing and refactoring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../6_descriptors/index.html" class="btn btn-neutral float-left" title="Getting more out of our objects with descriptors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../6_descriptors/index.html" class="btn btn-neutral float-left" title="Descriptors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

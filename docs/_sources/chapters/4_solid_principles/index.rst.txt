@@ -1,5 +1,5 @@
-The SOLID principles
-====================
+SOLID
+=====
 
 In case some of us aren't aware of what SOLID stands for, here it is:
 

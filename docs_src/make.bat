@@ -1,4 +1,4 @@
-@ECHO OFF
+@ECHO off
 
 pushd %~dp0
 
@@ -25,8 +25,21 @@ if errorlevel 9009 (
 	exit /b 1
 )
 
-sphinx-apidoc.exe -M -f -o modules ../clean_code
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+
+if "%1" == "html" (
+    @RD /S /Q ..\docs
+
+    xcopy _build\html ..\docs /E /y
+    type NUL > ..\docs\.nojekyll
+
+) else (
+    del ..\python.pdf
+    copy _build\latex\clean_code.pdf ..\python.pdf
+)
+
+@RD /S /Q _build
+
 goto end
 
 :help

@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                24/02/2020
+                28/02/2020
               </div>
             
           
@@ -92,12 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../1_docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../2_pythonic_code/index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../3_general_traits/index.html">General traits of good code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">The SOLID principles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Using decorators to improve our code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Getting more out of our objects with descriptors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../7_generators/index.html">Using generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../7_generators/index.html">Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../8_unit_testing/index.html">Unit testing and refactoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Common design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../10_clean_architecture/index.html">Clean architecture</a></li>
 </ul>
 
@@ -255,18 +255,18 @@ point, this tag can be updated for a newer version, and we want any other instan
 already created) to use this new branch when the fetch operation is being called, as shown
 in the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GitFetcher</span><span class="p">:</span>
-    <span class="n">_current_tag</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_current_tag</span> <span class="o">=</span> <span class="bp">None</span>
 
 <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">current_tag</span> <span class="o">=</span> <span class="n">tag</span>
 
 <span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">current_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_tag</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_tag</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;tag was never set&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_tag</span>
 
-<span class="nd">@current_tag</span><span class="o">.</span><span class="n">setter</span>
+<span class="nd">@current_tag.setter</span>
 <span class="k">def</span> <span class="nf">current_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_tag</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_current_tag</span> <span class="o">=</span> <span class="n">new_tag</span>
 
@@ -295,15 +295,15 @@ of the code is actually moved away from our original class, making either one of
 cohesive and compliant with the single responsibility principle:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SharedAttribute</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">initial_value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._name}</span><span class="s2"> was never set&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{self._name} was never set&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 
     <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
@@ -323,7 +323,7 @@ as shown in the following code:</p>
     <span class="n">current_tag</span> <span class="o">=</span> <span class="n">SharedAttribute</span><span class="p">()</span>
     <span class="n">current_branch</span> <span class="o">=</span> <span class="n">SharedAttribute</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_tag</span> <span class="o">=</span> <span class="n">tag</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_branch</span> <span class="o">=</span> <span class="n">branch</span>
 
@@ -368,7 +368,7 @@ pattern work:</p>
 
     <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;pulling from tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Tag = </span><span class="si">{self.source}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Tag = {self.source}&quot;</span>
 
 <span class="k">class</span> <span class="nc">BranchFetcher</span><span class="p">(</span><span class="n">BaseFetcher</span><span class="p">):</span>
     <span class="n">_attributes</span> <span class="o">=</span> <span class="p">{}</span>
@@ -379,7 +379,7 @@ pattern work:</p>
 
     <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;pulling from branch </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Branch = </span><span class="si">{self.source}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Branch = {self.source}&quot;</span>
 </pre></div>
 </div>
 <p>Both objects have a base class, sharing their initialization method. But then they have to
@@ -413,12 +413,12 @@ create a mixin class, as shown in the following code:</p>
 <span class="k">class</span> <span class="nc">TagFetcher</span><span class="p">(</span><span class="n">SharedAllMixin</span><span class="p">,</span> <span class="n">BaseFetcher</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;pulling from tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Tag = </span><span class="si">{self.source}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Tag = {self.source}&quot;</span>
 
 <span class="k">class</span> <span class="nc">BranchFetcher</span><span class="p">(</span><span class="n">SharedAllMixin</span><span class="p">,</span> <span class="n">BaseFetcher</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;pulling from branch </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Branch = </span><span class="si">{self.source}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Branch = {self.source}&quot;</span>
 </pre></div>
 </div>
 <p>This time, we are using the mixin class to create the dictionary with the attributes in each
@@ -488,7 +488,7 @@ following code:</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_adapt_arguments</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{user_id}</span><span class="s2">:</span><span class="si">{username}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{user_id}:{username}&quot;</span>
 </pre></div>
 </div>
 <p>It might be the case that our class already derives from another one, in which case, this will
@@ -548,7 +548,7 @@ implementation of this is shown in the following code:</p>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">name</span><span class="p">,</span>
                  <span class="n">perc_discount</span><span class="p">,</span>
-                 <span class="o">*</span><span class="n">products</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Product</span><span class="p">,</span> <span class="s2">&quot;ProductBundle&quot;</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="o">*</span><span class="n">products</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Product</span><span class="p">,</span> <span class="s2">&quot;ProductBundle&quot;</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_perc_discount</span> <span class="o">=</span> <span class="n">perc_discount</span>
@@ -628,7 +628,7 @@ a decorated one. It’s going to take the values from this and convert them, ret
 modified version of the code.</p>
 <p>If we want to remove all values that evaluate to <code class="docutils literal notranslate"><span class="pre">False</span></code> and normalize them to form our
 original query, we would have to use the following schema:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span> <span class="o">=</span> <span class="n">DictQuery</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">none</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="s2">&quot;UPPERCASE&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span> <span class="o">=</span> <span class="n">DictQuery</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">none</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="s2">&quot;UPPERCASE&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_query</span> <span class="o">=</span> <span class="n">CaseInsensitive</span><span class="p">(</span><span class="n">RemoveEmpty</span><span class="p">(</span><span class="n">original</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 <span class="go">{&#39;key&#39;: &#39;value&#39;, &#39;empty&#39;: &#39;&#39;, &#39;none&#39;: None, &#39;upper&#39;: &#39;UPPERCASE&#39;, &#39;title&#39;:</span>
@@ -644,7 +644,7 @@ and define each decoration step as a function, as shown in the following code:</
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QueryEnhancer</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">query</span><span class="p">:</span> <span class="n">DictQuery</span><span class="p">,</span>
-                 <span class="o">*</span><span class="n">decorators</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="o">*</span><span class="n">decorators</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_decorated</span> <span class="o">=</span> <span class="n">query</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_decorators</span> <span class="o">=</span> <span class="n">decorators</span>
 
@@ -659,7 +659,7 @@ and define each decoration step as a function, as shown in the following code:</
 <p>With respect to the client, nothing has changed because this class maintains the
 compatibility through its <code class="docutils literal notranslate"><span class="pre">render()</span></code> method. Internally, however, this object is used in a
 slightly different fashion, as shown in the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">DictQuery</span><span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">none</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="s2">&quot;UPPERCASE&quot;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">DictQuery</span><span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">none</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="s2">&quot;UPPERCASE&quot;</span><span class="p">,</span>
 <span class="go">title=&quot;Title&quot;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">QueryEnhancer</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">remove_empty</span><span class="p">,</span> <span class="n">case_insensitive</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 <span class="go">{&#39;foo&#39;: &#39;bar&#39;, &#39;upper&#39;: &#39;uppercase&#39;, &#39;title&#39;: &#39;title&#39;}</span>
@@ -746,15 +746,15 @@ following code:</p>
 
 
 <span class="k">class</span> <span class="nc">Event</span><span class="p">:</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="bp">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_event</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">successor</span> <span class="o">=</span> <span class="n">next_event</span>
 
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logline</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_process</span><span class="p">(</span><span class="n">logline</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">(</span><span class="n">logline</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">successor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">successor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">successor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">logline</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logline</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -767,7 +767,7 @@ following code:</p>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">can_process</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">logline</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">logline</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">logline</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">logline</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -933,15 +933,15 @@ delegates all the actions to state , as shown in the following code:</p>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">merge_request</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_merge_request</span> <span class="o">=</span> <span class="n">merge_request</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="nd">@abc.abstractmethod</span>
     <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">...</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="nd">@abc.abstractmethod</span>
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">...</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="nd">@abc.abstractmethod</span>
     <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">...</span>
 
@@ -983,10 +983,10 @@ delegates all the actions to state , as shown in the following code:</p>
         <span class="k">pass</span>
 
 <span class="k">class</span> <span class="nc">MergeRequest</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source_branch</span> <span class="o">=</span> <span class="n">source_branch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_branch</span> <span class="o">=</span> <span class="n">target_branch</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">approvals</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">Open</span>
 
@@ -994,7 +994,7 @@ delegates all the actions to state , as shown in the following code:</p>
     <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
 
-    <span class="nd">@state</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@state.setter</span>
     <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state_cls</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">new_state_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -1008,7 +1008,7 @@ delegates all the actions to state , as shown in the following code:</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">merge</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.target_branch}</span><span class="s2">:</span><span class="si">{self.source_branch}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{self.target_branch}:{self.source_branch}&quot;</span>
 </pre></div>
 </div>
 <p>The following list outlines some clarifications about implementation details and the design
@@ -1055,7 +1055,7 @@ typically happens every time the actions that it needs to do are in the form
 <code class="docutils literal notranslate"><span class="pre">self.state.open()</span></code>, and so on. Can we remove some of that boilerplate?</p>
 <p>We could, by means of <code class="docutils literal notranslate"><span class="pre">__getattr__()</span></code>, as it is portrayed in the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MergeRequest</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source_branch</span> <span class="o">=</span> <span class="n">source_branch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_branch</span> <span class="o">=</span> <span class="n">target_branch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">:</span> <span class="n">MergeRequestState</span>
@@ -1066,7 +1066,7 @@ typically happens every time the actions that it needs to do are in the form
     <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
 
-    <span class="nd">@state</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@state.setter</span>
     <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state_cls</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">new_state_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -1078,7 +1078,7 @@ typically happens every time the actions that it needs to do are in the form
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.target_branch}</span><span class="s2">:</span><span class="si">{self.source_branch}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{self.target_branch}:{self.source_branch}&quot;</span>
 </pre></div>
 </div>
 <p>On the one hand, it is good that we reuse some code and remove repetitive lines. This gives

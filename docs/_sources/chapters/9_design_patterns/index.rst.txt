@@ -1,5 +1,5 @@
-Common design patterns
-======================
+Design patterns
+===============
 
 Design patterns have been a widespread topic in software engineering since their original
 inception in the famous **Gang of Four (GoF) book**, "Design Patterns: Elements of Reusable

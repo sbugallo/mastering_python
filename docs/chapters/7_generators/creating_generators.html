@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                24/02/2020
+                28/02/2020
               </div>
             
           
@@ -92,12 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../1_docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../2_pythonic_code/index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../3_general_traits/index.html">General traits of good code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">The SOLID principles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Using decorators to improve our code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Getting more out of our objects with descriptors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Using generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5_decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../8_unit_testing/index.html">Unit testing and refactoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Common design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../10_clean_architecture/index.html">Clean architecture</a></li>
 </ul>
 
@@ -203,8 +203,8 @@ we are settling on the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PurchasesStats</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">purchases</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">purchases</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">purchases</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_total_purchases</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
@@ -244,8 +244,8 @@ we are settling on the following:</p>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.min_price}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.max_price}</span><span class="s2">, </span><span class="si">{self.avg_price}</span><span class="s2">)&quot;</span>
+            <span class="n">f</span><span class="s2">&quot;{self.__class__.__name__}({self.min_price}, &quot;</span>
+            <span class="n">f</span><span class="s2">&quot;{self.max_price}, {self.avg_price})&quot;</span>
         <span class="p">)</span>
 </pre></div>
 </div>
@@ -327,7 +327,7 @@ and, <code class="docutils literal notranslate"><span class="pre">max()</span></
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">&lt;generator object &lt;genexpr&gt; at 0x7f95ece4dad0&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">0</span>
 <span class="go">1</span>

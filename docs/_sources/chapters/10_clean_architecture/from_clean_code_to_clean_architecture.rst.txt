@@ -98,7 +98,7 @@ framework of choice, the libraries used to connect to external agents, and inter
 between systems, are not relevant. What is relevant is what the system does. A concept
 such as a scream architecture (SCREAM) reflects this idea.
 
-The ***dependency inversion principle (DIP)** is of great help in this regard; we don't want to depend upon
+The **dependency inversion principle (DIP)** is of great help in this regard; we don't want to depend upon
 concrete implementations but rather abstractions. In the code, we place abstractions (or interfaces)
 on the boundaries, the dependencies, those parts of the application that we don't control
 and might change in the future. We do this because we want to invert the dependencies.

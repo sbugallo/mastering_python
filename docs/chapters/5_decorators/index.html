@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using decorators to improve our code &mdash; Mastering Python</title>
+  <title>Decorators &mdash; Mastering Python</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Getting more out of our objects with descriptors" href="../6_descriptors/index.html" />
-    <link rel="prev" title="The SOLID principles" href="../4_solid_principles/index.html" /> 
+    <link rel="next" title="Descriptors" href="../6_descriptors/index.html" />
+    <link rel="prev" title="SOLID" href="../4_solid_principles/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                24/02/2020
+                28/02/2020
               </div>
             
           
@@ -94,8 +94,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../1_docstrings_and_annotations/index.html">Docstrings and annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../2_pythonic_code/index.html">Pythonic code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../3_general_traits/index.html">General traits of good code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">The SOLID principles</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Using decorators to improve our code</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../4_solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Decorators</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#what-are-decorators">1. What are decorators?</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#what-are-decorators-in-python">1.1. What are decorators in Python?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#decorate-functions">1.2. Decorate functions</a></li>
@@ -128,10 +128,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#analyzing-good-decorators">5. Analyzing good decorators</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Getting more out of our objects with descriptors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../7_generators/index.html">Using generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../6_descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../7_generators/index.html">Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../8_unit_testing/index.html">Unit testing and refactoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Common design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../9_design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../10_clean_architecture/index.html">Clean architecture</a></li>
 </ul>
 
@@ -178,7 +178,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>Using decorators to improve our code</li>
+      <li>Decorators</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -194,10 +194,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="../6_descriptors/index.html" class="btn btn-neutral float-right" title="Getting more out of our objects with descriptors" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../6_descriptors/index.html" class="btn btn-neutral float-right" title="Descriptors" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../4_solid_principles/index.html" class="btn btn-neutral float-left" title="The SOLID principles" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../4_solid_principles/index.html" class="btn btn-neutral float-left" title="SOLID" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -206,8 +206,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="using-decorators-to-improve-our-code">
-<h1>Using decorators to improve our code<a class="headerlink" href="#using-decorators-to-improve-our-code" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="decorators">
+<h1>Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-are-decorators">
 <h2>1. What are decorators?<a class="headerlink" href="#what-are-decorators" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="what-are-decorators-in-python">
@@ -267,14 +267,14 @@ controlling a particular domain-level exception and retrying a certain number of
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">last_raised</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">last_raised</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="n">RETRIES_LIMIT</span> <span class="o">=</span> <span class="mi">3</span>
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">RETRIES_LIMIT</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ControlledException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrying </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrying </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
                 <span class="n">last_raised</span> <span class="o">=</span> <span class="n">e</span>
         <span class="k">raise</span> <span class="n">last_raised</span>
 
@@ -379,7 +379,7 @@ method, which will just call these Serialization objects with itself:</p>
     <span class="k">return</span> <span class="n">event_field</span>
 
 <span class="k">class</span> <span class="nc">EventSerializer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serialization_fields</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serialization_fields</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serialization_fields</span> <span class="o">=</span> <span class="n">serialization_fields</span>
 
     <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -507,13 +507,13 @@ to control. The new version of the code supporting the new requirements might lo
 this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RETRIES_LIMIT</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="k">def</span> <span class="nf">with_retry</span><span class="p">(</span><span class="n">retries_limit</span><span class="o">=</span><span class="n">RETRIES_LIMIT</span><span class="p">,</span> <span class="n">allowed_exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">with_retry</span><span class="p">(</span><span class="n">retries_limit</span><span class="o">=</span><span class="n">RETRIES_LIMIT</span><span class="p">,</span> <span class="n">allowed_exceptions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">allowed_exceptions</span> <span class="o">=</span> <span class="n">allowed_exceptions</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ControlledException</span><span class="p">,)</span>
 
     <span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">last_raised</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">last_raised</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retries_limit</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -559,14 +559,14 @@ the decorator on the magic method named <code class="docutils literal notranslat
 <p>The code for the decorator will look like it does in the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WithRetry</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retries_limit</span><span class="o">=</span><span class="n">RETRIES_LIMIT</span><span class="p">,</span>
-        <span class="n">allowed_exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">allowed_exceptions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">retries_limit</span> <span class="o">=</span> <span class="n">retries_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allowed_exceptions</span> <span class="o">=</span> <span class="n">allowed_exceptions</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ControlledException</span><span class="p">,)</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">last_raised</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">last_raised</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retries_limit</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -646,7 +646,7 @@ undesired, and hard-to-track, side-effects.</p>
 about to run:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trace_decorator</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">return</span> <span class="n">wrapped</span>
 </pre></div>
@@ -690,7 +690,7 @@ function (<code class="docutils literal notranslate"><span class="pre">wrapped</
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trace_decorator</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapped</span>
@@ -704,7 +704,7 @@ Check help for the function, like so:</p>
 </pre></div>
 </div>
 <p>And verify that its qualified name is correct, like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">process_account</span><span class="o">.</span><span class="vm">__qualname__</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">process_account</span><span class="o">.</span><span class="n">__qualname__</span>
 <span class="go">&#39;process_account&#39;</span>
 </pre></div>
 </div>
@@ -750,7 +750,7 @@ function started running and then logging its running time:</p>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -801,14 +801,14 @@ the wrong moment, and not when the function is actually called.</p>
 <p>Luckily, the fix is also very simple: we just have to move the code inside the wrapped
 function in order to delay its execution:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">traced_function</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;function </span><span class="si">%s</span><span class="s2"> took </span><span class="si">%.2f</span><span class="s2">s&quot;</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">,</span>
             <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -931,7 +931,7 @@ assume that we receive the object we need directly.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbstring</span> <span class="o">=</span> <span class="n">dbstring</span>
 
     <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;query </span><span class="si">{query}</span><span class="s2"> at </span><span class="si">{self.dbstring}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;query {query} at {self.dbstring}&quot;</span>
 
 <span class="k">def</span> <span class="nf">inject_db_driver</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This decorator converts the parameter by creating a ``DBDriver``</span>
@@ -995,7 +995,7 @@ description, by implementing the <code class="docutils literal notranslate"><spa
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">DBDriver</span><span class="p">(</span><span class="n">dbstring</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">MethodType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="n">instance</span><span class="p">))</span>
@@ -1058,14 +1058,14 @@ example. We created a decorator that traced the execution of certain functions w
 similar to the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">traced_function</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
 
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;function </span><span class="si">%s</span><span class="s2"> took </span><span class="si">%.2f</span><span class="s2">s&quot;</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">,</span>
             <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -1082,7 +1082,7 @@ limited responsibility:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">log_execution</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;started execution of </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wrapped</span>
 
@@ -1091,7 +1091,7 @@ limited responsibility:</p>
     <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;function </span><span class="si">%s</span><span class="s2"> took </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;function </span><span class="si">%s</span><span class="s2"> took </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">function</span><span class="o">.</span><span class="n">__qualname__</span><span class="p">,</span>
         <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">return</span> <span class="n">wrapped</span>
@@ -1123,7 +1123,7 @@ guidelines on how good decorators are created.</p>
 </ul>
 <p>A nice example of decorators can be found in the Celery project, where a task is defined by
 applying the decorator of the task from the application to a function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">task</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app.task</span>
 <span class="k">def</span> <span class="nf">mytask</span><span class="p">():</span>
     <span class="o">....</span>
 </pre></div>
@@ -1169,10 +1169,10 @@ details for that matter.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../6_descriptors/index.html" class="btn btn-neutral float-right" title="Getting more out of our objects with descriptors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../6_descriptors/index.html" class="btn btn-neutral float-right" title="Descriptors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../4_solid_principles/index.html" class="btn btn-neutral float-left" title="The SOLID principles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../4_solid_principles/index.html" class="btn btn-neutral float-left" title="SOLID" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
