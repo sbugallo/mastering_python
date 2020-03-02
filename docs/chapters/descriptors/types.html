@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                28/02/2020
+                02/03/2020
               </div>
             
           
@@ -97,6 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
@@ -188,7 +189,7 @@ deeper idea of what to expect from each type of descriptor.</p>
 it is used:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NonDataDescriptor</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="mi">42</span>
 
@@ -260,7 +261,7 @@ method, as we will see in the next example.</p>
 another simple descriptor that implements the <code class="docutils literal notranslate"><span class="pre">__set__</span></code> method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DataDescriptor</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="mi">42</span>
 

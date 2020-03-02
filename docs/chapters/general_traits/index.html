@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                28/02/2020
+                02/03/2020
               </div>
             
           
@@ -156,6 +156,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
@@ -476,31 +477,31 @@ going to be sent upon decoding. In the following listing, we will focus on the d
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_connector</span> <span class="o">=</span> <span class="n">connector</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">deliver_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;connection error detected: {e}&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connection error detected: </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{event} contains incorrect data: {e}&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{event}</span><span class="s2"> contains incorrect data: </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 
     <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_n_times</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connector</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{e}: attempting new connection in {self.retry_threshold}&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{e}</span><span class="s2">: attempting new connection in </span><span class="si">{self.retry_threshold}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_threshold</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span>
 
-        <span class="k">raise</span> <span class="n">ConnectionError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Couldn&#39;t connect after {self.retry_n_times} times&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Couldn&#39;t connect after </span><span class="si">{self.retry_n_times}</span><span class="s2"> times&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -530,10 +531,10 @@ exceptions (should they occur), and logging them accordingly:</p>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retry_n_times</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">connector</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-    <span class="k">except</span> <span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{e}: attempting new connection in {retry_threshold}&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{e}</span><span class="s2">: attempting new connection in </span><span class="si">{retry_threshold}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">retry_threshold</span><span class="p">)</span>
-    <span class="n">exc</span> <span class="o">=</span> <span class="n">ConnectionError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Couldn&#39;t connect after {retry_n_times} times&quot;</span><span class="p">)</span>
+    <span class="n">exc</span> <span class="o">=</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Couldn&#39;t connect after </span><span class="si">{retry_n_times}</span><span class="s2"> times&quot;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
     <span class="k">raise</span> <span class="n">exc</span>
 </pre></div>
@@ -551,7 +552,7 @@ of the method looks much more compact and easier to read:</p>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_connector</span> <span class="o">=</span> <span class="n">connector</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">deliver_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connect_with_retry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_n_times</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_threshold</span><span class="p">)</span>
@@ -561,7 +562,7 @@ of the method looks much more compact and easier to read:</p>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{event} contains incorrect data: {e}&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{event}</span><span class="s2"> contains incorrect data: </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 </pre></div>
 </div>
@@ -681,7 +682,7 @@ the debugger at that line, we might not be able to conveniently see the result t
 again, even if we call that function again, we don’t know if that was the offending value.</p>
 <p>A better alternative requires fewer lines of code and provides more useful information:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">condition</span><span class="o">.</span><span class="n">holds</span><span class="p">()</span>
-<span class="k">assert</span> <span class="n">result</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Error with {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Error with </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -764,7 +765,7 @@ a real code base:</p>
 
     <span class="c1"># more processing</span>
     <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="n">students_ranking</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Name: {student.name}, Score: {student.passed * 11 - student.failed * 5 - student.years * 2}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{student.name}</span><span class="s2">, Score: {student.passed * 11 - student.failed * 5 - student.years * 2}&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Notice how the lambda which is in the key of the sorted function represents some valid knowledge from the
@@ -781,7 +782,7 @@ suffer from duplication and will be easier to understand:</p>
     <span class="n">students_ranking</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">students</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">score_for_student</span><span class="p">)</span>
     <span class="c1"># more processing</span>
     <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="n">students_ranking</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Name: {student.name}, Score: {core_for_student(student)}&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{student.name}</span><span class="s2">, Score: {core_for_student(student)}&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>A fair disclaimer: this is just an analysis of one of the traits of code duplication. In reality, there are
@@ -892,7 +893,7 @@ implicit). This code would instead be rewritten like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="o">...</span>
-<span class="k">except</span> <span class="n">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1089,7 +1090,7 @@ to be the one for <code class="docutils literal notranslate"><span class="pre">C
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">module_name</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{self.module_name}:{self.name}&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.module_name}</span><span class="s2">:</span><span class="si">{self.name}</span><span class="s2">&quot;</span>
 
 <span class="k">class</span> <span class="nc">BaseModule1</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
     <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;module-1&quot;</span>
@@ -1188,7 +1189,7 @@ that they will have been changed by the time the function returns.</p>
 <p>In the following we can see the difference:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">argument</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">argument</span> <span class="o">+=</span> <span class="s2">&quot; in function&quot;</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">immutable</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">function</span><span class="p">(</span><span class="n">immutable</span><span class="p">)</span>
@@ -1242,9 +1243,9 @@ expected by the function. Instead of passing them one by one by the position (th
 first element, <code class="docutils literal notranslate"><span class="pre">list[1]</span></code> to the second, and so on), which would be really un-Pythonic, we can use the
 packing mechanism and pass them all together in a single instruction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">third</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">third</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">third</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
@@ -1269,7 +1270,7 @@ can be a list, tuple, or something else), and after some point we just want the 
 can assign the variables we need and leave the rest under a packaged list. The order in which we unpack is not
 limited. If there is nothing to place in one of the unpacked subsections, the result will be an empty list:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">rest</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Element: {0} - Rest: {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">rest</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Element: </span><span class="si">{0}</span><span class="s2"> - Rest: </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">rest</span><span class="p">))</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">show</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
@@ -1299,7 +1300,7 @@ each element is being iterated over. To see an example of this in action, we are
 a function that receives a list of database rows, and that it is in charge of creating users out of that data.
 The first implementation takes the values to construct the user with from the position of each column in the
 row, which is not idiomatic at all. The second implementation uses unpacking while iterating:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">USERS</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;first_name_{i}&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name_{i}&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="n">_000</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">USERS</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;first_name_</span><span class="si">{i}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name_</span><span class="si">{i}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1_000</span><span class="p">)]</span>
 
 <span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">):</span>
@@ -1345,7 +1346,7 @@ the value for that key as the value for that parameter in that function.</p>
 <p>Conversely, if we define a function with a parameter starting with two-star symbols, the opposite will happen:
 keyword-provided parameters will be packed into a dictionary:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">function</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
 <span class="go">{&#39;key&#39;: &#39;value&#39;}</span>
@@ -1469,7 +1470,7 @@ including taxes and discounts, but afterward we want to format the final price t
     <span class="k">return</span> <span class="p">(</span><span class="n">base_price</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">tax</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">discount</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">show_price</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="s2">&quot;$ {0:,.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;$ </span><span class="si">{0:,.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">str_final_price</span><span class="p">(</span><span class="n">base_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tax</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">discount</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fmt_function</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">fmt_function</span><span class="p">(</span><span class="n">calculate_price</span><span class="p">(</span><span class="n">base_price</span><span class="p">,</span> <span class="n">tax</span><span class="p">,</span> <span class="n">discount</span><span class="p">))</span>

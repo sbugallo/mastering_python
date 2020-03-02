@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                28/02/2020
+                02/03/2020
               </div>
             
           
@@ -97,6 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
@@ -297,7 +298,7 @@ loop. Consider the following piece of code as an example of tracking the element
 without the <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 <span class="gp">...</span>
 <span class="go">0 one</span>
@@ -307,7 +308,7 @@ without the <code class="docutils literal notranslate"><span class="pre">enumera
 </div>
 <p>This can be replaced with the following code, which is shorter and definitely cleaner:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">]):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">0 one</span>
 <span class="go">1 two</span>
@@ -318,7 +319,7 @@ without the <code class="docutils literal notranslate"><span class="pre">enumera
 fashion, you can use the built-in <code class="docutils literal notranslate"><span class="pre">zip()</span></code>. This is a very common pattern for uniform iteration
 over two same-sized iterables:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">(1, 4)</span>
 <span class="go">(2, 5)</span>
@@ -327,7 +328,7 @@ over two same-sized iterables:</p>
 </div>
 <p>Note that the results of <code class="docutils literal notranslate"><span class="pre">zip()</span></code> can be reversed by another <code class="docutils literal notranslate"><span class="pre">zip()</span></code> call:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">(1, 2, 3)</span>
 <span class="go">(4, 5, 6)</span>
@@ -337,7 +338,7 @@ over two same-sized iterables:</p>
 input iterables to be the same size. If you provide arguments of different lengths, then it
 will trim the output to the shortest argument, as shown in the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">(1, 1)</span>
 <span class="go">(2, 2)</span>
@@ -523,7 +524,7 @@ And, for a very long time, this was the only situation when you could expect tha
 would iterate over dictionary elements in the same order as they were added to the
 dictionary. The easiest way to present this is by using integer numbers, as hashes of integer
 numbers are the same as their value:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">number</span><span class="p">:</span> <span class="bp">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">number</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="go">dict_keys([0, 1, 2, 3, 4])</span>
 </pre></div>
 </div>
@@ -551,7 +552,7 @@ PEP 486 “Preserving the order of <code class="docutils literal notranslate"><s
 arguments collected using the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> syntax must be the same as presented in function
 call. This behavior can be clearly presented with the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fun</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
@@ -569,7 +570,7 @@ called <code class="docutils literal notranslate"><span class="pre">OrderedDict<
 <code class="docutils literal notranslate"><span class="pre">iterable</span></code> as the initialization argument. Each element of that argument should be a pair of a
 dictionary key and value, as in the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">OrderedDict</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OrderedDict</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="go">odict_keys([&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;])</span>
 </pre></div>
 </div>

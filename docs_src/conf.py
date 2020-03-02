@@ -127,7 +127,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'clean_codedoc'
+htmlhelp_basename = 'mastering_pythondoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -148,14 +148,14 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [(master_doc, "clean_code.tex", "Clean Code in Python", "Sergio Bugallo", "manual")]
+latex_documents = [(master_doc, "mastering_python.tex", "Mastering Python", "Sergio Bugallo", "manual")]
 
 
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "clean_code", "Clean Code in Python", [author], 1)]
+man_pages = [(master_doc, "mastering_python", "Mastering Python", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -164,8 +164,8 @@ man_pages = [(master_doc, "clean_code", "Clean Code in Python", [author], 1)]
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'clean_code', 'Clean Code in Python',
-     author, 'clean_code', 'One line description of project.',
+    (master_doc, 'mastering_python', 'Mastering Python',
+     author, 'mastering_python', 'One line description of project.',
      'Miscellaneous'),
 ]
 
