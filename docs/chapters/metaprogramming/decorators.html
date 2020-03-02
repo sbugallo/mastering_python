@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Decorators &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                02/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Metaprogramming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Decorators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/metaprogramming/decorators.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="decorators">
+<h1>2. Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h1>
+<p>The decorator syntax was already explained, as a syntactic sugar for the following simple pattern:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">decorated_function</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="n">decorated_function</span> <span class="o">=</span> <span class="n">some_decorator</span><span class="p">(</span><span class="n">decorated_function</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This verbose form of function decoration clearly shows what the decorator does. It takes a
+function object and modifies it at runtime. As a result, a new function (or anything else) is
+created based on the previous function object with the same name. This decoration may be
+a complex operation that performs some code introspection or decorated function to give
+different results depending on how the original function was implemented. All this means
+is that decorators can be considered as a metaprogramming tool.</p>
+<p>This is good news. The basics of decorators are relatively easy to grasp and in most cases
+make code shorter, easier to read, and also cheaper to maintain. Other metaprogramming
+tools that are available in Python are more difficult to understand and master. Also, they
+might not make the code simple at all.</p>
+<div class="section" id="class-decorators">
+<h2>2.1. Class decorators<a class="headerlink" href="#class-decorators" title="Permalink to this headline">¶</a></h2>
+<p>One of the lesser known syntax features of Python are the class decorators. Their syntax
+and implementation is exactly the same as function decorators. The only difference is that they are
+expected to return a class instead of the function object. Here is an example class decorator
+that modifies the <code class="docutils literal notranslate"><span class="pre">__repr__()</span></code> method to return the printable object representation, which
+is shortened to some arbitrary number of characters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">short_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="fm">__repr__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">super</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()[:</span><span class="mi">8</span><span class="p">]</span>
+    <span class="k">return</span> <span class="bp">cls</span>
+
+<span class="nd">@short_repr</span>
+<span class="k">class</span> <span class="nc">ClassWithRelativelyLongName</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The following is what you will see in the output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ClassWithRelativelyLongName</span><span class="p">()</span>
+<span class="go">&lt;ClassWi</span>
+</pre></div>
+</div>
+<p>Of course, the preceding snippet is not an example of good code by any means. Still, it
+shows how multiple language features that are explained in the previous chapter can be
+used together, for example:</p>
+<ul class="simple">
+<li><p>Not only instances but also class objects can be modified at runtime</p></li>
+<li><p>Functions are descriptors too, so they can be added to the class at runtime because the actual method binding is performed on the attribute lookup as part of the descriptor protocol</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">super()</span></code> call can be used outside of a class definition scope as long as proper arguments are provided</p></li>
+<li><p>Finally, class decorators can be used on class definitions</p></li>
+</ul>
+<p>The other aspects of writing function decorators apply to the class decorators as well. Most
+importantly, they can use closures and be parametrized. Taking advantage of these facts,
+the previous example can be rewritten into the following more readable and maintainable
+form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">parametrized_short_repr</span><span class="p">(</span><span class="n">max_width</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parametrized decorator that shortens representation&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">parametrized</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inner wrapper function that is actual decorator&quot;&quot;&quot;</span>
+
+        <span class="k">class</span> <span class="nc">ShortlyRepresented</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Subclass that provides decorated behavior&quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()[:</span><span class="n">max_width</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ShortlyRepresented</span>
+
+    <span class="k">return</span> <span class="n">parametrized</span>
+</pre></div>
+</div>
+<p>The major drawback of using closures in class decorators this way is that the resulting
+objects are no longer instances of the class that was decorated but instances of the subclass
+that was created dynamically in the decorator function. Among others, this will affect the
+class’s <code class="docutils literal notranslate"><span class="pre">__name__</span></code> and <code class="docutils literal notranslate"><span class="pre">__doc__</span></code> attributes, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@parametrized_short_repr</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ClassWithLittleBitLongerLongName</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Such usage of class decorators will result in the following changes to the class metadata:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ClassWithLittleBitLongerLongName</span><span class="p">()</span><span class="o">.</span><span class="vm">__class__</span>
+<span class="go">&lt;class &#39;ShortlyRepresented&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ClassWithLittleBitLongerLongName</span><span class="p">()</span><span class="o">.</span><span class="vm">__doc__</span>
+<span class="go">&#39;Subclass that provides decorated behavior&#39;</span>
+</pre></div>
+</div>
+<p>Unfortunately, this cannot be fixed as simply as we explained before. In class
+decorators, you can’t simply use the additional <code class="docutils literal notranslate"><span class="pre">wraps</span></code> decorator to preserve the original
+class type and metadata. This makes use of the class decorators in this form limited in some
+circumstances. They can, for instance, break results of automated documentation
+generation tools.</p>
+<p>Still, despite this single caveat, class decorators are a simple and lightweight alternative to
+the popular mixin class pattern. Mixin in Python is a class that is not meant to be
+instantiated, but is instead used to provide some reusable API or functionality to other
+existing classes. Mixin classes are almost always added using multiple inheritance. Their
+usage usually takes the following form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SomeConcreteClass</span><span class="p">(</span><span class="n">MixinClass</span><span class="p">,</span> <span class="n">SomeBaseClass</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Mixins classes form a useful design pattern that is utilized in many libraries and
+frameworks. To name one, Django is an example framework that uses them extensively.
+While useful and popular, mixins can cause some trouble if not designed well, because, in
+most cases, they require the developer to rely on multiple inheritance. As we stated earlier,
+Python handles multiple inheritance relatively well, thanks to its clear MRO
+implementation. Anyway, try to avoid subclassing multiple classes if you can. Multiple
+inheritance makes code more complex and hard to reason about. This is why class
+decorators may be a good replacement for mixin classes.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

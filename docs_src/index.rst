@@ -20,6 +20,7 @@ Index
     chapters/decorators/index
     chapters/descriptors/index
     chapters/generators/index
+    chapters/metaprogramming/index
     chapters/unit_testing/index
     chapters/design_patterns/index
     chapters/clean_architecture/index

@@ -25,6 +25,6 @@ help:
     	rm -rf _build; \
     else \
     	rm -rf ../python.pdf; \
-    	mv _build/latex/clean_code.pdf ../python.pdf; \
+    	mv _build/latex/mastering_python.pdf ../python.pdf; \
     	rm -rf _build; \
     fi

@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Using __new__() for overriding instantiation &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                02/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Metaprogramming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Using __new__() for overriding instantiation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/metaprogramming/using_new.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-new-for-overriding-instantiation">
+<h1>4. Using __new__() for overriding instantiation<a class="headerlink" href="#using-new-for-overriding-instantiation" title="Permalink to this headline">¶</a></h1>
+<p>The special method <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> is a static method that’s responsible for creating class
+instances. It is special-cased, so there is no need to declare it as static using
+the <code class="docutils literal notranslate"><span class="pre">staticmethod</span></code> decorator. This <code class="docutils literal notranslate"><span class="pre">__new__(cls,</span> <span class="pre">[,...])</span></code> method is called prior to
+the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> initialization method. Typically, the implementation of
+overridden <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> invokes its superclass version using <code class="docutils literal notranslate"><span class="pre">super().__new__()</span></code> with
+suitable arguments and modifies the instance before returning it.</p>
+<p>The following is an example class with the overridden <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> method implementation
+in order to count the number of class instances:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InstanceCountingClass</span><span class="p">:</span>
+
+    <span class="n">instances_created</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;__new__() called with:&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instances_created</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">instances_created</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">instance</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;__init__() called with:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attribute</span> <span class="o">=</span> <span class="n">attribute</span>
+</pre></div>
+</div>
+<p>Here is the log of the example interactive session that shows how
+our InstanceCountingClass implementation works:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">instance_counting</span> <span class="kn">import</span> <span class="n">InstanceCountingClass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance1</span> <span class="o">=</span> <span class="n">InstanceCountingClass</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+<span class="go">__new__() called with: &lt;class &#39;__main__.InstanceCountingClass&#39;&gt; (&#39;abc&#39;,) {}</span>
+<span class="go">__init__() called with: &lt;__main__.InstanceCountingClass object at</span>
+<span class="go">0x101259e10&gt; abc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance2</span> <span class="o">=</span> <span class="n">InstanceCountingClass</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
+<span class="go">__new__() called with: &lt;class &#39;__main__.InstanceCountingClass&#39;&gt; (&#39;xyz&#39;,) {}</span>
+<span class="go">__init__() called with: &lt;__main__.InstanceCountingClass object at</span>
+<span class="go">0x101259dd8&gt; xyz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance1</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">instance1</span><span class="o">.</span><span class="n">instances_created</span>
+<span class="go">(0, 2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance2</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">instance2</span><span class="o">.</span><span class="n">instances_created</span>
+<span class="go">(1, 2)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> method should usually return an instance of the featured class, but it is
+also possible for it to return other class instances. If this does happen (a different class
+instance is returned), then the call to the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method is skipped. This fact is useful
+when there is a need to modify creation/initialization behavior of immutable class instances
+like some of Python’s built-in types, as shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NonZero</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skipped_value</span><span class="p">):</span>
+        <span class="c1"># implementation of __init__ could be skipped in this case</span>
+        <span class="c1"># but it is left to present how it may be not called</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;__init__() called&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Let’s review these in the following interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">NonZero</span><span class="p">(</span><span class="o">-</span><span class="mi">12</span><span class="p">))</span>
+<span class="go">__init__() called</span>
+<span class="go">&lt;class &#39;__main__.NonZero&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">NonZero</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="go">&lt;class &#39;NoneType&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">NonZero</span><span class="p">(</span><span class="o">-</span><span class="mf">3.123</span><span class="p">)</span>
+<span class="go">__init__() called</span>
+<span class="go">-3</span>
+</pre></div>
+</div>
+<p>So, when should we use <code class="docutils literal notranslate"><span class="pre">__new__()</span></code>? The answer is simple: only when <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> is not
+enough. One such case was already mentioned, that is, subclassing immutable built-in
+Python types such as <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">frozenset</span></code>, and so on. This is because there was no
+way to modify such an immutable object instance in the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method once it was
+created.</p>
+<p>Some programmers can argue that <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> may be useful for performing important
+object initialization that may be missed if the user forgets to use
+the <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> call in the overridden initialization method. While it sounds
+reasonable, this has a major drawback. With such an approach, it becomes harder for the
+programmer to explicitly skip previous initialization steps if this is the already desired
+behavior. It also breaks an unspoken rule of all initializations performed in <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>.</p>
+<p>Because <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> is not constrained to return the same class instance, it can be easily
+abused. Irresponsible usage of this method might do a lot of harm to code readability, so it
+should always be used carefully and backed with extensive documentation. Generally, it is
+better to search for other solutions that may be available for the given problem, instead of
+affecting object creation in a way that will break a basic programmers’ expectations. Even
+overridden initialization of immutable types can be replaced with more predictable and
+well-established design patterns like the Factory Method.</p>
+<p>There is at least one aspect of Python programming where extensive usage of
+the <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> method is well justified. These are metaclasses.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
