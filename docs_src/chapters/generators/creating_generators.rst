@@ -1,7 +1,7 @@
 1. Creating generators
 **********************
 
-Generators were introduced in Python a long time ago (PEP-255), with the idea of
+Generators were introduced in Python a long time ago, with the idea of
 introducing iteration in Python while improving the performance of the program (by using
 less memory) at the same time.
 
@@ -11,10 +11,19 @@ memory: instead of having a very large list of elements in memory, holding every
 once, we have an object that knows how to produce each particular element, one at a time,
 as they are required.
 
+In many cases, the resources required to process one element are less than the resources
+required to store whole sequences. Therefore, they can be kept low, making the program
+more efficient.
+
 This feature enables lazy computations or heavyweight objects in memory, in a similar
 manner to what other functional programming languages (Haskell, for instance) provide. It
 would even be possible to work with infinite sequences because the lazy nature of
 generators allows for such an option.
+
+A common use case is to stream data
+buffers with generators (for example, from files). They can be paused, resumed, and
+stopped whenever necessary at any stage of the data processing pipeline without any need
+to load whole datasets into the program's memory
 
 1.1. A first look at generators
 +++++++++++++++++++++++++++++++
@@ -201,3 +210,9 @@ It is also worth mentioning, that we can only iterate 1 time over generators:
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
     StopIteration
+
+.. tip::
+
+    It is better to have a lot of simple iterable functions that work over
+    sequences of values than a complex function that computes the result for
+    one value at a time.

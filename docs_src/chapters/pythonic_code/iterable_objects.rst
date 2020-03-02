@@ -19,6 +19,7 @@ be able to work on for loops.
 
 When we try to iterate an object, Python will call the ``iter()`` function over it. One of the first things this
 function checks for is the presence of the ``__iter__`` method on that object, which, if present, will be executed.
+``__iter__`` should return the iterator itself.
 
 The following code creates an object that allows iterating over a range of dates, producing one day at a time on every
 round of the loop:
