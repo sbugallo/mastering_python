@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Best practices for arguments &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                03/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development_environments/index.html">Modern Python Development Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Naming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Best practices for arguments</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/chapters/naming/arguments.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="best-practices-for-arguments">
+<h1>4. Best practices for arguments<a class="headerlink" href="#best-practices-for-arguments" title="Permalink to this headline">¶</a></h1>
+<p>The signatures of functions and methods are the guardians of code integrity. They drive its
+usage and build its APIs. Besides the naming rules that we have discussed previously,
+special care has to be taken for arguments. This can be done through the following three
+simple rules:</p>
+<ul class="simple">
+<li><p>Build arguments by iterative design.</p></li>
+<li><p>Trust the arguments and your tests.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> magic arguments carefully.</p></li>
+</ul>
+<div class="section" id="building-arguments-by-iterative-design">
+<h2>4.1. Building arguments by iterative design<a class="headerlink" href="#building-arguments-by-iterative-design" title="Permalink to this headline">¶</a></h2>
+<p>Having a fixed and well-defined list of arguments for each function makes the code more
+robust. But this can’t be done in the first version, so arguments have to be built by iterative
+design. They should reflect the precise use cases the element was created for, and evolve
+accordingly.</p>
+<p>Consider the following example of the first versions of some <code class="docutils literal notranslate"><span class="pre">Service</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Service</span><span class="p">:</span> <span class="c1"># version 1</span>
+
+    <span class="k">def</span> <span class="nf">_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="s1">&#39;EXECUTE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to extend the signature of the <code class="docutils literal notranslate"><span class="pre">execute()</span></code> method with new arguments in a
+way that preserves backward compatibility, you should provide default values for these
+arguments as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Service</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="c1"># version 2</span>
+
+    <span class="k">def</span> <span class="nf">_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+        <span class="n">logger</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="s1">&#39;EXECUTE&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following example from an interactive session presents two styles of calling
+the <code class="docutils literal notranslate"><span class="pre">execute()</span></code> method of the updated <code class="docutils literal notranslate"><span class="pre">Service</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Service</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;my query&#39;</span><span class="p">)</span>
+<span class="go"># old-style call</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Service</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;my query&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">)</span>
+<span class="go">WARNING:root:done</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="trusting-the-arguments-and-your-tests">
+<h2>4.2. Trusting the arguments and your tests<a class="headerlink" href="#trusting-the-arguments-and-your-tests" title="Permalink to this headline">¶</a></h2>
+<p>Given the dynamic typing nature of Python, some developers use assertions at the top of
+their functions and methods to make sure the arguments have proper content, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">dividend</span><span class="p">,</span> <span class="n">divisor</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dividend</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">divisor</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dividend</span> <span class="o">/</span> <span class="n">divisor</span>
+</pre></div>
+</div>
+<p>This is often done by developers who are used to static typing and feel that something is
+missing in Python.</p>
+<p>This way of checking arguments is a part of the <strong>Design by Contract (DbC)</strong> programming
+style, where preconditions are checked before the code is actually run.</p>
+<p>The two main problems in this approach are as follows:</p>
+<ul class="simple">
+<li><p>DbC’s code explains how it should be used, making it less readable</p></li>
+<li><p>This can make it slower, since the assertions are made on each call</p></li>
+</ul>
+<p>The latter can be avoided with the <code class="docutils literal notranslate"><span class="pre">-O</span></code> option of the Python interpreter. In that case, all
+assertions are removed from the code before the byte code is created, so that the checking is
+lost.</p>
+<p>In any case, assertions have to be done carefully, and should not be used to bend Python to
+a statically typed language. The only use case for this is to protect the code from being
+called nonsensically. If you really want to have some kind of static typing in Python, you
+should definitely try MyPy or a similar static type checker that does not affect your code
+runtime and allows you to provide type definitions in a more readable form as function
+and variable annotations.</p>
+</div>
+<div class="section" id="using-args-and-kwargs-magic-arguments-carefully">
+<h2>4.3. Using *args and **kwargs magic arguments carefully<a class="headerlink" href="#using-args-and-kwargs-magic-arguments-carefully" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> arguments can break the robustness of a function or method.
+They make the signature fuzzy, and the code often starts to become a small argument
+parser where it should not, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fuzzy_thing</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;do_this&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok i did this&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;do_that&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;that is done&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">fuzzy_thing</span><span class="p">(</span><span class="n">do_this</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ok</span> <span class="n">i</span> <span class="n">did</span> <span class="n">this</span>
+<span class="n">ok</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">fuzzy_thing</span><span class="p">(</span><span class="n">do_that</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">that</span> <span class="ow">is</span> <span class="n">done</span>
+<span class="n">ok</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">fuzzy_thing</span><span class="p">(</span><span class="n">what_about_that</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ok</span>
+</pre></div>
+</div>
+<p>If the argument list gets long and complex, it is tempting to add magic arguments. But this
+is more a sign of a weak function or method that should be broken into pieces or refactored.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">*args</span></code> is used to deal with a sequence of elements that are treated the same way in
+the function, asking for a unique container argument such as an iterator is better, for
+example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span> <span class="c1"># okay</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">arg</span>
+
+    <span class="k">return</span> <span class="n">total</span>
+
+
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span> <span class="c1"># better!</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">arg</span>
+
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>, the same rule applies. It is better to fix the named arguments to make the
+method’s signature meaningful, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_sentence</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">noun</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;noun&#39;</span><span class="p">,</span> <span class="s1">&#39;Bill&#39;</span><span class="p">)</span>
+    <span class="n">verb</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verb&#39;</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">)</span>
+    <span class="n">adjective</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;adjective&#39;</span><span class="p">,</span> <span class="s1">&#39;happy&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{noun}</span><span class="s1"> </span><span class="si">{verb}</span><span class="s1"> </span><span class="si">{adjective}</span><span class="s1">&#39;</span>
+
+<span class="k">def</span> <span class="nf">make_sentence</span><span class="p">(</span><span class="n">noun</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">verb</span><span class="o">=</span><span class="s1">&#39;is&#39;</span><span class="p">,</span> <span class="n">adjective</span><span class="o">=</span><span class="s1">&#39;happy&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{noun}</span><span class="s1"> </span><span class="si">{verb}</span><span class="s1"> </span><span class="si">{adjective}</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+<p>Another interesting approach is to create a container class that groups several related
+arguments to provide an execution context. This structure differs
+from <code class="docutils literal notranslate"><span class="pre">*args</span></code> or <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> because it can provide internals that work over the values, and
+can evolve independently. The code that uses it as an argument will not have to deal with
+its internals.</p>
+<p>For instance, a web request passed on to a function is often represented by an instance of a
+class. This class is in charge of holding the data passed by the web server, as shown in the
+following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span> <span class="c1"># version 1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">,</span> <span class="s1">&#39;No referer&#39;</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span> <span class="c1"># version 2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">,</span> <span class="s1">&#39;No referer&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;No host&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Magic arguments cannot be avoided sometimes, especially in metaprogramming. For
+instance, they are indispensable in the creation of decorators that work on functions with
+any kind of signature.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

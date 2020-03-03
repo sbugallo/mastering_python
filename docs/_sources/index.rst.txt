@@ -21,6 +21,7 @@ Index
     chapters/descriptors/index
     chapters/generators/index
     chapters/metaprogramming/index
+    chapters/naming/index
     chapters/unit_testing/index
     chapters/design_patterns/index
     chapters/clean_architecture/index

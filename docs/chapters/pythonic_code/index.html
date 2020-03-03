@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                02/03/2020
+                03/03/2020
               </div>
             
           
@@ -165,6 +165,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generators/index.html">Generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../naming/index.html">Naming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
@@ -876,7 +877,8 @@ be able to work on for loops.</p>
 <div class="section" id="creating-iterable-objects">
 <h3>5.1. Creating iterable objects<a class="headerlink" href="#creating-iterable-objects" title="Permalink to this headline">¶</a></h3>
 <p>When we try to iterate an object, Python will call the <code class="docutils literal notranslate"><span class="pre">iter()</span></code> function over it. One of the first things this
-function checks for is the presence of the <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> method on that object, which, if present, will be executed.</p>
+function checks for is the presence of the <code class="docutils literal notranslate"><span class="pre">__iter__</span></code> method on that object, which, if present, will be executed.
+<code class="docutils literal notranslate"><span class="pre">__iter__</span></code> should return the iterator itself.</p>
 <p>The following code creates an object that allows iterating over a range of dates, producing one day at a time on every
 round of the loop:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>

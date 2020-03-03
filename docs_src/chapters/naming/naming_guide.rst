@@ -1,0 +1,116 @@
+3. Naming guide
+***************
+
+A common set of naming rules can be applied on variables, methods, functions, and
+properties. The names of classes and modules play a very important role in namespace
+construction and greatly affect code readability. This section contains a miniguide that will
+help you to define meaningful and readable names for your code elements.
+
+3.1. Using the has/is prefixes for Boolean elements
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+When an element holds a Boolean value you can mark it with ``is`` and/or ``has`` syntax to
+make the variable more readable. In the following example, is_connected and
+``has_cache`` are such identifiers that hold Boolean states of the ``DB`` class instances:
+
+.. code-block:: python
+
+    class DB:
+    is_connected = False
+    has_cache = False
+
+3.2. Using plurals for variables that are collections
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+When an element is holding a sequence, it is a good idea to use a plural form. You can also
+do the same for various mapping variables and properties. In following
+example, ``connected_users`` and ``tables`` are class attributes that hold multiple values:
+
+.. code-block:: python
+
+    class DB:
+        connected_users = ['Tarek']
+        tables = {'Customer':['id', 'first_name', 'last_name']}
+
+3.3. Using explicit names for dictionaries
+++++++++++++++++++++++++++++++++++++++++++
+
+When a variable holds a mapping, you should use an explicit name when possible. For
+example, if a ``dict`` holds a person's address, it can be named ``persons_addresses``:
+
+.. code-block:: python
+
+    persons_addresses = {'Bill': '6565 Monty Road', 'Pamela': '45 Python street'}
+
+3.4. Avoid generic names and redundancy
+***************************************
+
+You should generally avoid using explicit type names ``list``, ``dict``, and ``set`` as parts of
+variable names even for local variables. Python now offers function and variable
+annotations and a typing hierarchy that allows you to easily mark an expected type for a
+given variable so there is no longer a need to describe object types in their names. It makes
+the code hard to read, understand, and use. Using a built-in name has to be avoided as well
+to avoid shadowing it in the current namespace. Generic verbs should also be avoided,
+unless they have a meaning in the namespace.
+
+Instead, domain-specific terms should be used as follows:
+
+.. code-block:: python
+
+    def compute(data): # too generic
+        for element in data:
+            yield element ** 2
+
+    def squares(numbers): # better
+        for number in numbers:
+            yield number ** 2
+
+There is also the following list of prefixes and suffixes that, despite being very common in
+programming, should be, in fact, avoided in function and class names:
+
+- Manager
+- Object
+- Do, handle, or perform
+
+The reason for this is that they are vague, ambiguous, and do not add any value to the
+actual name. Jeff Atwood, the co-founder of Discourse and Stack Overflow, has a very good
+article on this topic and it can be found on his blog at
+`http://blog.codinghorror.com/i-shall-call-it-somethingmanager/ <http://blog.codinghorror.com/i-shall-call-it-somethingmanager/>`_
+
+There is also a list of package names that should be avoided. Everything that does not give
+any clue about its content can do a lot of harm to the project in the long term. Names such
+as ``misc``, ``tools``, ``utils``, ``common``, or core have a very strong tendency to become endless
+bags of various unrelated code pieces of very poor quality that seem to grow in size
+exponentially. In most cases, the existence of such a module is a sign of laziness or lack of
+enough design efforts. Enthusiasts of such module names can simply forestall the future
+and rename them to ``trash`` or ``dumpster`` because this is exactly how their teammates will
+eventually treat such modules.
+
+In most cases, it is almost always better to have more small modules even with very little
+content but with names that reflect well what is inside. To be honest, there is nothing
+inherently wrong with names such as ``utils`` and ``common`` and there is a possibility to use
+them responsibly. But reality shows that in many cases they instead become a stub for
+dangerous structural antipatterns that proliferate very fast. And if you don't act fast
+enough, you may not be able get rid of them ever. So the best approach is simply to avoid
+such risky organizational patterns and nip them in the bud.
+
+3.5. Avoiding existing names
+++++++++++++++++++++++++++++
+
+It is a bad practice to use names that shadow other names that already exist in the same
+context. It makes code reading and debugging very confusing. Always try to define original
+names, even if they are local to the context. If you eventually have to reuse existing names
+or keywords, use a trailing underscore to avoid name collision, for example:
+
+.. code-block:: python
+
+    def xapian_query(terms, or_=True):
+        """if or_ is true, terms are combined with the OR clause"""
+        ...
+
+Note that the ``class`` keyword is often replaced by ``klass`` or ``cls``:
+
+.. code-block:: python
+
+    def factory(klass, *args, **kwargs):
+        return klass(*args, **kwargs)

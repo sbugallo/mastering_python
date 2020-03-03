@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                02/03/2020
+                03/03/2020
               </div>
             
           
@@ -137,6 +137,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../naming/index.html">Naming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_patterns/index.html">Design patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../clean_architecture/index.html">Clean architecture</a></li>
@@ -215,9 +216,13 @@
             
   <div class="section" id="generators">
 <h1>Generators<a class="headerlink" href="#generators" title="Permalink to this headline">¶</a></h1>
+<p>Generators provide an elegant way to write simple and efficient code for functions that
+return a sequence of elements. Based on the <code class="docutils literal notranslate"><span class="pre">yield</span></code> statement, they allow you to pause a
+function and return an intermediate result. The function saves its execution context and can
+be resumed later, if necessary.</p>
 <div class="section" id="creating-generators">
 <h2>1. Creating generators<a class="headerlink" href="#creating-generators" title="Permalink to this headline">¶</a></h2>
-<p>Generators were introduced in Python a long time ago (PEP-255), with the idea of
+<p>Generators were introduced in Python a long time ago, with the idea of
 introducing iteration in Python while improving the performance of the program (by using
 less memory) at the same time.</p>
 <p>The idea of a generator is to create an object that is iterable, and, while it’s being iterated,
@@ -225,10 +230,17 @@ will produce the elements it contains, one at a time. The main use of generators
 memory: instead of having a very large list of elements in memory, holding everything at
 once, we have an object that knows how to produce each particular element, one at a time,
 as they are required.</p>
+<p>In many cases, the resources required to process one element are less than the resources
+required to store whole sequences. Therefore, they can be kept low, making the program
+more efficient.</p>
 <p>This feature enables lazy computations or heavyweight objects in memory, in a similar
 manner to what other functional programming languages (Haskell, for instance) provide. It
 would even be possible to work with infinite sequences because the lazy nature of
 generators allows for such an option.</p>
+<p>A common use case is to stream data
+buffers with generators (for example, from files). They can be paused, resumed, and
+stopped whenever necessary at any stage of the data processing pipeline without any need
+to load whole datasets into the program’s memory</p>
 <div class="section" id="a-first-look-at-generators">
 <h3>1.1. A first look at generators<a class="headerlink" href="#a-first-look-at-generators" title="Permalink to this headline">¶</a></h3>
 <p>Let’s start with an example. The problem at hand now is that we want to process a large list
@@ -390,6 +402,12 @@ and, <code class="docutils literal notranslate"><span class="pre">max()</span></
   File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
 <span class="gr">StopIteration</span>
 </pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>It is better to have a lot of simple iterable functions that work over
+sequences of values than a complex function that computes the result for
+one value at a time.</p>
 </div>
 </div>
 </div>
