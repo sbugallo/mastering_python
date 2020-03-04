@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Craftmanship &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Pythonic code" href="chapters/pythonic_code/index.html" />
+    <link rel="prev" title="Index" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Craftmanship</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html">Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html">Generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html">Metaprogramming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html">Naming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Craftmanship</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/parts/craftmanship/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="chapters/pythonic_code/index.html" class="btn btn-neutral float-right" title="Pythonic code" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../index.html" class="btn btn-neutral float-left" title="Index" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="craftmanship">
+<h1>Craftmanship<a class="headerlink" href="#craftmanship" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chapters/pythonic_code/index.html">Pythonic code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#strings-and-bytes">1. Strings and bytes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#indexes-and-slices">2. Indexes and slices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#context-managers">3. Context managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#properties-attributes-and-different-types-of-methods-for-objects">4. Properties, attributes and different types of methods for objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#iterable-objects">5. Iterable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#container-objects">6. Container objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#dynamic-attributes-for-objects">7. Dynamic attributes for objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#callable-objects">8. Callable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#docstrings">9. Docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#annotations">10. Annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#caveats-in-python">11. Caveats in Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/general_traits/index.html">General traits of good code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#design-by-contract">1. Design by contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#defensive-programming">2. Defensive programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#separation-of-concerns">3. Separation of concerns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#acronyms-to-live-by">4. Acronyms to live by</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#composition-and-inheritance">5. Composition and inheritance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#arguments-in-functions-and-methods">6. Arguments in functions and methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html#final-remarks-on-good-practices-for-software-design">7. Final remarks on good practices for software design</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/solid_principles/index.html">SOLID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html#single-responsibility-principle">1. Single responsibility principle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html#the-open-closed-principle">2. The open/closed principle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html#liskov-s-substitution-principle">3. Liskov’s substitution principle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html#interface-segregation">4. Interface segregation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html#dependency-inversion">5. Dependency inversion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/decorators/index.html">Decorators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html#what-are-decorators">1. What are decorators?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html#effective-decorators-avoid-common-mistakes">2. Effective decorators: avoid common mistakes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html#the-dry-principle-with-decorators">3. The DRY principle with decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html#decorators-and-separation-of-concerns">4. Decorators and separation of concerns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html#analyzing-good-decorators">5. Analyzing good decorators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/descriptors/index.html">Descriptors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html#a-first-look-at-descriptors">1. A first look at descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html#types-of-descriptors">2. Types of descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html#descriptors-in-action">3. Descriptors in action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html#analysis-of-descriptors">4. Analysis of descriptors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/generators/index.html">Generators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html#creating-generators">1. Creating generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html#iterating-idiomatically">2. Iterating idiomatically</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html#coroutines">3. Coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html#asynchronous-programming">4. Asynchronous programming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/metaprogramming/index.html">Metaprogramming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html#what-is-metaprogramming">1. What is metaprogramming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html#decorators">2. Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html#using-new-for-overriding-instantiation">4. Using __new__() for overriding instantiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html#metaclasses">5. Metaclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html#code-generation">6. Code generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/naming/index.html">Naming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#pep-8">1. PEP 8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#naming-styles">2. Naming styles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#naming-guide">3. Naming guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#best-practices-for-arguments">4. Best practices for arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#class-names">5. Class names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#id1">6. Modules and packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html#useful-tools">7. Useful tools</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="chapters/pythonic_code/index.html" class="btn btn-neutral float-right" title="Pythonic code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../index.html" class="btn btn-neutral float-left" title="Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

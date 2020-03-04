@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Analysis of descriptors &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Analysis of descriptors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/descriptors/analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analysis-of-descriptors">
+<h1>4. Analysis of descriptors<a class="headerlink" href="#analysis-of-descriptors" title="Permalink to this headline">¶</a></h1>
+<p>We have seen how descriptors work so far and explored some interesting situations in
+which they contribute to clean design by simplifying their logic and leveraging more
+compact classes.</p>
+<p>Up to this point, we know that by using descriptors, we can achieve cleaner code,
+abstracting away repeated logic and implementation details. But how do we know our
+implementation of the descriptors is clean and correct? What makes a good descriptor? Are
+we using this tool properly or over-engineering with it?</p>
+<div class="section" id="how-python-uses-descriptors-internally">
+<h2>4.1. How Python uses descriptors internally<a class="headerlink" href="#how-python-uses-descriptors-internally" title="Permalink to this headline">¶</a></h2>
+<p>Referring to the question as to what makes a good descriptor?, a simple answer would be
+that a good descriptor is pretty much like any other good Python object. It is consistent with
+Python itself. The idea that follows this premise is that analyzing how Python uses
+descriptors will give us a good idea of good implementations so that we know what to
+expect from the descriptors we write.</p>
+<p>We will see the most common scenarios where Python itself uses descriptors to solve parts
+of its internal logic, and we will also discover elegant descriptors and that they have been
+there in plain sight all along.</p>
+<div class="section" id="functions-and-methods">
+<h3>4.1.1. Functions and methods<a class="headerlink" href="#functions-and-methods" title="Permalink to this headline">¶</a></h3>
+<p>The most resonating case of an object that is a descriptor is probably a function. Functions
+implement the <code class="docutils literal notranslate"><span class="pre">__get__</span></code> method, so they can work as methods when defined inside a class.
+Methods are just functions that take an extra argument. By convention, the first argument
+of a method is named “self”, and it represents an instance of the class that the method is
+being defined in. Then, whatever the method does with “self”, would be the same as any
+other function receiving the object and applying modifications to it.</p>
+<p>In order words, when we define something like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>It is actually the same as if we define this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="n">myclass_instance</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+    <span class="n">myclass_instance</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">method</span><span class="p">(</span><span class="n">MyClass</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>So, it is just another function, modifying the object, only that it’s defined inside the class,
+and it is said to be bound to the object.</p>
+<p>When we call something in the form of this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Python is, in fact, doing something equivalent to this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="n">MyClass</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice that this is just a syntax conversion that is handled internally by Python. The way
+this works is by means of descriptors.</p>
+<p>Since functions implement the descriptor protocol (see the following listing) before calling
+the method, the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> method is invoked first, and some transformations happen
+before running the code on the internal callable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">function</span><span class="p">():</span> <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">function</span><span class="o">.</span><span class="fm">__get__</span>
+<span class="go">&lt;method-wrapper &#39;__get__&#39; of function object at 0x...&gt;</span>
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">instance.method(...)</span></code> statement, before processing all the arguments of the
+callable inside the parenthesis, the “instance.method” part is evaluated.</p>
+<p>Since <code class="docutils literal notranslate"><span class="pre">method</span></code> is an object defined as a class attribute, and it has a <code class="docutils literal notranslate"><span class="pre">__get__</span></code> method, this is
+called. What this does is convert the function to a method, which means binding the
+callable to the instance of the object it is going to work with.</p>
+<p>Let’s see this with an example so that we can get an idea of what Python might be doing
+internally.</p>
+<p>We will define a callable object inside a class that will act as a sort of function or method
+that we want to define to be invoked externally. An instance of the <code class="docutils literal notranslate"><span class="pre">Method</span></code> class is
+supposed to be a function or method to be used inside a different class. This function will
+just print its three parameters: the instance that it received (which would be the
+self parameter on the class it’s being defined in), and two more arguments. Notice that in
+the <code class="docutils literal notranslate"><span class="pre">__call__()</span></code> method, the self parameter does not represent the instance of
+<code class="docutils literal notranslate"><span class="pre">MyClass</span></code>, but instead an instance of <code class="docutils literal notranslate"><span class="pre">Method</span></code>. The parameter named instance is meant to
+be a <code class="docutils literal notranslate"><span class="pre">MyClass</span></code> type of object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Method</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.name}</span><span class="s2">: </span><span class="si">{instance}</span><span class="s2"> called with </span><span class="si">{arg1}</span><span class="s2"> and </span><span class="si">{arg2}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">Method</span><span class="p">(</span><span class="s2">&quot;Internal call&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Under these considerations and, after creating the object, the following two calls should be
+equivalent, based on the preceding definition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="n">Method</span><span class="p">(</span><span class="s2">&quot;External call&quot;</span><span class="p">)(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">)</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, only the first one works as expected, as the second one gives an error:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="n">File</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">)</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="fm">__call__</span><span class="p">()</span> <span class="n">missing</span> <span class="mi">1</span> <span class="n">required</span> <span class="n">positional</span> <span class="n">argument</span><span class="p">:</span> <span class="s1">&#39;arg2&#39;</span>
+</pre></div>
+</div>
+<p>We are seeing the same error we faced with a decorator. The arguments are being shifted to the left by one,
+instance is taking the place of <code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">arg1</span></code> is going to be instance, and there is nothing to provide
+for <code class="docutils literal notranslate"><span class="pre">arg2</span></code>.</p>
+<p>In order to fix this, we need to make <code class="docutils literal notranslate"><span class="pre">Method</span></code> a descriptor.</p>
+<p>This way, when we call <code class="docutils literal notranslate"><span class="pre">instance.method</span></code> first, we are going to call its <code class="docutils literal notranslate"><span class="pre">__get__()</span></code>, on
+which we bind this callable to the object accordingly (bypassing the object as the first
+parameter), and then proceed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
+
+<span class="k">class</span> <span class="nc">Method</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.name}</span><span class="s2">: </span><span class="si">{instance}</span><span class="s2"> called with </span><span class="si">{arg1}</span><span class="s2"> and </span><span class="si">{arg2}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="k">return</span> <span class="n">MethodType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, both calls work as expected:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">External</span> <span class="n">call</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">MyClass</span> <span class="nb">object</span> <span class="n">at</span> <span class="mi">0</span><span class="n">x</span><span class="o">...&gt;</span> <span class="n">called</span> <span class="k">with</span> <span class="n">fist</span> <span class="ow">and</span> <span class="n">second</span>
+<span class="n">Internal</span> <span class="n">call</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">MyClass</span> <span class="nb">object</span> <span class="n">at</span> <span class="mi">0</span><span class="n">x</span><span class="o">...&gt;</span> <span class="n">called</span> <span class="k">with</span> <span class="n">first</span> <span class="ow">and</span> <span class="n">second</span>
+</pre></div>
+</div>
+<p>What we did is convert the function (actually the callable object we defined instead) to a
+method by using <code class="docutils literal notranslate"><span class="pre">MethodType</span></code> from the <code class="docutils literal notranslate"><span class="pre">types</span></code> module. The first parameter of this class
+should be a callable (<code class="docutils literal notranslate"><span class="pre">self</span></code>, in this case, is one by definition because it implements
+<code class="docutils literal notranslate"><span class="pre">__call__</span></code>), and the second one is the object to bind this function to.</p>
+<p>Something similar to this is what function objects use in Python so they can work as
+methods when they are defined inside a class.</p>
+<p>Since this is a very elegant solution, it’s worth exploring it to keep it in mind as a Pythonic
+approach when defining our own objects. For instance, if we were to define our own
+callable, it would be a good idea to also make it a descriptor so that we can use it in classes
+as class attributes as well.</p>
+</div>
+<div class="section" id="built-in-decorators-for-methods">
+<h3>4.1.2. Built-in decorators for methods<a class="headerlink" href="#built-in-decorators-for-methods" title="Permalink to this headline">¶</a></h3>
+<p>All <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>, and <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> decorators are descriptors.</p>
+<p>We have mentioned several times that the idiom makes the descriptor return itself when it’s
+being called from a class directly. Since properties are actually descriptors, that is the
+reason why, when we ask it from the class, we don’t get the result of computing the
+property, but the entire property object instead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nd">@property</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MyClass</span><span class="o">.</span><span class="n">prop</span>
+<span class="go">&lt;property object at 0x...&gt;</span>
+</pre></div>
+</div>
+<p>For class methods, the <code class="docutils literal notranslate"><span class="pre">__get__</span></code> function in the descriptor will make sure that the class is
+the first parameter to be passed to the function being decorated, regardless of whether it’s
+called from the class directly or from an instance. For static methods, it will make sure that
+no parameters are bound other than those defined by the function, namely undoing the
+binding done by <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> on functions that make self the first parameter of that
+function.</p>
+<p>Let’s take an example; we create a <code class="docutils literal notranslate"><span class="pre">&#64;classproperty</span></code> decorator that works as the regular
+<code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> decorator, but for classes instead. With a decorator like this one, the following
+code should be able to work:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TableEvent</span><span class="p">:</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="s2">&quot;public&quot;</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span>
+
+    <span class="nd">@classproperty</span>
+    <span class="k">def</span> <span class="nf">topic</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">read_prefix_from_config</span><span class="p">()</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{prefix}{cls.schema}</span><span class="s2">.</span><span class="si">{cls.table}</span><span class="s2">&quot;</span>
+
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">TableEvent</span><span class="o">.</span><span class="n">topic</span>
+<span class="s1">&#39;public.user&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">TableEvent</span><span class="p">()</span><span class="o">.</span><span class="n">topic</span>
+<span class="s1">&#39;public.user&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="slots">
+<h3>4.1.3. Slots<a class="headerlink" href="#slots" title="Permalink to this headline">¶</a></h3>
+<p>When a class defines the <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> attribute, it can contain all the attributes that the class
+expects and no more.</p>
+<p>Trying to add extra attributes dynamically to a class that defines <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> will result in
+an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>. By defining this attribute, the class becomes static, so it will not have
+a <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute where you can add more objects dynamically.</p>
+<p>How, then, are its attributes retrieved if not from the dictionary of the object? By using
+descriptors. Each name defined in a slot will have its own descriptor that will store the
+value for retrieval later:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Coordinate2D</span><span class="p">:</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.lat}</span><span class="s2">, </span><span class="si">{self.lon}</span><span class="s2">)&quot;</span>
+</pre></div>
+</div>
+<p>While this is an interesting feature, it has to be used with caution because it is taking away
+the dynamic nature of Python. In general, this ought to be reserved only for objects that we
+know are static, and if we are absolutely sure we are not adding any attributes to them
+dynamically in other parts of the code.</p>
+<p>As an upside of this, objects defined with slots use less memory, since they only need a
+fixed set of fields to hold values and not an entire dictionary.</p>
+</div>
+</div>
+<div class="section" id="implementing-descriptors-in-decorators">
+<h2>4.2. Implementing descriptors in decorators<a class="headerlink" href="#implementing-descriptors-in-decorators" title="Permalink to this headline">¶</a></h2>
+<p>We now understand how Python uses descriptors in functions to make them work as
+methods when they are defined inside a class. We have also seen examples of cases where
+we can make decorators work by making them comply with the descriptor protocol by
+using the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> method of the interface to adapt the decorator to the object it is being
+called with. This solves the problem for our decorators in the same way that Python solves
+the issue of functions as methods in objects.</p>
+<p>The general recipe for adapting a decorator in such a way is to implement the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code>
+method on it and use <code class="docutils literal notranslate"><span class="pre">types.MethodType</span></code> to convert the callable (the decorator itself) to a
+method bound to the object it is receiving (the instance parameter received by <code class="docutils literal notranslate"><span class="pre">__get__</span></code>).</p>
+<p>For this to work, we will have to implement the decorator as an object, because otherwise, if
+we are using a function, it will already have a <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> method, which will be doing
+something different that will not work unless we adapt it. The cleaner way to proceed is to
+define a class for the decorator.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use a decorator class when defining a decorator that we want to apply to class methods, and implement the <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> method on it.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

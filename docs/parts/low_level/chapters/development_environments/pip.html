@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Installing packages with pip &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Installing packages with pip</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/low_level/chapters/development_environments/pip.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installing-packages-with-pip">
+<h1>1. Installing packages with pip<a class="headerlink" href="#installing-packages-with-pip" title="Permalink to this headline">¶</a></h1>
+<p>Nowadays, a lot of operating systems come with Python as a standard component. Most
+Linux distributions and UNIX-based systems, such as FreeBSD, NetBSD, OpenBSD, or
+macOS, come with Python either installed by default or available through system package
+repositories. Many of them even use it as part of some core components: Python powers
+the installers of Ubuntu (Ubiquity), Red Hat Linux (Anaconda), and Fedora (Anaconda
+again). Unfortunately, the preinstalled system version of Python is often Python 2.7, which
+is fairly outdated.</p>
+<p>Due to Python’s popularity as an operating system component, a lot of packages from PyPI
+are also available as native packages managed by the system’s package management tools,
+such as apt-get (Debian, Ubuntu), rpm (Red Hat Linux), or emerge (Gentoo). It should be
+remembered, however, that the list of available libraries is very limited, and they are mostly
+outdated compared to PyPI. This is the reason why pip should always be used to obtain
+new packages in the latest version, as recommended by the Python Packaging Authority
+(PyPA). Although it is an independent package, starting from version 2.7.9 and 3.4 of
+CPython, it is bundled with every new release by default. Installing the new package is as
+simple as this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install &lt;package-name&gt;
+</pre></div>
+</div>
+<p>Among other features, pip allows specific versions of packages to be forced (using the <code class="docutils literal notranslate"><span class="pre">pip</span>
+<span class="pre">install</span> <span class="pre">package-name==version</span></code> syntax) and upgraded to the latest version available
+(using the <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code> switch). The full usage description for most of the command-line
+tools presented in the book can be easily obtained simply by running the command with
+the <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> switch, but here is an example session that demonstrates the most
+commonly used options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip show pip
+Name: pip
+Version: <span class="m">18</span>.0
+Summary: The PyPA recommended tool <span class="k">for</span> installing Python packages.
+Home-page: https://pip.pypa.io/
+Author: The pip developers
+Author-email: pypa-dev@groups.google.com
+License: MIT
+Location: /Users/swistakm/.envs/epp-3rd-ed/lib/python3.7/site-packages
+Requires:
+Required-by:
+
+$ pip install <span class="s1">&#39;pip&gt;=18.0&#39;</span>
+Requirement already satisfied: pip&gt;<span class="o">=</span><span class="m">18</span>.0 in <span class="o">(</span>...<span class="o">)</span>/lib/python3.7/sitepackages <span class="o">(</span><span class="m">18</span>.0<span class="o">)</span>
+
+$ pip install --upgrade pip
+Requirement already up-to-date: pip in <span class="o">(</span>...<span class="o">)</span>/lib/python3.7/site-packages
+<span class="o">(</span><span class="m">18</span>.0<span class="o">)</span>
+</pre></div>
+</div>
+<p>In some cases, pip may not be available by default. From Python 3.4 onward (and also
+Python 2.7.9), it can always be bootstrapped using the ensurepip module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m ensurepip
+Looking in links:
+/var/folders/z6/3m2r6jgd04q0m7yq29c6lbzh0000gn/T/tmp784u9bct
+Requirement already satisfied: setuptools in /Users/swistakm/.envs/epp-3rd-ed/lib/python3.7/site-packages <span class="o">(</span><span class="m">40</span>.4.3<span class="o">)</span>
+Collecting pip
+Installing collected packages: pip
+Successfully installed pip-10.0.1
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

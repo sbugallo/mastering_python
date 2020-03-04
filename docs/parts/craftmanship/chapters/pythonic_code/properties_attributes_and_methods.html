@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Properties, attributes and different types of methods for objects &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Properties, attributes and different types of methods for objects</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/pythonic_code/properties_attributes_and_methods.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="properties-attributes-and-different-types-of-methods-for-objects">
+<h1>4. Properties, attributes and different types of methods for objects<a class="headerlink" href="#properties-attributes-and-different-types-of-methods-for-objects" title="Permalink to this headline">¶</a></h1>
+<p>All of the properties and functions of an object are public in Python, which is different from other languages where
+properties can be public, private, or protected. That is, there is no point in preventing caller objects from invoking
+any attributes an object has. This is another difference with respect to other programming languages in which you can
+mark some attributes as private or protected.</p>
+<p>There is no strict enforcement, but there are some conventions. An attribute that starts with an underscore is meant to
+be private to that object, and we expect that no external agent calls it (but again, there is nothing preventing this).</p>
+<div class="section" id="underscores-in-python">
+<h2>4.1. Underscores in Python<a class="headerlink" href="#underscores-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Consider the following example to illustrate this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Connector</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">source</span>
+<span class="go">&#39;postgresql://localhost&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">_timeout</span>
+<span class="go">60</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">__password</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr"> File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="gr">AttributeError</span>: <span class="n">&#39;Connector&#39; object has no attribute &#39;__password&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+<span class="go">{&#39;source&#39;: &#39;postgresql://localhost&#39;, &#39;_timeout&#39;: 60, &#39;user&#39;: &#39;root&#39;, &#39;_Connector__password&#39;: &#39;1234&#39;}</span>
+</pre></div>
+</div>
+<p>Here, a Connector object is created with source, and it starts with 4 attributes—the
+aforementioned <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span></code>, <code class="docutils literal notranslate"><span class="pre">user</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code>. <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code> are public, <code class="docutils literal notranslate"><span class="pre">timeout</span></code> is
+private and <code class="docutils literal notranslate"><span class="pre">password</span></code> is.</p>
+<p>However, as we can see from the following lines when we create an object like this, we can actually access <code class="docutils literal notranslate"><span class="pre">timeout</span></code>.
+The interpretation of this code is that <code class="docutils literal notranslate"><span class="pre">_timeout</span></code> should be accessed only within connector itself and never from a
+caller. This means that you should organize the code in a way so that you can safely refactor the timeout at all of the
+times it’s needed, relying on the fact that it’s not being called from outside the object (only internally), hence
+preserving the same interface as before. Complying with these rules makes the code easier to maintain and more
+robust because we don’t have to worry about ripple effects when refactoring. The same principle applies to methods as
+well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Objects should only expose those attributes and methods that are relevant to an external caller object,
+namely, entailing its interface. Everything that is not strictly part of an object’s interface should be kept prefixed
+with a single underscore.</p>
+</div>
+<p>This is the Pythonic way of clearly delimiting the interface of an object. There is, however, a common misconception
+that some attributes and methods can be actually made private. This is, again, a misconception.</p>
+<p><code class="docutils literal notranslate"><span class="pre">password</span></code> is defined with a double underscore instead. Some developers use this method to hide some attributes,
+thinking, like in this example, that <code class="docutils literal notranslate"><span class="pre">password</span></code> is now private and that no other object can modify it. Now, take a
+look at the exception that is raised when trying to access it. It’s <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>, saying that it doesn’t exist.
+It doesn’t say something like “this is private” or “this can’t be accessed” and so on. It says it does not exist. This
+should give us a clue that, in fact, something different is happening and that this behavior is instead just a side
+effect, but not the real effect we want.</p>
+<p>What’s actually happening is that with the double underscores, Python creates a different name for the attribute (this
+is called <strong>name mangling</strong>). What it does is create the attribute with the following name instead:
+“_&lt;class-name&gt;__&lt;attribute-name&gt;”. In this case, an attribute named ‘_Connector__password’ will be created.</p>
+<p>Notice the side effect that we mentioned earlier—the attribute only exists with a different name, and for that reason
+the AttributeError was raised on our first attempt to access it.</p>
+<p>The idea of the double underscore in Python is completely different. It was created as a means to override different
+methods of a class that is going to be extended several times, without the risk of having collisions with the method
+names. Even that is a too far-fetched use case as to justify the use of this mechanism.</p>
+<p>Double underscores are a non-Pythonic approach. If you need to define attributes as private, use a single underscore,
+and respect the Pythonic convention that it is a private attribute.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not use double underscores.</p>
+</div>
+</div>
+<div class="section" id="properties">
+<h2>4.2 Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<p>When the object needs to just hold values, we can use regular attributes. Sometimes, we might want to do some
+computations based on the state of the object and the values of other attributes. Most of the time, properties are a
+good choice for this.</p>
+<p>Properties are to be used when we need to define access control to some attributes in an object, which is another point
+where Python has its own way of doing things. In other programming languages (like Java), you would create access
+methods (getters and setters), but idiomatic Python would use properties instead.</p>
+<p>Imagine that we have an application where users can register and we want to protect certain information about the user
+from being incorrect, such as their email, as shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">EMAIL_FORMAT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^@]+@[^@]+\.[^@]+&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">is_valid_email</span><span class="p">(</span><span class="n">potentially_valid_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">EMAIL_FORMAT</span><span class="p">,</span> <span class="n">potentially_valid_email</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">_email</span> <span class="o">=</span> <span class="kc">None</span>
+
+     <span class="nd">@property</span>
+     <span class="k">def</span> <span class="nf">email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_email</span>
+
+     <span class="nd">@email</span><span class="o">.</span><span class="n">setter</span>
+     <span class="k">def</span> <span class="nf">email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_email</span><span class="p">):</span>
+         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_email</span><span class="p">(</span><span class="n">new_email</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t set </span><span class="si">{new_email}</span><span class="s2"> as it&#39;s not a valid email&quot;</span><span class="p">)</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">_email</span> <span class="o">=</span> <span class="n">new_email</span>
+</pre></div>
+</div>
+<p>By putting <code class="docutils literal notranslate"><span class="pre">email</span></code> under a property, we obtain some advantages for free. In this example, the first <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code>
+method will return the value held by the private attribute <code class="docutils literal notranslate"><span class="pre">email</span></code>. As mentioned earlier, the leading underscore
+determines that this attribute is intended to be used as private, and therefore should not be accessed from outside this
+class.</p>
+<p>Then, the second method uses <code class="docutils literal notranslate"><span class="pre">&#64;email.setter</span></code>, with the already defined property of the previous method. This is the
+one that is going to be called when <code class="docutils literal notranslate"><span class="pre">&lt;user&gt;.email</span> <span class="pre">=</span> <span class="pre">&lt;new_email&gt;</span></code> runs from the caller code, and <code class="docutils literal notranslate"><span class="pre">&lt;new_email&gt;</span></code> will
+become the parameter of this method. Here, we explicitly defined a validation that will fail if the value that is trying
+to be set is not an actual email address. If it is, it will then update the attribute with the new value as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="s2">&quot;jsmith&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;jsmith@&quot;</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">Can&#39;t set jsmith@ as it&#39;s not a valid email</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;jsmith@g.co&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u1</span><span class="o">.</span><span class="n">email</span>
+<span class="go">&#39;jsmith@g.co&#39;</span>
+</pre></div>
+</div>
+<p>This approach is much more compact than having custom methods prefixed with <code class="docutils literal notranslate"><span class="pre">get_</span></code> or <code class="docutils literal notranslate"><span class="pre">set_</span></code>. It’s clear what is
+expected because it’s just email.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t write custom <code class="docutils literal notranslate"><span class="pre">get_*</span></code> and <code class="docutils literal notranslate"><span class="pre">set_*</span></code> methods for all attributes on your objects. Most of the time, leaving
+them as regular attributes is just enough. If you need to modify the logic for when an attribute is retrieved or
+modified, then use properties.</p>
+</div>
+<p>You might find that properties are a good way to achieve command and query separation (CC08). Command and query
+separation state that a method of an object should either answer to something or do something, but not both. If a method
+of an object is doing something and at the same time it returns a status answering a question of how that operation
+went, then it’s doing more than one thing, clearly violating the principle that functions should do one thing, and one
+thing only.</p>
+<p>Depending on the name of the method, this can create even more confusion, making it harder for readers to understand
+what the actual intention of the code is. For example, if a method is called set_email, and we use it as
+if self.set_email(“<a class="reference external" href="mailto:a&#37;&#52;&#48;j&#46;com">a<span>&#64;</span>j<span>&#46;</span>com</a>”): …, what is that code doing? Is it setting the email to <a class="reference external" href="mailto:a&#37;&#52;&#48;j&#46;com">a<span>&#64;</span>j<span>&#46;</span>com</a>? Is it checking if the
+email is already set to that value? Both (setting and then checking if the status is correct)?</p>
+<p>With properties, we can avoid this kind of confusion. The <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> decorator is the query that will answer to
+something, and the <code class="docutils literal notranslate"><span class="pre">&#64;&lt;property_name&gt;.setter</span></code> is the command that will do something.</p>
+<p>Another piece of good advice derived from this example is as follows: don’t do more than one thing on a method. If you
+want to assign something and then check the value, break that down into two or more sentences.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Methods should do one thing only. If you have to run an action and then check for the status, so that in separate
+methods that are called by different statements.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

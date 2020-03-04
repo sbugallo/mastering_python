@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6. Code generation &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>6. Code generation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/metaprogramming/code_generation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="code-generation">
+<h1>6. Code generation<a class="headerlink" href="#code-generation" title="Permalink to this headline">¶</a></h1>
+<p>As we already mentioned, the dynamic code generation is the most difficult approach to
+metaprogramming. There are tools in Python that allow you to generate and execute code
+or even do some modifications to the already compiled code objects.</p>
+<p>Various projects such as <strong>Hy</strong> show that even whole languages can be
+reimplemented in Python using code generation techniques. This proves that the
+possibilities are practically limitless. Knowing how vast this topic is and how badly it is
+riddled with various pitfalls, I won’t even try to give detailed suggestions on how to create
+code this way, or to provide useful code samples.</p>
+<p>Anyway, knowing what is possible may be useful for you if you plan to study this field
+deeper by yourself. So, treat this section only as a short summary of possible starting points
+for further learning.</p>
+<div class="section" id="exec-eval-and-compile">
+<h2>6.1. exec, eval and compile<a class="headerlink" href="#exec-eval-and-compile" title="Permalink to this headline">¶</a></h2>
+<p>Python provides the following three built-in functions to manually execute, evaluate, and
+compile arbitrary Python code:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">exec(object,</span> <span class="pre">globals,</span> <span class="pre">locals)</span></code>: This allows you to dynamically execute the Python code. <code class="docutils literal notranslate"><span class="pre">object</span></code> should be a string or code object (see the <code class="docutils literal notranslate"><span class="pre">compile()</span></code> function) representing a single statement or sequence of multiple statements. The <code class="docutils literal notranslate"><span class="pre">globals</span></code> and <code class="docutils literal notranslate"><span class="pre">locals</span></code> arguments provide global and local namespaces for the executed code and are optional. If they are not provided, then the code is executed in the current scope. If provided, <code class="docutils literal notranslate"><span class="pre">globals</span></code> must be a dictionary, while <code class="docutils literal notranslate"><span class="pre">locals</span></code> might be any mapping object; it always returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eval(expression,</span> <span class="pre">globals,</span> <span class="pre">locals)</span></code>: This is used to evaluate the given expression by returning its value. It is similar to <code class="docutils literal notranslate"><span class="pre">exec()</span></code>, but it expects <code class="docutils literal notranslate"><span class="pre">expression</span></code> to be a single Python expression and not a sequence of statements. It returns the value of the evaluated expression.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compile(source,</span> <span class="pre">filename,</span> <span class="pre">mode)</span></code>: This compiles the source into the code object or AST object. The source code is provided as a string value in the <code class="docutils literal notranslate"><span class="pre">source</span></code> argument. The filename should be the file from which the code was read. If it has no file associated (for example, because it was created dynamically), then <code class="docutils literal notranslate"><span class="pre">&lt;string&gt;</span></code> is the value that is commonly used. Mode should be either <code class="docutils literal notranslate"><span class="pre">exec</span></code> (sequence of statements), <code class="docutils literal notranslate"><span class="pre">eval</span></code> (single expression), or <code class="docutils literal notranslate"><span class="pre">single</span></code> (a single interactive statement, such as in a Python interactive session).</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">eval()</span></code> functions are the easiest to start with when trying to dynamically
+generate code because they can operate on strings. If you already know how to program in
+Python, then you may already know how to correctly generate working source code
+programmatically.</p>
+<p>The most useful in the context of metaprogramming is obviously <code class="docutils literal notranslate"><span class="pre">exec()</span></code> because it allows
+you to execute any sequence of Python statements. The word <em>any</em> should be alarming for
+you. Even <code class="docutils literal notranslate"><span class="pre">eval()</span></code>, which allows only evaluation of expressions in the hands of a skillful
+programmer (when fed with the user input), can lead to serious security holes. Note that
+crashing the Python interpreter is the scenario you should be least afraid of. Introducing
+vulnerability to remote execution exploits due to irresponsible use
+of <code class="docutils literal notranslate"><span class="pre">exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">eval()</span></code> can cost you your image as a professional developer, or even your
+job.</p>
+<p>Even if used with a trusted input, there is a list of little details
+about <code class="docutils literal notranslate"><span class="pre">exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">eval()</span></code> that is too long to be included here, but might affect how your
+application works in ways you would not expect. Armin Ronacher has a good article that
+lists the most important of them, titled “Be careful with exec and eval” in Python (refer
+to <a class="reference external" href="http://lucumr.pocoo.org/2011/2/1/exec-in-python/">http://lucumr.pocoo.org/2011/2/1/exec-in-python/</a> ).</p>
+<p>Despite all these frightening warnings, there are natural situations where the usage
+of <code class="docutils literal notranslate"><span class="pre">exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">eval()</span></code> is really justified. Still, in the case of even the tiniest doubt, you
+should not use them and try to find a different solution.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The signature of the <code class="docutils literal notranslate"><span class="pre">eval()</span></code> function might make you think that if you
+provide empty <code class="docutils literal notranslate"><span class="pre">globals</span></code> and <code class="docutils literal notranslate"><span class="pre">locals</span></code> namespaces and wrap it with
+proper <code class="docutils literal notranslate"><span class="pre">try</span></code> … <code class="docutils literal notranslate"><span class="pre">except</span></code> statements, then it will be reasonably safe. There
+could be nothing more wrong. Ned Batcheler has written a very good
+article in which he shows how to cause an interpreter segmentation fault
+in the <code class="docutils literal notranslate"><span class="pre">eval()</span></code> call, even with erased access to all Python built-ins
+(see <a class="reference external" href="http://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html">http://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html</a> ).
+This is single proof that both <code class="docutils literal notranslate"><span class="pre">exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">eval()</span></code> should never
+be used with untrusted input.</p>
+</div>
+</div>
+<div class="section" id="abstract-syntax-tree-ast">
+<h2>6.2. Abstract syntax tree (AST)<a class="headerlink" href="#abstract-syntax-tree-ast" title="Permalink to this headline">¶</a></h2>
+<p>The Python syntax is converted into AST before it is compiled into byte code. This is a tree
+representation of the abstract syntactic structure of the source code. Processing of Python
+grammar is available thanks to the built-in <code class="docutils literal notranslate"><span class="pre">ast</span></code> module. Raw ASTs of Python code can be
+created using the <code class="docutils literal notranslate"><span class="pre">compile()</span></code> function with the <code class="docutils literal notranslate"><span class="pre">ast.PyCF_ONLY_AST</span></code> flag, or by using
+the <code class="docutils literal notranslate"><span class="pre">ast.parse()</span></code> helper. Direct translation in reverse is not that simple and there is no
+function provided in the standard library that can do so. Some projects, such as PyPy, do
+such things though.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ast</span></code> module provides some helper functions that allow you to work with the AST, for
+example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">&#39;def hello_world(): print(&quot;hello world!&quot;)&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span>
+<span class="go">&lt;_ast.Module object at 0x00000000038E9588&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ast</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<span class="go">&quot;Module(</span>
+<span class="go">    body=[</span>
+<span class="go">        FunctionDef(</span>
+<span class="go">            name=&#39;hello_world&#39;,</span>
+<span class="go">            args=arguments(</span>
+<span class="go">                args=[],</span>
+<span class="go">                vararg=None,</span>
+<span class="go">                kwonlyargs=[],</span>
+<span class="go">                kw_defaults=[],</span>
+<span class="go">                kwarg=None,</span>
+<span class="go">                defaults=[]</span>
+<span class="go">            ),</span>
+<span class="go">            body=[</span>
+<span class="go">                Expr(</span>
+<span class="go">                    value=Call(</span>
+<span class="go">                        func=Name(id=&#39;print&#39;, ctx=Load()),</span>
+<span class="go">                        args=[Str(s=&#39;hello world!&#39;)],</span>
+<span class="go">                        keywords=[]</span>
+<span class="go">                    )</span>
+<span class="go">                )</span>
+<span class="go">            ],</span>
+<span class="go">            decorator_list=[],</span>
+<span class="go">            returns=None</span>
+<span class="go">        )</span>
+<span class="go">    ]</span>
+<span class="go">)&quot;</span>
+</pre></div>
+</div>
+<p>The output of <code class="docutils literal notranslate"><span class="pre">ast.dump()</span></code> in the preceding example was reformatted to increase the
+readability and better show the tree-like structure of the AST. It is important to know that
+the AST can be modified before being passed to <code class="docutils literal notranslate"><span class="pre">compile()</span></code>. This gives you many new
+possibilities. For instance, new syntax nodes can be used for additional instrumentation,
+such as test coverage measurement. It is also possible to modify the existing code tree in
+order to add new semantics to the existing syntax. Such a technique is used by the MacroPy
+project (<a class="reference external" href="https://github.com/lihaoyi/macropy">https://github.com/lihaoyi/macropy</a>)
+to add syntactic macros to Python using the already existing syntax:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../../../_images/macropy_diagram.jpg"><img alt="../../../../_images/macropy_diagram.jpg" src="../../../../_images/macropy_diagram.jpg" style="width: 50%;" /></a>
+</div>
+<p>AST can also be created in a purely artificial manner, and there is no need to parse any
+source at all. This gives Python programmers the ability to create Python bytecode for
+custom domain-specific languages, or even completely implement other programming
+languages on top of Python VMs.</p>
+<div class="section" id="import-hooks">
+<h3>6.2.1. Import hooks<a class="headerlink" href="#import-hooks" title="Permalink to this headline">¶</a></h3>
+<p>Taking advantage of MacroPy’s ability to modify original ASTs would be as easy as using
+the <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">macropy.activate</span></code> statement if it could somehow override the Python
+import behavior. Fortunately, Python provides a way to intercept imports using the
+following two kinds of import hooks:</p>
+<ul class="simple">
+<li><p><strong>Meta hooks</strong>: These are called before any other <code class="docutils literal notranslate"><span class="pre">import</span></code> processing has occurred. Using meta hooks, you can override the way in which <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> is processed for even frozen and built-in modules. To add a new meta hook, a new <strong>meta path finder</strong> object must be added to the <code class="docutils literal notranslate"><span class="pre">sys.meta_path</span></code> list.</p></li>
+<li><p><strong>Import path hooks</strong>: These are called as part of <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> processing. They are used if the path item associated with the given hook is encountered. The import path hooks are added by extending the <code class="docutils literal notranslate"><span class="pre">sys.path_hooks</span></code> list with a new <strong>path finder</strong> object.</p></li>
+</ul>
+<p>The details of implementing both path finders and meta path finders are extensively
+implemented in the official Python documentation
+(see <a class="reference external" href="https://docs.python.org/3/reference/import.html">https://docs.python.org/3/reference/import.html</a> ).
+The official documentation should be your primary resource if you want to interact with imports on that level.
+This is so because import machinery in Python is rather complex and any attempt to summarize it
+in a few paragraphs would inevitably fail. Here, we just noted that such things are possible.</p>
+</div>
+</div>
+<div class="section" id="projects-that-use-code-generation-patterns">
+<h2>6.3. Projects that use code generation patterns<a class="headerlink" href="#projects-that-use-code-generation-patterns" title="Permalink to this headline">¶</a></h2>
+<p>It is hard to find a really usable implementation of the library that relies on code generation
+patterns that is not only an experiment or simple proof of concept. The reasons for that
+situation are fairly obvious:</p>
+<ul class="simple">
+<li><p>Deserved fear of the <code class="docutils literal notranslate"><span class="pre">exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">eval()</span></code> functions because, if used irresponsibly, they can cause real disasters</p></li>
+<li><p>Successful code generation is very difficult to develop and maintain because it requires a deep understanding of the language and exceptional programming skills in general</p></li>
+</ul>
+<p>Despite these difficulties, there are some projects that successfully take this approach either
+to improve performance or achieve things that would be impossible by other means.</p>
+<div class="section" id="falcon-s-compiled-router">
+<h3>6.3.1. Falcon’s compiled router<a class="headerlink" href="#falcon-s-compiled-router" title="Permalink to this headline">¶</a></h3>
+<p>Falcon ( <a class="reference external" href="http://falconframework.org/">http://falconframework.org/</a> ) is a minimalist Python WSGI web
+framework for building fast and lightweight APIs. It strongly encourages the REST architectural style that
+is currently very popular around the web. It is a good alternative to other rather heavy
+frameworks, such as Django or Pyramid. It is also a strong competitor to other micro-
+frameworks that aim for simplicity, such as Flask, Bottle, or web2py.</p>
+<p>One of its features is it’s very simple routing mechanism. It is not as complex as the routing
+provided by Django <code class="docutils literal notranslate"><span class="pre">urlconf</span></code> and does not provide as many features, but in most cases is
+just enough for any API that follows the REST architectural design. What is most
+interesting about Falcon’s routing is the internal construction of that router. Falcon’s router
+is implemented using the code generated from the list of routes, and code changes every
+time a new route is registered. This is the effort that’s needed to make routing fast.</p>
+<p>Consider this very short API example, taken from Falcon’s web documentation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">falcon</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<span class="k">class</span> <span class="nc">QuoteResource</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">on_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">resp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles GET requests&quot;&quot;&quot;</span>
+
+        <span class="n">quote</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;quote&#39;</span><span class="p">:</span> <span class="s1">&#39;I</span><span class="se">\&#39;</span><span class="s1">ve always been more interested in &#39;</span>
+                     <span class="s1">&#39;the future than in the past.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Grace Hopper&#39;</span>
+        <span class="p">}</span>
+
+        <span class="n">resp</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">quote</span><span class="p">)</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="n">falcon</span><span class="o">.</span><span class="n">API</span><span class="p">()</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="s1">&#39;/quote&#39;</span><span class="p">,</span> <span class="n">QuoteResource</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>In short, the highlighted call to the <code class="docutils literal notranslate"><span class="pre">api.add_route()</span></code> method updates dynamically the
+whole generated code tree for Falcon’s request router. It also compiles it using
+the <code class="docutils literal notranslate"><span class="pre">compile()</span></code> function and generates the new route-finding function using <code class="docutils literal notranslate"><span class="pre">eval()</span></code>. Let’s
+take a closer look at the following <code class="docutils literal notranslate"><span class="pre">__code__</span></code> attribute of
+the <code class="docutils literal notranslate"><span class="pre">api._router._find()</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">_router</span><span class="o">.</span><span class="n">_find</span><span class="o">.</span><span class="vm">__code__</span>
+<span class="go">&lt;code object find at 0x00000000033C29C0, file &quot;&lt;string&gt;&quot;, line 1&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="s1">&#39;/none&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">_router</span><span class="o">.</span><span class="n">_find</span><span class="o">.</span><span class="vm">__code__</span>
+<span class="go">&lt;code object find at 0x00000000033C2810, file &quot;&lt;string&gt;&quot;, line 1&gt;</span>
+</pre></div>
+</div>
+<p>This transcript shows that the code of this function was generated from the string and not
+from the real source code file (the “<code class="docutils literal notranslate"><span class="pre">&lt;string&gt;</span></code>” file). It also shows that the actual code
+object changes with every call to the <code class="docutils literal notranslate"><span class="pre">api.add_route()</span></code> method (the object’s address in
+memory changes).</p>
+</div>
+<div class="section" id="hy">
+<h3>6.3.2. Hy<a class="headerlink" href="#hy" title="Permalink to this headline">¶</a></h3>
+<p>Hy (<a class="reference external" href="http://docs.hylang.org/">http://docs.hylang.org/</a>) is the dialect of Lisp, and is written entirely in
+Python. Many similar projects that implement other code in Python usually try only to tokenize the
+plain form of code that’s provided either as a file-like object or string and interpret it as a
+series of explicit Python calls. Unlike others, Hy can be considered as a language that runs
+fully in the Python runtime environment, just like Python does. Code written in Hy can use
+the existing built-in modules and external packages and vice-versa. Code written with Hy
+can be imported back into Python.</p>
+<p>To embed Lisp in Python, Hy translates Lisp code directly into Python AST. Import
+interoperability is achieved using the import hook that is registered once the Hy module is
+imported into Python. Every module with the <code class="docutils literal notranslate"><span class="pre">.hy</span></code> extension is treated as the Hy module
+and can be imported like the ordinary Python module. The following is a <em>hello world</em>
+program written in this Lisp dialect:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">;; hyllo.hy</span>
+<span class="p">(</span><span class="nv">defn</span> <span class="nv">hello</span> <span class="nv">[]</span> <span class="p">(</span><span class="nb">print</span> <span class="s">&quot;hello world&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>It can be imported and executed with the following Python code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">hy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">hyllo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyllo</span><span class="o">.</span><span class="n">hello</span><span class="p">()</span>
+<span class="go">hello world</span>
+</pre></div>
+</div>
+<p>If we dig deeper and try to disassemble <code class="docutils literal notranslate"><span class="pre">hyllo.hello</span></code> using the built-in <code class="docutils literal notranslate"><span class="pre">dis</span></code> module, we
+will notice that the byte code of the Hy function does not differ significantly from its pure
+Python counterpart, as shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="n">hyllo</span><span class="o">.</span><span class="n">hello</span><span class="p">)</span>
+<span class="go">2           0 LOAD_GLOBAL   0 (print)</span>
+<span class="go">            3 LOAD_CONST    1 (&#39;hello world!&#39;)</span>
+<span class="go">            6 CALL_FUNCTION 1 (1 positional, 0 keyword pair)</span>
+<span class="go">            9 RETURN_VALUE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">hello</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello world!&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="n">hello</span><span class="p">)</span>
+<span class="go">1           0 LOAD_GLOBAL   0 (print)</span>
+<span class="go">            3 LOAD_CONST    1 (&#39;hello world!&#39;)</span>
+<span class="go">            6 CALL_FUNCTION 1 (1 positional, 0 keyword pair)</span>
+<span class="go">            9 POP_TOP       10 LOAD_CONST</span>
+<span class="go">            0 (None)        13 RETURN_VALUE</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

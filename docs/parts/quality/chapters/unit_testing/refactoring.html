@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Refactoring &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Refactoring</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/unit_testing/refactoring.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="refactoring">
+<h1>3. Refactoring<a class="headerlink" href="#refactoring" title="Permalink to this headline">¶</a></h1>
+<p><strong>Refactoring</strong> is a critical activity in software maintenance, yet something that can’t be done
+(at least correctly) without having unit tests. Every now and then, we need to support a
+new feature or use our software in unintended ways. We need to realize that the only way
+to accommodate such requirements is by first refactoring our code, make it more generic.
+Only then can we move forward.</p>
+<p>Typically, when refactoring our code, we want to improve its structure and make it better,
+sometimes more generic, more readable, or more flexible. The challenge is to achieve these
+goals while at the same time preserving the exact same functionality it had prior to the
+modifications that were made. This means that, in the eyes of the clients of those
+components we’re refactoring, it might as well be the case that nothing had happened at all.</p>
+<p>This constraint of having to support the same functionalities as before but with a different
+version of the code implies that we need to run regression tests on code that was modified.
+The only cost-effective way of running regression tests is if those tests are automatic. The
+most cost-effective version of automatic tests is unit tests.</p>
+<div class="section" id="evolving-our-code">
+<h2>3.1. Evolving our code<a class="headerlink" href="#evolving-our-code" title="Permalink to this headline">¶</a></h2>
+<p>In the previous example, we were able to separate out the side-effects from our code to
+make it testable by patching those parts of the code that depended on things we couldn’t
+control on the unit test. This is a good approach since, after all, the <code class="docutils literal notranslate"><span class="pre">mock.patch</span></code> function
+comes in handy for these sorts of task and replaces the objects we tell it to, giving us back a
+<code class="docutils literal notranslate"><span class="pre">Mock</span></code> object.</p>
+<p>The downside of that is that we have to provide the path of the object we are going to
+mock, including the module, as a string. This is a bit fragile, because if we refactor our code
+(let’s say we rename the file or move it to some other location), all the places with the patch
+will have to be updated, or the test will break.</p>
+<p>In the example, the fact that the <code class="docutils literal notranslate"><span class="pre">notify()</span></code> method directly depends on an implementation
+detail (the requests module) is a design issue, that is, it is taking its toll on the unit tests as
+well with the aforementioned fragility that is implied.</p>
+<p>We still need to replace those methods with doubles (mocks), but if we refactor the code,
+we can do it in a better way. Let’s separate these methods into smaller ones, and most
+importantly inject the dependency rather than keep it fixed. The code now applies
+the dependency inversion principle, and it expects to work with something that supports
+an interface (in this example, implicit one) such as the one the requests module provides:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">STATUS_ENDPOINT</span>
+
+
+<span class="k">class</span> <span class="nc">BuildStatus</span><span class="p">:</span>
+    <span class="n">endpoint</span> <span class="o">=</span> <span class="n">STATUS_ENDPOINT</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">transport</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build_date</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">compose_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">merge_request_id</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">merge_request_id</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;built_at&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_date</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">deliver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">merge_request_id</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compose_payload</span><span class="p">(</span><span class="n">merge_request_id</span><span class="p">,</span> <span class="n">status</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We separate the methods (not notify is now compose + deliver),
+make <code class="docutils literal notranslate"><span class="pre">compose_payload()</span></code> a new method (so that we can replace, without the need to
+patch the class), and require the transport dependency to be injected. Now that
+transport is a dependency, it is much easier to change that object for any double we want.</p>
+<p>It is even possible to expose a fixture of this object with the doubles replaced as required:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">build_status</span><span class="p">():</span>
+    <span class="n">bstatus</span> <span class="o">=</span> <span class="n">BuildStatus</span><span class="p">(</span><span class="n">Mock</span><span class="p">())</span>
+    <span class="n">bstatus</span><span class="o">.</span><span class="n">build_date</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;2018-01-01T00:00:01&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bstatus</span>
+
+<span class="k">def</span> <span class="nf">test_build_notification_sent</span><span class="p">(</span><span class="n">build_status</span><span class="p">):</span>
+    <span class="n">build_status</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="mi">1234</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+    <span class="n">expected_payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1234</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;built_at&quot;</span><span class="p">:</span> <span class="n">build_status</span><span class="o">.</span><span class="n">build_date</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="n">build_status</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">post</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">build_status</span><span class="o">.</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">expected_payload</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="production-code-isn-t-the-only-thing-that-evolves">
+<h2>3.2. Production code isn’t the only thing that evolves<a class="headerlink" href="#production-code-isn-t-the-only-thing-that-evolves" title="Permalink to this headline">¶</a></h2>
+<p>We keep saying that unit tests are as important as production code. And if we are careful
+enough with production code as to create the best possible abstraction, why wouldn’t we
+do the same for unit tests?</p>
+<p>If the code for unit tests is as important as the main code, then it’s definitely wise to design
+it with extensibility in mind and make it as maintainable as possible. After all, this is the
+code that will have to be maintained by an engineer other than its original author, so it has
+to be readable.</p>
+<p>The reason why we pay so much attention to make the code’s flexibility is that we know
+requirements change and evolve over time, and eventually as domain business rules
+change, our code will have to change as well to support these new requirements. Since the
+production code changed to support new requirements, in turn, the testing code will have
+to change as well to support the newer version of the production code.</p>
+<p>In one of the first examples we used, we created a series of tests for the merge request
+object, trying different combinations and checking the status at which the merge request
+was left. This is a good first approach, but we can do better than that.</p>
+<p>Once we understand the problem better, we can start creating better abstractions. With this,
+the first idea that comes to mind is that we can create a higher-level abstraction that checks
+for particular conditions. For example, if we have an object that is a test suite that
+specifically targets the <code class="docutils literal notranslate"><span class="pre">MergeRequest</span></code> class, we know its functionality will be limited to the
+behavior of this class (because it should comply to the SRP), and therefore we could create
+specific testing methods on this testing class. These will only make sense for this class, but
+that will be helpful in reducing a lot of boilerplate code.</p>
+<p>Instead of repeating assertions that follow the exact same structure, we can create a method
+that encapsulates this and reuse it across all of the tests:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TestMergeRequestStatus</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span> <span class="o">=</span> <span class="n">MergeRequest</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">assert_rejected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">REJECTED</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">assert_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">assert_approved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">MergeRequestStatus</span><span class="o">.</span><span class="n">APPROVED</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_simple_rejected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merge_request</span><span class="o">.</span><span class="n">downvote</span><span class="p">(</span><span class="s2">&quot;maintainer&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assert_rejected</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_just_created_is_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assert_pending</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If something changes with how we check the status of a merge request (or let’s say we want
+to add extra checks), there is only one place (the <code class="docutils literal notranslate"><span class="pre">assert_approved()</span></code> method) that will
+have to be modified. More importantly, by creating these higher-level abstractions, the code
+that started as merely unit tests starts to evolve into what could end up being a testing
+framework with its own API or domain language, making testing more declarative.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

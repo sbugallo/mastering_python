@@ -1,0 +1,1134 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Naming &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Code quality" href="../../../quality/index.html" />
+    <link rel="prev" title="Metaprogramming" href="../metaprogramming/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Craftmanship</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Naming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pep-8">1. PEP 8</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#why-and-when-to-follow-pep-8">1.1. Why and when to follow PEP 8?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#team-specific-style-guidelines">1.2. Team-specific style guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#naming-styles">2. Naming styles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#variables">2.1. Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#functions-and-methods">2.2. Functions and methods</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arguments">2.3. Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#properties">2.4. Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#classes">2.5. Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modules-and-packages">2.6. Modules and packages</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#naming-guide">3. Naming guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-the-has-is-prefixes-for-boolean-elements">3.1. Using the has/is prefixes for Boolean elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-plurals-for-variables-that-are-collections">3.2. Using plurals for variables that are collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-explicit-names-for-dictionaries">3.3. Using explicit names for dictionaries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avoid-generic-names-and-redundancy">3.4. Avoid generic names and redundancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avoiding-existing-names">3.5. Avoiding existing names</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#best-practices-for-arguments">4. Best practices for arguments</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#building-arguments-by-iterative-design">4.1. Building arguments by iterative design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trusting-the-arguments-and-your-tests">4.2. Trusting the arguments and your tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-args-and-kwargs-magic-arguments-carefully">4.3. Using *args and **kwargs magic arguments carefully</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#class-names">5. Class names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">6. Modules and packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#useful-tools">7. Useful tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pylint">7.1. Pylint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pycodestyle-and-flake8">7.2. pycodestyle and flake8</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Craftmanship</a> &raquo;</li>
+        
+      <li>Naming</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/naming/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../../../quality/index.html" class="btn btn-neutral float-right" title="Code quality" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../metaprogramming/index.html" class="btn btn-neutral float-left" title="Metaprogramming" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="naming">
+<h1>Naming<a class="headerlink" href="#naming" title="Permalink to this headline">¶</a></h1>
+<p>Most of the standard library was built keeping usability in mind. Python, in this case, can
+be compared to the pseudocode you might think about when working on a program. Most
+of the code can be read out loud. For instance, this snippet could be understood even by
+someone that is not a programmer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">if</span> <span class="s1">&#39;d&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">my_list</span><span class="p">:</span>
+    <span class="n">my_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The fact that Python code is so close to natural language is one of the reasons why Python is
+so easy to learn and use. When you are writing a program, the flow of your thoughts is
+quickly translated into lines of code.</p>
+<div class="section" id="pep-8">
+<h2>1. PEP 8<a class="headerlink" href="#pep-8" title="Permalink to this headline">¶</a></h2>
+<p>PEP 8 (<a class="reference external" href="http://www.python.org/dev/peps/pep-0008">http://www.python.org/dev/peps/pep-0008</a>)
+provides a style guide for writing
+Python code. Besides some basic rules, such as indentation, maximum line length, and
+other details concerning the code layout, PEP 8 also provides a section on naming
+conventions that most of the code bases follow.</p>
+<p>This section provides only a quick summary of PEP 8, and a handy naming guide for each
+kind of Python syntax element. You should still consider reading the PEP 8 document as
+mandatory.</p>
+<div class="section" id="why-and-when-to-follow-pep-8">
+<h3>1.1. Why and when to follow PEP 8?<a class="headerlink" href="#why-and-when-to-follow-pep-8" title="Permalink to this headline">¶</a></h3>
+<p>If you are creating a new software package that is intended to be open sourced, you should
+always follow PEP 8 because it is a widely accepted standard and is used in most of the
+open source projects written in Python. If you want to foster any collaboration with other
+programmers, then you should definitely stick to PEP 8, even if you have different views on
+the best code style guidelines. Doing so has the benefit of making it a lot easier for other
+developers to jump straight into your project. Code will be easier to read for newcomers
+because it will be consistent in style with most of the other Python open source packages.</p>
+<p>Also, starting with full PEP 8 compliance saves you time and trouble in the future. If you
+want to release your code to the public, you will eventually face suggestions from fellow
+programmers to switch to PEP 8. Arguments as to whether it is really necessary to do so for
+a particular project tend to be never-ending flame wars that are impossible to win. This is
+the sad truth, but you may be eventually forced to be consistent with it or risk losing
+valuable contributors.</p>
+<p>Also, restyling of the whole project’s code base if it is in a mature state of development
+might require a tremendous amount of work. In some cases, such restyling might require
+changing almost every line of code. While most of the changes can be automated
+(indentation, newlines, and trailing whitespaces), such massive code overhaul usually
+introduces a lot of conflicts in every version control workflow that is based on branching. It
+is also very hard to review so many changes at once. These are the reasons why many open
+source projects have a rule that style-fixing changes should always be included in separate
+pull/merge requests or patches that do not affect any feature or bug.</p>
+</div>
+<div class="section" id="team-specific-style-guidelines">
+<h3>1.2. Team-specific style guidelines<a class="headerlink" href="#team-specific-style-guidelines" title="Permalink to this headline">¶</a></h3>
+<p>Despite providing a comprehensive set of style guidelines, PEP 8 still leaves some freedom
+for the developers. Especially in terms of nested data literals and multiline function calls
+that require long lists of arguments. Some teams may decide that they require additional
+styling rules and the best option is to formalize them in some kind of document that is
+available for every team member.</p>
+<p>Also, in some situations, it may be impossible or economically infeasible to be strictly
+consistent with PEP 8 in some old projects that had no style guide defined. Such projects
+will still benefit from formalization of the actual coding conventions even if they do not
+reflect the official set of PEP 8 rules. Remember, what is more important than consistency
+with PEP 8 is consistency within the project. If rules are formalized and available as a
+reference for every programmer, then it is way easier to keep consistency within a project
+and organization.</p>
+</div>
+</div>
+<div class="section" id="naming-styles">
+<h2>2. Naming styles<a class="headerlink" href="#naming-styles" title="Permalink to this headline">¶</a></h2>
+<p>The different naming styles used in Python are:</p>
+<ul class="simple">
+<li><p>CamelCase</p></li>
+<li><p>mixedCase</p></li>
+<li><p>UPPERCASE and UPPER_CASE_WITH_UNDERSCORES</p></li>
+<li><p>lowercase and lower_case_with_underscores</p></li>
+<li><p>_leading and trailing_ underscores, and sometimes __doubled__ underscores</p></li>
+</ul>
+<p>Lowercase and uppercase elements are often a single word, and sometimes a few words
+concatenated. With underscores, they are usually abbreviated phrases. Using a single word
+is better. The leading and trailing underscores are used to mark the privacy and special
+elements.</p>
+<p>These styles are applied to the following:</p>
+<ul class="simple">
+<li><p>Variables</p></li>
+<li><p>Functions and methods</p></li>
+<li><p>Properties</p></li>
+<li><p>Classes</p></li>
+<li><p>Modules</p></li>
+<li><p>Packages</p></li>
+</ul>
+<div class="section" id="variables">
+<h3>2.1. Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h3>
+<p>There are the following two kinds of variables in Python:</p>
+<ul class="simple">
+<li><p><strong>Constants</strong>: These define values that are not supposed to change during program execution</p></li>
+<li><p><strong>Public and private variables</strong>: These hold the state of applications that can change during program execution</p></li>
+</ul>
+<div class="section" id="constants">
+<h4>2.1.1. Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h4>
+<p>For constant global variables, an uppercase with an underscore is used. It informs the
+developer that the given variable represents a constant value.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are no real constants in Python like those in C++, where const can
+be used. You can change the value of any variable. That’s why Python
+uses a naming convention to mark a variable as a constant.</p>
+</div>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">doctest</span></code> module provides a list of option flags and directives
+(<a class="reference external" href="http://docs.python.org/lib/doctest-options.html">http://docs.python.org/lib/doctest-options.html</a>)
+that are small sentences, clearly defining what each option is intended for, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doctest</span> <span class="kn">import</span> <span class="n">IGNORE_EXCEPTION_DETAIL</span>
+<span class="kn">from</span> <span class="nn">doctest</span> <span class="kn">import</span> <span class="n">REPORT_ONLY_FIRST_FAILURE</span>
+</pre></div>
+</div>
+<p>These variable names seem rather long, but it is important to clearly describe them. Their
+usage is mostly located in the initialization code rather than in the body of the code itself, so
+this verbosity is not annoying.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Abbreviated names obfuscate the code most of the time. Don’t be afraid of
+using complete words when an abbreviation seems unclear.</p>
+</div>
+<p>Some constants’ names are also driven by the underlying technology. For instance,
+the <code class="docutils literal notranslate"><span class="pre">os</span></code> module uses some constants that are defined on the C side, such as
+the <code class="docutils literal notranslate"><span class="pre">EX_XXX</span></code> series, that defines UNIX exit code numbers. Same name code can be found, as
+in the following example, in the system’s <code class="docutils literal notranslate"><span class="pre">sysexits.h</span></code> C headers files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">EX_SOFTWARE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Another good practice when using constants is to gather all of them at the top of a module
+that uses them. It is also common to combine them under new variables if they are flags or
+enumerations that allow for such operations, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">doctest</span>
+<span class="n">TEST_OPTIONS</span> <span class="o">=</span> <span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span> <span class="o">|</span> <span class="n">doctest</span><span class="o">.</span><span class="n">NORMALIZE_WHITESPACE</span> <span class="o">|</span> <span class="n">doctest</span><span class="o">.</span><span class="n">REPORT_ONLY_FIRST_FAILURE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="naming-and-usage">
+<h5>2.1.1.1. Naming and usage<a class="headerlink" href="#naming-and-usage" title="Permalink to this headline">¶</a></h5>
+<p>Constants are used to define a set of values the program relies on, such as the default
+configuration filename.</p>
+<p>A good practice is to gather all the constants in a single file in the package. That is how
+Django works, for instance. A module named <code class="docutils literal notranslate"><span class="pre">settings.py</span></code> provides all the constants as
+follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SQL_USER</span> <span class="o">=</span> <span class="s1">&#39;tarek&#39;</span>
+<span class="n">SQL_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;secret&#39;</span>
+<span class="n">SQL_URI</span> <span class="o">=</span> <span class="s1">&#39;postgres://</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">@localhost/db&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">SQL_USER</span><span class="p">,</span> <span class="n">SQL_PASSWORD</span><span class="p">)</span>
+<span class="n">MAX_THREADS</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>Another approach is to use a configuration file that can be parsed with
+the <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code> module, or another configuration parsing tool. But some people argue
+that it is rather an overkill to use another file format in a language such as Python, where a
+source file can be edited and changed as easily as a text file.</p>
+<p>For options that act like flags, a common practice is to combine them with Boolean
+operations, as the <code class="docutils literal notranslate"><span class="pre">doctest</span></code> and <code class="docutils literal notranslate"><span class="pre">re</span></code> modules do. The pattern taken from <code class="docutils literal notranslate"><span class="pre">doctest</span></code> is quite
+simple, as shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">def</span> <span class="nf">register_option</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">OPTIONS</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">has_option</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">options</span> <span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># now defining options</span>
+<span class="n">BLUE</span> <span class="o">=</span> <span class="n">register_option</span><span class="p">(</span><span class="s1">&#39;BLUE&#39;</span><span class="p">)</span>
+<span class="n">RED</span> <span class="o">=</span> <span class="n">register_option</span><span class="p">(</span><span class="s1">&#39;RED&#39;</span><span class="p">)</span>
+<span class="n">WHITE</span> <span class="o">=</span> <span class="n">register_option</span><span class="p">(</span><span class="s1">&#39;WHITE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This code allows for the following usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># let&#39;s try them</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SET</span> <span class="o">=</span> <span class="n">BLUE</span> <span class="o">|</span> <span class="n">RED</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_option</span><span class="p">(</span><span class="n">SET</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_option</span><span class="p">(</span><span class="n">SET</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>When you define a new set of constants, avoid using a common prefix for them, unless the
+module has several independent sets of options. The module name itself is a common
+prefix.</p>
+<p>Another good solution for option-like constants would be to use the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> class from the
+built-in <code class="docutils literal notranslate"><span class="pre">enum</span></code> module and simply rely on the <code class="docutils literal notranslate"><span class="pre">set</span></code> collection instead of the binary operators.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Using binary bit-wise operations to combine options is common in
+Python. The inclusive OR ( <code class="docutils literal notranslate"><span class="pre">|</span></code> ) operator will let you combine several
+options in a single integer, and the AND ( <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> ) operator will let you check
+that the option is present in the integer (refer to
+the <code class="docutils literal notranslate"><span class="pre">has_option</span></code> function).</p>
+</div>
+</div>
+</div>
+<div class="section" id="public-and-private-variables">
+<h4>2.1.2. Public and private variables<a class="headerlink" href="#public-and-private-variables" title="Permalink to this headline">¶</a></h4>
+<p>For global variables that are mutable and freely available through imports, a lowercase
+letter with an underscore should be used when they do not need to be protected. If a
+variable shouldn’t be used and modified outside of its origin module we consider it a
+private member of that module. A leading underscore, in that case, can mark the variable as
+a private element of the package, as shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_observers</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">add_observer</span><span class="p">(</span><span class="n">observer</span><span class="p">):</span>
+    <span class="n">_observers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_observers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Makes sure _observers cannot be modified.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_observers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Variables that are located in functions, and methods, follow the same rules as public
+variables and are never marked as private since they are local to the function context.</p>
+<p>For class or instance variables, you should use the private marker (the leading underscore)
+if making the variable a part of the public signature does not bring any useful information,
+or is redundant. In other words, if the variable is used only internally for the purpose of
+some other method that provides an actual public feature, it is better to make it private.</p>
+<p>For instance, the attributes that are powering a property are good private citizens, as shown
+in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Citizen</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_first_name</span> <span class="o">=</span> <span class="n">first_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_name</span> <span class="o">=</span> <span class="n">last_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._first_name}</span><span class="s2"> </span><span class="si">{self._last_name}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Another example would be a variable that keeps some internal state that should not be
+disclosed to other classes. This value is not useful for the rest of the code, but participates in
+the behavior of the class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">UnforgivingElephant</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_people_to_stomp_on</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">get_slapped_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_people_to_stomp_on</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ouch!&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">revenge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;10 years later...&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_people_to_stomp_on</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> stomps on </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">person</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Here is what you’ll see in an interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span> <span class="o">=</span> <span class="n">UnforgivingElephant</span><span class="p">(</span><span class="s1">&#39;Joe&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">get_slapped_by</span><span class="p">(</span><span class="s1">&#39;Tarek&#39;</span><span class="p">)</span>
+<span class="go">Ouch!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">get_slapped_by</span><span class="p">(</span><span class="s1">&#39;Bill&#39;</span><span class="p">)</span>
+<span class="go">Ouch!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">revenge</span><span class="p">()</span>
+<span class="go">10 years later...</span>
+<span class="go">Joe stomps on Tarek</span>
+<span class="go">Joe stomps on Bill</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="functions-and-methods">
+<h3>2.2. Functions and methods<a class="headerlink" href="#functions-and-methods" title="Permalink to this headline">¶</a></h3>
+<p>Functions and methods should be in lowercase with underscores. This rule was not always
+true in the old standard library modules. Python 3 did a lot of reorganization of the
+standard library, so most of the functions and methods have a consistent letter case. Still,
+for some modules such as <code class="docutils literal notranslate"><span class="pre">threading</span></code>, you can access the old function names that
+used <code class="docutils literal notranslate"><span class="pre">mixedCase</span></code> (for example, <code class="docutils literal notranslate"><span class="pre">currentThread</span></code>). This was left to allow easier backward
+compatibility, but if you don’t need to run your code in older versions of Python, then you
+should avoid using these old names.</p>
+<p>This way of writing methods was common before the lowercase norm became the standard,
+and some frameworks, such as Zope and Twisted, are also still using <code class="docutils literal notranslate"><span class="pre">mixedCase</span></code> for
+methods. The community of developers working with them is still quite large. So the choice
+between <code class="docutils literal notranslate"><span class="pre">mixedCase</span></code> and lowercase with an underscore is definitely driven by the libraries
+you are using.</p>
+<p>As a Zope developer, it is not easy to stay consistent because building an application that
+mixes pure Python modules and modules that import Zope code is difficult. In Zope, some
+classes mix both conventions because the code base is still evolving and Zope developers
+try to adopt the common conventions accepted by so many.</p>
+<p>A decent practice in this kind of library environment is to use <code class="docutils literal notranslate"><span class="pre">mixedCase</span></code> only for elements
+that are exposed in the framework, and to keep the rest of the code in PEP 8 style.</p>
+<p>It is also worth noting that developers of the Twisted project took a completely different
+approach to this problem. The Twisted project, same as Zope, predates the PEP 8
+document. It was started when there were no official guidelines for Python code style, so it
+had its own guidelines. Stylistic rules about the indentation, docstrings, line lengths, and so
+on could be easily adopted. On the other hand, updating all the code to match naming
+conventions from PEP 8 would result in completely broken backward compatibility. And
+doing that for such a large project as Twisted is infeasible. So Twisted adopted as much of
+PEP 8 as possible and left things such as <code class="docutils literal notranslate"><span class="pre">mixedCase</span></code> for variables, functions, and methods
+as part of its own coding standard. And this is completely compatible with the PEP 8
+suggestion because it exactly says that consistency within a project is more important than
+consistency with PEP 8’s style guide.</p>
+<div class="section" id="the-private-controversy">
+<h4>2.2.1 The private controversy<a class="headerlink" href="#the-private-controversy" title="Permalink to this headline">¶</a></h4>
+<p>For private methods and functions, we usually use a single leading underscore. This is only
+a naming convention and has no syntactical meaning. But it doesn’t mean that leading
+underscores have no syntactical meaning at all. When a method has two leading
+underscores, it is renamed on the fly by the interpreter to prevent a name collision with a
+method from any subclass. This feature of Python is called <strong>name mangling</strong>.</p>
+<p>So some people tend to use a double leading underscore for their private attributes to avoid
+name collision in the subclasses, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__secret</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;don&#39;t tell&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">public</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__secret</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Derived</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__secret</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;never ever&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From this you will see the following output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Base</span><span class="o">.</span><span class="n">__secret</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="n">File</span> <span class="s2">&quot;&lt;input&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="gr">AttributeError</span>: <span class="n">type object &#39;Base&#39; has no attribute &#39;__secret&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dir</span><span class="p">(</span><span class="n">Base</span><span class="p">)</span>
+<span class="go">[&#39;_Base__secret&#39;, ..., &#39;public&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Base</span><span class="p">()</span><span class="o">.</span><span class="n">public</span><span class="p">()</span>
+<span class="go">don&#39;t tell</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Derived</span><span class="p">()</span><span class="o">.</span><span class="n">public</span><span class="p">()</span>
+<span class="go">don&#39;t tell</span>
+</pre></div>
+</div>
+<p>The original motivation for name mangling in Python was not to provide the same isolation
+primitive as a private keyword in C++ but to make sure that some base classes implicitly
+avoid collisions in subclasses, especially if they are intended to be used in multiple
+inheritance contexts (for example, as mixin classes). But using it for every attribute that isn’t
+public obfuscates the code and makes it extremely hard to extend. This is not Pythonic at
+all.</p>
+<p>For more information on this topic, an interesting thread occurred in the Python-Dev
+mailing list many years ago, where people argued on the utility of name mangling and its
+fate in the language. It can be found at</p>
+<p><a class="reference external" href="http://mail.python.org/pipermail/python-dev/2005-December/058555.html">http://mail.python.org/pipermail/python-dev/2005-December/058555.html</a> .</p>
+</div>
+<div class="section" id="special-methods">
+<h4>2.2.2. Special methods<a class="headerlink" href="#special-methods" title="Permalink to this headline">¶</a></h4>
+<p>Special methods (<a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#special-method-names">https://docs.python.org/3/reference/datamodel.html#special-method-names</a>)
+start and end with a double underscore and form so-called protocols of the
+language. Some developers
+used to call them <em>dunder</em> methods as a portmanteau of double underscore. They are used for
+operator overloading, container definitions, and so on. For the sake of readability, they
+should be gathered at the beginning of class definitions, as shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WeirdInt</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;weirdo </span><span class="si">%d</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="bp">self</span>
+
+    <span class="c1"># public API</span>
+    <span class="k">def</span> <span class="nf">do_this</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;this&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">do_that</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;that&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>No user-defined method should use this convention unless it explicitly has to implement
+one of the Python object protocols. So don’t invent your own dunder methods such as this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BadHabits</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__my_method__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="arguments">
+<h3>2.3. Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h3>
+<p>Arguments are in lowercase, with underscores if needed. They follow the same naming
+rules as variables because arguments are simply local variables that get their value as
+function input values. In the following example, <code class="docutils literal notranslate"><span class="pre">text</span></code> and <code class="docutils literal notranslate"><span class="pre">separator</span></code> are arguments of
+<code class="docutils literal notranslate"><span class="pre">one_line()</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">one_line</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+<span class="sd">&quot;&quot;&quot;Convert possibly multiline text to single line&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="properties">
+<h3>2.4. Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>
+<p>The names of properties are in lowercase, or in lowercase with underscores. Most of the
+time they represent an object’s state, which can be a noun or an adjective, or a small phrase
+when needed. In the following code example, the <code class="docutils literal notranslate"><span class="pre">Container</span></code> class is a simple data
+structure that can return copies of its contents through <code class="docutils literal notranslate"><span class="pre">unique_items</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ordered_items</span></code> properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Container</span><span class="p">:</span>
+    <span class="n">_contents</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_contents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unique_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contents</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ordered_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contents</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="classes">
+<h3>2.5. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<p>The names of classes are always in <code class="docutils literal notranslate"><span class="pre">CamelCase</span></code>, and may have a leading underscore when
+they are private to a module.</p>
+<p>In object-oriented programming classes are used to encapsulate the application state.
+Attributes of objects are record of that state. Methods are used to modify that state, convert
+it into meaningful values or to produce side effects. This is why class names are often noun
+phrases and form a usage logic with the method names that are verb phrases. The following
+code example contains a <code class="docutils literal notranslate"><span class="pre">Document</span></code> class definition with a single <code class="docutils literal notranslate"><span class="pre">save()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Document</span><span class="p">():</span>
+    <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">contents</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Class instances often use the same noun phrases as the document but spelled with
+lowercase. So, actual <code class="docutils literal notranslate"><span class="pre">Document</span></code> class usage could be as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">()</span>
+<span class="n">new_document</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modules-and-packages">
+<h3>2.6. Modules and packages<a class="headerlink" href="#modules-and-packages" title="Permalink to this headline">¶</a></h3>
+<p>Besides the special module <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, the module names are in lowercase. The following
+are some examples from the standard library:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shutil</span></code></p></li>
+</ul>
+<p>The Python standard library does not use underscores for module names to separate words
+but they are used commonly in many other projects. When the module is private to the
+package, a leading underscore is added. Compiled C or C++ modules are usually named
+with an underscore and imported in pure Python modules. Package names follow the same
+rules, since they act more like structured modules.</p>
+</div>
+</div>
+<div class="section" id="naming-guide">
+<h2>3. Naming guide<a class="headerlink" href="#naming-guide" title="Permalink to this headline">¶</a></h2>
+<p>A common set of naming rules can be applied on variables, methods, functions, and
+properties. The names of classes and modules play a very important role in namespace
+construction and greatly affect code readability. This section contains a miniguide that will
+help you to define meaningful and readable names for your code elements.</p>
+<div class="section" id="using-the-has-is-prefixes-for-boolean-elements">
+<h3>3.1. Using the has/is prefixes for Boolean elements<a class="headerlink" href="#using-the-has-is-prefixes-for-boolean-elements" title="Permalink to this headline">¶</a></h3>
+<p>When an element holds a Boolean value you can mark it with <code class="docutils literal notranslate"><span class="pre">is</span></code> and/or <code class="docutils literal notranslate"><span class="pre">has</span></code> syntax to
+make the variable more readable. In the following example, is_connected and
+<code class="docutils literal notranslate"><span class="pre">has_cache</span></code> are such identifiers that hold Boolean states of the <code class="docutils literal notranslate"><span class="pre">DB</span></code> class instances:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DB</span><span class="p">:</span>
+<span class="n">is_connected</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">has_cache</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-plurals-for-variables-that-are-collections">
+<h3>3.2. Using plurals for variables that are collections<a class="headerlink" href="#using-plurals-for-variables-that-are-collections" title="Permalink to this headline">¶</a></h3>
+<p>When an element is holding a sequence, it is a good idea to use a plural form. You can also
+do the same for various mapping variables and properties. In following
+example, <code class="docutils literal notranslate"><span class="pre">connected_users</span></code> and <code class="docutils literal notranslate"><span class="pre">tables</span></code> are class attributes that hold multiple values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DB</span><span class="p">:</span>
+    <span class="n">connected_users</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tarek&#39;</span><span class="p">]</span>
+    <span class="n">tables</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Customer&#39;</span><span class="p">:[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-explicit-names-for-dictionaries">
+<h3>3.3. Using explicit names for dictionaries<a class="headerlink" href="#using-explicit-names-for-dictionaries" title="Permalink to this headline">¶</a></h3>
+<p>When a variable holds a mapping, you should use an explicit name when possible. For
+example, if a <code class="docutils literal notranslate"><span class="pre">dict</span></code> holds a person’s address, it can be named <code class="docutils literal notranslate"><span class="pre">persons_addresses</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">persons_addresses</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Bill&#39;</span><span class="p">:</span> <span class="s1">&#39;6565 Monty Road&#39;</span><span class="p">,</span> <span class="s1">&#39;Pamela&#39;</span><span class="p">:</span> <span class="s1">&#39;45 Python street&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="avoid-generic-names-and-redundancy">
+<h3>3.4. Avoid generic names and redundancy<a class="headerlink" href="#avoid-generic-names-and-redundancy" title="Permalink to this headline">¶</a></h3>
+<p>You should generally avoid using explicit type names <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">dict</span></code>, and <code class="docutils literal notranslate"><span class="pre">set</span></code> as parts of
+variable names even for local variables. Python now offers function and variable
+annotations and a typing hierarchy that allows you to easily mark an expected type for a
+given variable so there is no longer a need to describe object types in their names. It makes
+the code hard to read, understand, and use. Using a built-in name has to be avoided as well
+to avoid shadowing it in the current namespace. Generic verbs should also be avoided,
+unless they have a meaning in the namespace.</p>
+<p>Instead, domain-specific terms should be used as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="c1"># too generic</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">element</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">squares</span><span class="p">(</span><span class="n">numbers</span><span class="p">):</span> <span class="c1"># better</span>
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">number</span> <span class="o">**</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>There is also the following list of prefixes and suffixes that, despite being very common in
+programming, should be, in fact, avoided in function and class names:</p>
+<ul class="simple">
+<li><p>Manager</p></li>
+<li><p>Object</p></li>
+<li><p>Do, handle, or perform</p></li>
+</ul>
+<p>The reason for this is that they are vague, ambiguous, and do not add any value to the
+actual name. Jeff Atwood, the co-founder of Discourse and Stack Overflow, has a very good
+article on this topic and it can be found on his blog at
+<a class="reference external" href="http://blog.codinghorror.com/i-shall-call-it-somethingmanager/">http://blog.codinghorror.com/i-shall-call-it-somethingmanager/</a></p>
+<p>There is also a list of package names that should be avoided. Everything that does not give
+any clue about its content can do a lot of harm to the project in the long term. Names such
+as <code class="docutils literal notranslate"><span class="pre">misc</span></code>, <code class="docutils literal notranslate"><span class="pre">tools</span></code>, <code class="docutils literal notranslate"><span class="pre">utils</span></code>, <code class="docutils literal notranslate"><span class="pre">common</span></code>, or core have a very strong tendency to become endless
+bags of various unrelated code pieces of very poor quality that seem to grow in size
+exponentially. In most cases, the existence of such a module is a sign of laziness or lack of
+enough design efforts. Enthusiasts of such module names can simply forestall the future
+and rename them to <code class="docutils literal notranslate"><span class="pre">trash</span></code> or <code class="docutils literal notranslate"><span class="pre">dumpster</span></code> because this is exactly how their teammates will
+eventually treat such modules.</p>
+<p>In most cases, it is almost always better to have more small modules even with very little
+content but with names that reflect well what is inside. To be honest, there is nothing
+inherently wrong with names such as <code class="docutils literal notranslate"><span class="pre">utils</span></code> and <code class="docutils literal notranslate"><span class="pre">common</span></code> and there is a possibility to use
+them responsibly. But reality shows that in many cases they instead become a stub for
+dangerous structural antipatterns that proliferate very fast. And if you don’t act fast
+enough, you may not be able get rid of them ever. So the best approach is simply to avoid
+such risky organizational patterns and nip them in the bud.</p>
+</div>
+<div class="section" id="avoiding-existing-names">
+<h3>3.5. Avoiding existing names<a class="headerlink" href="#avoiding-existing-names" title="Permalink to this headline">¶</a></h3>
+<p>It is a bad practice to use names that shadow other names that already exist in the same
+context. It makes code reading and debugging very confusing. Always try to define original
+names, even if they are local to the context. If you eventually have to reuse existing names
+or keywords, use a trailing underscore to avoid name collision, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">xapian_query</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">or_</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;if or_ is true, terms are combined with the OR clause&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">class</span></code> keyword is often replaced by <code class="docutils literal notranslate"><span class="pre">klass</span></code> or <code class="docutils literal notranslate"><span class="pre">cls</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">factory</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">klass</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="best-practices-for-arguments">
+<h2>4. Best practices for arguments<a class="headerlink" href="#best-practices-for-arguments" title="Permalink to this headline">¶</a></h2>
+<p>The signatures of functions and methods are the guardians of code integrity. They drive its
+usage and build its APIs. Besides the naming rules that we have discussed previously,
+special care has to be taken for arguments. This can be done through the following three
+simple rules:</p>
+<ul class="simple">
+<li><p>Build arguments by iterative design.</p></li>
+<li><p>Trust the arguments and your tests.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> magic arguments carefully.</p></li>
+</ul>
+<div class="section" id="building-arguments-by-iterative-design">
+<h3>4.1. Building arguments by iterative design<a class="headerlink" href="#building-arguments-by-iterative-design" title="Permalink to this headline">¶</a></h3>
+<p>Having a fixed and well-defined list of arguments for each function makes the code more
+robust. But this can’t be done in the first version, so arguments have to be built by iterative
+design. They should reflect the precise use cases the element was created for, and evolve
+accordingly.</p>
+<p>Consider the following example of the first versions of some <code class="docutils literal notranslate"><span class="pre">Service</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Service</span><span class="p">:</span> <span class="c1"># version 1</span>
+
+    <span class="k">def</span> <span class="nf">_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="s1">&#39;EXECUTE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to extend the signature of the <code class="docutils literal notranslate"><span class="pre">execute()</span></code> method with new arguments in a
+way that preserves backward compatibility, you should provide default values for these
+arguments as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Service</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="c1"># version 2</span>
+
+    <span class="k">def</span> <span class="nf">_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+        <span class="n">logger</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="s1">&#39;EXECUTE&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following example from an interactive session presents two styles of calling
+the <code class="docutils literal notranslate"><span class="pre">execute()</span></code> method of the updated <code class="docutils literal notranslate"><span class="pre">Service</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Service</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;my query&#39;</span><span class="p">)</span>
+<span class="go"># old-style call</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Service</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;my query&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">)</span>
+<span class="go">WARNING:root:done</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="trusting-the-arguments-and-your-tests">
+<h3>4.2. Trusting the arguments and your tests<a class="headerlink" href="#trusting-the-arguments-and-your-tests" title="Permalink to this headline">¶</a></h3>
+<p>Given the dynamic typing nature of Python, some developers use assertions at the top of
+their functions and methods to make sure the arguments have proper content, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">dividend</span><span class="p">,</span> <span class="n">divisor</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dividend</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">divisor</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dividend</span> <span class="o">/</span> <span class="n">divisor</span>
+</pre></div>
+</div>
+<p>This is often done by developers who are used to static typing and feel that something is
+missing in Python.</p>
+<p>This way of checking arguments is a part of the <strong>Design by Contract (DbC)</strong> programming
+style, where preconditions are checked before the code is actually run.</p>
+<p>The two main problems in this approach are as follows:</p>
+<ul class="simple">
+<li><p>DbC’s code explains how it should be used, making it less readable</p></li>
+<li><p>This can make it slower, since the assertions are made on each call</p></li>
+</ul>
+<p>The latter can be avoided with the <code class="docutils literal notranslate"><span class="pre">-O</span></code> option of the Python interpreter. In that case, all
+assertions are removed from the code before the byte code is created, so that the checking is
+lost.</p>
+<p>In any case, assertions have to be done carefully, and should not be used to bend Python to
+a statically typed language. The only use case for this is to protect the code from being
+called nonsensically. If you really want to have some kind of static typing in Python, you
+should definitely try MyPy or a similar static type checker that does not affect your code
+runtime and allows you to provide type definitions in a more readable form as function
+and variable annotations.</p>
+</div>
+<div class="section" id="using-args-and-kwargs-magic-arguments-carefully">
+<h3>4.3. Using *args and **kwargs magic arguments carefully<a class="headerlink" href="#using-args-and-kwargs-magic-arguments-carefully" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> arguments can break the robustness of a function or method.
+They make the signature fuzzy, and the code often starts to become a small argument
+parser where it should not, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fuzzy_thing</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;do_this&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok i did this&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;do_that&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;that is done&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">fuzzy_thing</span><span class="p">(</span><span class="n">do_this</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ok</span> <span class="n">i</span> <span class="n">did</span> <span class="n">this</span>
+<span class="n">ok</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">fuzzy_thing</span><span class="p">(</span><span class="n">do_that</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">that</span> <span class="ow">is</span> <span class="n">done</span>
+<span class="n">ok</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">fuzzy_thing</span><span class="p">(</span><span class="n">what_about_that</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ok</span>
+</pre></div>
+</div>
+<p>If the argument list gets long and complex, it is tempting to add magic arguments. But this
+is more a sign of a weak function or method that should be broken into pieces or refactored.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">*args</span></code> is used to deal with a sequence of elements that are treated the same way in
+the function, asking for a unique container argument such as an iterator is better, for
+example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span> <span class="c1"># okay</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">arg</span>
+
+    <span class="k">return</span> <span class="n">total</span>
+
+
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span> <span class="c1"># better!</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">arg</span>
+
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>, the same rule applies. It is better to fix the named arguments to make the
+method’s signature meaningful, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_sentence</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">noun</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;noun&#39;</span><span class="p">,</span> <span class="s1">&#39;Bill&#39;</span><span class="p">)</span>
+    <span class="n">verb</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verb&#39;</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">)</span>
+    <span class="n">adjective</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;adjective&#39;</span><span class="p">,</span> <span class="s1">&#39;happy&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{noun}</span><span class="s1"> </span><span class="si">{verb}</span><span class="s1"> </span><span class="si">{adjective}</span><span class="s1">&#39;</span>
+
+<span class="k">def</span> <span class="nf">make_sentence</span><span class="p">(</span><span class="n">noun</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">verb</span><span class="o">=</span><span class="s1">&#39;is&#39;</span><span class="p">,</span> <span class="n">adjective</span><span class="o">=</span><span class="s1">&#39;happy&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{noun}</span><span class="s1"> </span><span class="si">{verb}</span><span class="s1"> </span><span class="si">{adjective}</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+<p>Another interesting approach is to create a container class that groups several related
+arguments to provide an execution context. This structure differs
+from <code class="docutils literal notranslate"><span class="pre">*args</span></code> or <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> because it can provide internals that work over the values, and
+can evolve independently. The code that uses it as an argument will not have to deal with
+its internals.</p>
+<p>For instance, a web request passed on to a function is often represented by an instance of a
+class. This class is in charge of holding the data passed by the web server, as shown in the
+following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span> <span class="c1"># version 1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">,</span> <span class="s1">&#39;No referer&#39;</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span> <span class="c1"># version 2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">,</span> <span class="s1">&#39;No referer&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;No host&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Magic arguments cannot be avoided sometimes, especially in metaprogramming. For
+instance, they are indispensable in the creation of decorators that work on functions with
+any kind of signature.</p>
+</div>
+</div>
+<div class="section" id="class-names">
+<h2>5. Class names<a class="headerlink" href="#class-names" title="Permalink to this headline">¶</a></h2>
+<p>The name of a class has to be concise, precise, and descriptive. A common practice is to use
+a suffix that informs about its type or nature, for example:</p>
+<ul class="simple">
+<li><p>SQLEngine</p></li>
+<li><p>MimeTypes</p></li>
+<li><p>StringWidget</p></li>
+<li><p>TestCase</p></li>
+</ul>
+<p>For base or abstract classes, a Base or Abstract prefix can be used as follows:</p>
+<ul class="simple">
+<li><p>BaseCookie</p></li>
+<li><p>AbstractFormatter</p></li>
+</ul>
+<p>The most important thing is to be consistent with the class attributes. For example, try to
+avoid redundancy between the class and its attributes’ names as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">SMTP</span><span class="o">.</span><span class="n">smtp_send</span><span class="p">()</span>  <span class="c1"># redundant information in the namespace</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SMTP</span><span class="o">.</span><span class="n">send</span><span class="p">()</span>  <span class="c1"># more readable and mnemonic</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>6. Modules and packages<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The module and package names inform about the purpose of their content. The names are
+short, in lowercase, and usually without underscores, for example:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sqlite</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">postgres</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sha1</span></code></p></li>
+</ul>
+<p>They are often suffixed with <code class="docutils literal notranslate"><span class="pre">lib</span></code> if they are implementing a protocol, as in the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">telnetlib</span>
+</pre></div>
+</div>
+<p>When choosing a name for a module, always consider its content and limit the amount
+of redundancy within the whole namespace, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">widgets.stringwidgets</span> <span class="kn">import</span> <span class="n">TextWidget</span> <span class="c1"># bad</span>
+<span class="kn">from</span> <span class="nn">widgets.strings</span> <span class="kn">import</span> <span class="n">TextWidget</span> <span class="c1"># better</span>
+</pre></div>
+</div>
+<p>When a module is getting complex and contains a lot of classes, it is a good practice to
+create a package and split the module’s elements into other modules.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> module can also be used to put back some common APIs at the top level of
+the package. This approach allows you to organize the code into smaller components
+without reducing the ease of use.</p>
+</div>
+<div class="section" id="useful-tools">
+<h2>7. Useful tools<a class="headerlink" href="#useful-tools" title="Permalink to this headline">¶</a></h2>
+<p>Common conventions and practices used in a software project should always be
+documented. But having proper documentation for guidelines is often not enough to
+enforce that these guidelines are actually followed. Fortunately, you can use automated
+tools that can check sources of your code and verify if it meets specific naming conventions
+and style guidelines.</p>
+<p>The following are a few popular tools:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pylint</span></code>: This is a very flexible source code analyzer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> and <code class="docutils literal notranslate"><span class="pre">flake8</span></code>: This is a small code style checker and a wrapper that adds to it some more useful features, such as static analysis and complexity measurement</p></li>
+</ul>
+<div class="section" id="pylint">
+<h3>7.1. Pylint<a class="headerlink" href="#pylint" title="Permalink to this headline">¶</a></h3>
+<p>Besides some quality assurance metrics, Pylint allows for checking of whether a given
+source code is following a naming convention. Its default settings correspond to PEP 8 and
+a Pylint script provides a shell report output.</p>
+<p>To install Pylint, you can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install pylint
+</pre></div>
+</div>
+<p>After this step, the command is available and can be run against a module, or several
+modules using wildcards. Let’s try it on Buildout’s <code class="docutils literal notranslate"><span class="pre">bootstrap.py</span></code> script as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget -O bootstrap.py https://bootstrap.pypa.io/bootstrap-buildout.py -q
+$ pylint bootstrap.py
+No config file found, using default configuration
+************* Module bootstrap
+C: <span class="m">76</span>, <span class="m">0</span>: Unnecessary parens after <span class="s1">&#39;print&#39;</span> keyword <span class="o">(</span>superfluous-parens<span class="o">)</span>
+C: <span class="m">31</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;tmpeggs&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">33</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;usage&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">45</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;parser&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">74</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;options&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">74</span>, <span class="m">9</span>: Invalid constant name <span class="s2">&quot;args&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">84</span>, <span class="m">4</span>: Import <span class="s2">&quot;from urllib.request import urlopen&quot;</span> should be placed at
+the top of the module <span class="o">(</span>wrong-import-position<span class="o">)</span>
+...
+Global evaluation
+-----------------
+Your code has been rated at <span class="m">6</span>.12/10
+</pre></div>
+</div>
+<p>Real Pylint’s output is a bit longer and here it has been truncated for the sake of brevity.</p>
+<p>Remember that Pylint can often give you false positive warnings that decrease the overall
+quality rating. For instance, an import statement that is not used by the code of the module
+itself is perfectly fine in some cases (for example, building top-level <code class="docutils literal notranslate"><span class="pre">__init__</span></code> modules in a
+package). Always treat Pylint’s output as a hint and not an oracle.</p>
+<p>Making calls to libraries that are using mixedCase for methods can also lower your rating.
+In any case, the global evaluation of your code score is not that important. Pylint is just a
+tool that points you to places where there is the possibility for improvements.</p>
+<p>It is always recommended to do some tuning of Pylint. In order to do so you need to create
+a <code class="docutils literal notranslate"><span class="pre">.pylinrc</span></code> configuration file in your project’s root directory. You can do that using the
+following <code class="docutils literal notranslate"><span class="pre">-generate-rcfile</span></code> option of the <code class="docutils literal notranslate"><span class="pre">pylint</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pylint --generate-rcfile &gt; .pylintrc
+</pre></div>
+</div>
+<p>This configuration file is self-documenting (every possible option is described with
+comment) and should already contain every available Pylint configuration option.</p>
+<p>Besides checking for compliance with some arbitrary coding standards, Pylint can also give
+additional information about the overall code quality, such as:</p>
+<ul class="simple">
+<li><p>Code duplication metrics</p></li>
+<li><p>Unused variables and imports</p></li>
+<li><p>Missing function, method, or class docstrings</p></li>
+<li><p>Too long function signatures</p></li>
+</ul>
+<p>The list of available checks that are enabled by default is very long. It is important to know
+that some of the rules are very arbitrary and cannot always be easily applied to every code
+base. Remember that consistency is always more valuable than compliance to some
+arbitrary rules. Fortunately, Pylint is very tunable, so if your team uses some naming and
+coding conventions that are different from the ones assumed by default, you can easily
+configure Pylint to check for consistency with your own conventions.</p>
+</div>
+<div class="section" id="pycodestyle-and-flake8">
+<h3>7.2. pycodestyle and flake8<a class="headerlink" href="#pycodestyle-and-flake8" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">pep8</span></code>) is a tool that has only one purpose; it provides only style
+checking against code conventions defined in PEP 8. This is the main difference from Pylint
+that has many more additional features. This is the best option for programmers that are
+interested in automated code style checking only for the PEP 8 standard, without any
+additional tool configuration, as in Pylint’s case.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> can be installed with pip as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install pycodestyle
+</pre></div>
+</div>
+<p>When run on the Buildout’s <code class="docutils literal notranslate"><span class="pre">bootstrap.py</span></code> script, it will give the following short list of
+code style violations:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget -O bootstrap.py https://bootstrap.pypa.io/bootstrap-buildout.py -q
+$ pycodestyle bootstrap.py
+bootstrap.py:118:1: E402 module level import not at top of file
+bootstrap.py:119:1: E402 module level import not at top of file
+bootstrap.py:190:1: E402 module level import not at top of file
+bootstrap.py:200:1: E402 module level import not at top of file
+</pre></div>
+</div>
+<p>The main difference from Pylint’s output is its length. <code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> concentrates only on
+style, so it does not provide any other warnings, such as unused variables, too long
+function names, or missing docstrings. It also does not give a rating. And it really makes
+sense because there is no such thing as partial consistency or partial conformance. Any,
+even the slightest, violation of style guidelines makes the code immediately inconsistent.</p>
+<p>The code of <code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> is simpler than Pylint’s and its output is easier to parse, so it may
+be a better choice if you want to make your code style verification part of a continuous
+integration process. If you are missing some static analysis features, there is
+the <code class="docutils literal notranslate"><span class="pre">flake8</span></code> package that is a wrapper on <code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> and a few other tools that are easily
+extendable and provide a more extensive suite of features. These include the following:</p>
+<ul class="simple">
+<li><p>McCabe complexity measurement</p></li>
+<li><p>Static analysis via <code class="docutils literal notranslate"><span class="pre">pyflakes</span></code></p></li>
+<li><p>Disabling whole files or single lines using comments</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../quality/index.html" class="btn btn-neutral float-right" title="Code quality" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../metaprogramming/index.html" class="btn btn-neutral float-left" title="Metaprogramming" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

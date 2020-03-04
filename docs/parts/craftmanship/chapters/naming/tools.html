@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>7. Useful tools &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>7. Useful tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/naming/tools.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="useful-tools">
+<h1>7. Useful tools<a class="headerlink" href="#useful-tools" title="Permalink to this headline">¶</a></h1>
+<p>Common conventions and practices used in a software project should always be
+documented. But having proper documentation for guidelines is often not enough to
+enforce that these guidelines are actually followed. Fortunately, you can use automated
+tools that can check sources of your code and verify if it meets specific naming conventions
+and style guidelines.</p>
+<p>The following are a few popular tools:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pylint</span></code>: This is a very flexible source code analyzer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> and <code class="docutils literal notranslate"><span class="pre">flake8</span></code>: This is a small code style checker and a wrapper that adds to it some more useful features, such as static analysis and complexity measurement</p></li>
+</ul>
+<div class="section" id="pylint">
+<h2>7.1. Pylint<a class="headerlink" href="#pylint" title="Permalink to this headline">¶</a></h2>
+<p>Besides some quality assurance metrics, Pylint allows for checking of whether a given
+source code is following a naming convention. Its default settings correspond to PEP 8 and
+a Pylint script provides a shell report output.</p>
+<p>To install Pylint, you can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install pylint
+</pre></div>
+</div>
+<p>After this step, the command is available and can be run against a module, or several
+modules using wildcards. Let’s try it on Buildout’s <code class="docutils literal notranslate"><span class="pre">bootstrap.py</span></code> script as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget -O bootstrap.py https://bootstrap.pypa.io/bootstrap-buildout.py -q
+$ pylint bootstrap.py
+No config file found, using default configuration
+************* Module bootstrap
+C: <span class="m">76</span>, <span class="m">0</span>: Unnecessary parens after <span class="s1">&#39;print&#39;</span> keyword <span class="o">(</span>superfluous-parens<span class="o">)</span>
+C: <span class="m">31</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;tmpeggs&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">33</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;usage&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">45</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;parser&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">74</span>, <span class="m">0</span>: Invalid constant name <span class="s2">&quot;options&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">74</span>, <span class="m">9</span>: Invalid constant name <span class="s2">&quot;args&quot;</span> <span class="o">(</span>invalid-name<span class="o">)</span>
+C: <span class="m">84</span>, <span class="m">4</span>: Import <span class="s2">&quot;from urllib.request import urlopen&quot;</span> should be placed at
+the top of the module <span class="o">(</span>wrong-import-position<span class="o">)</span>
+...
+Global evaluation
+-----------------
+Your code has been rated at <span class="m">6</span>.12/10
+</pre></div>
+</div>
+<p>Real Pylint’s output is a bit longer and here it has been truncated for the sake of brevity.</p>
+<p>Remember that Pylint can often give you false positive warnings that decrease the overall
+quality rating. For instance, an import statement that is not used by the code of the module
+itself is perfectly fine in some cases (for example, building top-level <code class="docutils literal notranslate"><span class="pre">__init__</span></code> modules in a
+package). Always treat Pylint’s output as a hint and not an oracle.</p>
+<p>Making calls to libraries that are using mixedCase for methods can also lower your rating.
+In any case, the global evaluation of your code score is not that important. Pylint is just a
+tool that points you to places where there is the possibility for improvements.</p>
+<p>It is always recommended to do some tuning of Pylint. In order to do so you need to create
+a <code class="docutils literal notranslate"><span class="pre">.pylinrc</span></code> configuration file in your project’s root directory. You can do that using the
+following <code class="docutils literal notranslate"><span class="pre">-generate-rcfile</span></code> option of the <code class="docutils literal notranslate"><span class="pre">pylint</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pylint --generate-rcfile &gt; .pylintrc
+</pre></div>
+</div>
+<p>This configuration file is self-documenting (every possible option is described with
+comment) and should already contain every available Pylint configuration option.</p>
+<p>Besides checking for compliance with some arbitrary coding standards, Pylint can also give
+additional information about the overall code quality, such as:</p>
+<ul class="simple">
+<li><p>Code duplication metrics</p></li>
+<li><p>Unused variables and imports</p></li>
+<li><p>Missing function, method, or class docstrings</p></li>
+<li><p>Too long function signatures</p></li>
+</ul>
+<p>The list of available checks that are enabled by default is very long. It is important to know
+that some of the rules are very arbitrary and cannot always be easily applied to every code
+base. Remember that consistency is always more valuable than compliance to some
+arbitrary rules. Fortunately, Pylint is very tunable, so if your team uses some naming and
+coding conventions that are different from the ones assumed by default, you can easily
+configure Pylint to check for consistency with your own conventions.</p>
+</div>
+<div class="section" id="pycodestyle-and-flake8">
+<h2>7.2. pycodestyle and flake8<a class="headerlink" href="#pycodestyle-and-flake8" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">pep8</span></code>) is a tool that has only one purpose; it provides only style
+checking against code conventions defined in PEP 8. This is the main difference from Pylint
+that has many more additional features. This is the best option for programmers that are
+interested in automated code style checking only for the PEP 8 standard, without any
+additional tool configuration, as in Pylint’s case.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> can be installed with pip as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install pycodestyle
+</pre></div>
+</div>
+<p>When run on the Buildout’s <code class="docutils literal notranslate"><span class="pre">bootstrap.py</span></code> script, it will give the following short list of
+code style violations:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget -O bootstrap.py https://bootstrap.pypa.io/bootstrap-buildout.py -q
+$ pycodestyle bootstrap.py
+bootstrap.py:118:1: E402 module level import not at top of file
+bootstrap.py:119:1: E402 module level import not at top of file
+bootstrap.py:190:1: E402 module level import not at top of file
+bootstrap.py:200:1: E402 module level import not at top of file
+</pre></div>
+</div>
+<p>The main difference from Pylint’s output is its length. <code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> concentrates only on
+style, so it does not provide any other warnings, such as unused variables, too long
+function names, or missing docstrings. It also does not give a rating. And it really makes
+sense because there is no such thing as partial consistency or partial conformance. Any,
+even the slightest, violation of style guidelines makes the code immediately inconsistent.</p>
+<p>The code of <code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> is simpler than Pylint’s and its output is easier to parse, so it may
+be a better choice if you want to make your code style verification part of a continuous
+integration process. If you are missing some static analysis features, there is
+the <code class="docutils literal notranslate"><span class="pre">flake8</span></code> package that is a wrapper on <code class="docutils literal notranslate"><span class="pre">pycodestyle</span></code> and a few other tools that are easily
+extendable and provide a more extensive suite of features. These include the following:</p>
+<ul class="simple">
+<li><p>McCabe complexity measurement</p></li>
+<li><p>Static analysis via <code class="docutils literal notranslate"><span class="pre">pyflakes</span></code></p></li>
+<li><p>Disabling whole files or single lines using comments</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

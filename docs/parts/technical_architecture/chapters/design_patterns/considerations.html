@@ -1,0 +1,245 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Considerations for design patterns in Python &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Considerations for design patterns in Python</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/technical_architecture/chapters/design_patterns/considerations.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="considerations-for-design-patterns-in-python">
+<h1>1. Considerations for design patterns in Python<a class="headerlink" href="#considerations-for-design-patterns-in-python" title="Permalink to this headline">¶</a></h1>
+<p>Object-oriented design patterns are ideas of software construction that appear in different
+scenarios when we deal with models of the problem we’re solving. Because they’re high-
+level ideas, it’s hard to think of them as being tied to particular programming languages.
+They are instead more general concepts about how objects will interact in the application.
+Of course, they will have their implementation details, varying from language to language,
+but that doesn’t form the essence of a design pattern.</p>
+<p>That’s the theoretical aspect of a design pattern, the fact that it is an abstract idea that
+expresses concepts about the layout of the objects in the solution. There are plenty of other
+books and several other resources about object-oriented design, and design patterns in
+particular, so we are going to focus on those implementation details for
+Python.</p>
+<p>Given the nature of Python, some of the classical design patterns aren’t actually needed.
+That means that Python already supports features that render those patterns invisible.
+Some argue that they don’t exist in Python, but keep in mind that invisible doesn’t mean
+non-existing. They are there, just embedded in Python itself, so it’s likely that we won’t
+even notice them.</p>
+<p>Others have a much simpler implementation, again thanks to the dynamic nature of the
+language, and the rest of them are practically the same as they are in other platforms, with
+small differences.</p>
+<p>In any case, the important goal for achieving clean code in Python is knowing what
+patterns to implement and how. That means recognizing some of the patterns that Python
+already abstracts and how we can leverage them. For instance, it would be completely non-
+Pythonic to try to implement the standard definition of the iterator pattern (as we would do
+in different languages), because (as we have already covered) iteration is deeply embedded
+in Python, and the fact that we can create objects that will directly work in a for loop
+makes this the right way to proceed.</p>
+<p>Something similar happens with some of the creational patterns. Classes are regular objects
+in Python, and so are functions. As we have seen in several examples so far, they can be
+passed around, decorated, reassigned, and so on. That means that whatever kind of
+customization we would like to make to our objects, we can most likely do it without
+needing any particular setup of factory classes. In addition, there is no special syntax for
+creating objects in Python (no new keyword, for example). This is another reason why,
+most of the time, a simple function call will just work as a factory.</p>
+<p>Other patterns are still needed, and we will see how, with some small adaptations, we can
+make them more Pythonic, taking full advantage of the features that the language provides
+(magic methods or the standard library).</p>
+<p>Out of all the patterns available, not all of them are equally frequent, nor useful, so we will
+focus on the main ones, those that we would expect to see the most in our applications, and
+we will do so by following a pragmatic approach.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

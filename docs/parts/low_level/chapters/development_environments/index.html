@@ -1,0 +1,1187 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Modern Python Development Environments &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Code distribution" href="../../../distribution/index.html" />
+    <link rel="prev" title="How does Python work?" href="../how_python_works/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                04/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Low level Python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../how_python_works/index.html">How does Python work?</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Modern Python Development Environments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installing-packages-with-pip">1. Installing packages with pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#isolating-the-runtime-environment">2. Isolating the runtime environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#application-level-isolation-versus-system-level-isolation">2.1 Application-level isolation versus system-level isolation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-s-venv">2.2. Python’s venv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system-level-environment-isolation">2.3. System-level environment isolation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#popular-productivity-tools">3. Popular productivity tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#custom-python-shells">3.1. Custom Python shells</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#incorporating-shells-in-your-own-scripts-and-programs">3.2. Incorporating shells in your own scripts and programs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interactive-debuggers">3.3. Interactive debuggers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Low level Python</a> &raquo;</li>
+        
+      <li>Modern Python Development Environments</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/low_level/chapters/development_environments/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../../../distribution/index.html" class="btn btn-neutral float-right" title="Code distribution" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../how_python_works/index.html" class="btn btn-neutral float-left" title="How does Python work?" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="modern-python-development-environments">
+<h1>Modern Python Development Environments<a class="headerlink" href="#modern-python-development-environments" title="Permalink to this headline">¶</a></h1>
+<p>A deep understanding of the programming language of choice is the most important thing
+in being an expert. This will always be true for any technology. Still, it is really hard to
+develop good software without knowing the common tools and practices that are common
+within the given language community. Python has no single feature that cannot be found in
+some other language. So, in direct comparison of syntax, expressiveness, or performance,
+there will always be a solution that is better in one or more fields. But, the area in which
+Python really stands out from the crowd is the whole ecosystem built around the language.
+The Python community spent years polishing standard practices and libraries that help to
+create more reliable software in a shorter time.</p>
+<p>The most obvious and important part of the ecosystem is a huge collection of free and open
+source packages that solve a multitude of problems. Writing new software is always an
+expensive and time-consuming process. Being able to reuse the existing code instead
+of reinventing the wheel greatly reduces development times and costs. For some companies,
+it is the only reason why their projects are economically feasible.</p>
+<p>Because of this, Python developers put a lot of effort into creating tools and standards to
+work with open source packages that have been created by others: starting from virtual
+isolated environments, improved interactive shells, and debuggers, to programs that help
+to discover, search, and analyze the huge collection of packages that are available
+on Python Package Index (PyPI).</p>
+<div class="section" id="installing-packages-with-pip">
+<h2>1. Installing packages with pip<a class="headerlink" href="#installing-packages-with-pip" title="Permalink to this headline">¶</a></h2>
+<p>Nowadays, a lot of operating systems come with Python as a standard component. Most
+Linux distributions and UNIX-based systems, such as FreeBSD, NetBSD, OpenBSD, or
+macOS, come with Python either installed by default or available through system package
+repositories. Many of them even use it as part of some core components: Python powers
+the installers of Ubuntu (Ubiquity), Red Hat Linux (Anaconda), and Fedora (Anaconda
+again). Unfortunately, the preinstalled system version of Python is often Python 2.7, which
+is fairly outdated.</p>
+<p>Due to Python’s popularity as an operating system component, a lot of packages from PyPI
+are also available as native packages managed by the system’s package management tools,
+such as apt-get (Debian, Ubuntu), rpm (Red Hat Linux), or emerge (Gentoo). It should be
+remembered, however, that the list of available libraries is very limited, and they are mostly
+outdated compared to PyPI. This is the reason why pip should always be used to obtain
+new packages in the latest version, as recommended by the Python Packaging Authority
+(PyPA). Although it is an independent package, starting from version 2.7.9 and 3.4 of
+CPython, it is bundled with every new release by default. Installing the new package is as
+simple as this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install &lt;package-name&gt;
+</pre></div>
+</div>
+<p>Among other features, pip allows specific versions of packages to be forced (using the <code class="docutils literal notranslate"><span class="pre">pip</span>
+<span class="pre">install</span> <span class="pre">package-name==version</span></code> syntax) and upgraded to the latest version available
+(using the <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code> switch). The full usage description for most of the command-line
+tools presented in the book can be easily obtained simply by running the command with
+the <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> switch, but here is an example session that demonstrates the most
+commonly used options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip show pip
+Name: pip
+Version: <span class="m">18</span>.0
+Summary: The PyPA recommended tool <span class="k">for</span> installing Python packages.
+Home-page: https://pip.pypa.io/
+Author: The pip developers
+Author-email: pypa-dev@groups.google.com
+License: MIT
+Location: /Users/swistakm/.envs/epp-3rd-ed/lib/python3.7/site-packages
+Requires:
+Required-by:
+
+$ pip install <span class="s1">&#39;pip&gt;=18.0&#39;</span>
+Requirement already satisfied: pip&gt;<span class="o">=</span><span class="m">18</span>.0 in <span class="o">(</span>...<span class="o">)</span>/lib/python3.7/sitepackages <span class="o">(</span><span class="m">18</span>.0<span class="o">)</span>
+
+$ pip install --upgrade pip
+Requirement already up-to-date: pip in <span class="o">(</span>...<span class="o">)</span>/lib/python3.7/site-packages
+<span class="o">(</span><span class="m">18</span>.0<span class="o">)</span>
+</pre></div>
+</div>
+<p>In some cases, pip may not be available by default. From Python 3.4 onward (and also
+Python 2.7.9), it can always be bootstrapped using the ensurepip module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m ensurepip
+Looking in links:
+/var/folders/z6/3m2r6jgd04q0m7yq29c6lbzh0000gn/T/tmp784u9bct
+Requirement already satisfied: setuptools in /Users/swistakm/.envs/epp-3rd-ed/lib/python3.7/site-packages <span class="o">(</span><span class="m">40</span>.4.3<span class="o">)</span>
+Collecting pip
+Installing collected packages: pip
+Successfully installed pip-10.0.1
+</pre></div>
+</div>
+</div>
+<div class="section" id="isolating-the-runtime-environment">
+<h2>2. Isolating the runtime environment<a class="headerlink" href="#isolating-the-runtime-environment" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span></code> may be used to install system-wide packages. On UNIX-based and Linux systems, this
+will require superuser privileges, so the actual invocation will be as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo pip install &lt;package-name&gt;
+</pre></div>
+</div>
+<p>Note that this is not required on Windows since it does not provide the Python interpreter
+by default, and Python on Windows is usually installed manually by the user without
+superuser privileges.</p>
+<p>Installing system-wide packages directly from PyPI is not recommended, and should be
+avoided. This may seem like a contradiction to the previous statement that using <code class="docutils literal notranslate"><span class="pre">pip</span></code> is a
+PyPA recommendation, but there are some serious reasons for that. As we explained
+earlier, Python is often an important part of many packages that are available through
+operating system package repositories, and may power a lot of important services. System
+distribution maintainers put in a lot of effort to select the correct versions of packages to
+match various package dependencies. Very often, Python packages that are available from
+a system’s package repositories contain custom patches, or are purposely kept outdated to
+ensure compatibility with some other system components. Forcing an update of such a
+package, using pip, to a version that breaks some backward compatibility, might cause
+bugs in some crucial system service.</p>
+<p>Doing such things on the local computer for development purposes only is also not a good
+excuse. Recklessly using pip that way is almost always asking for trouble, and will
+eventually lead to issues that are very hard to debug. This does not mean that installing
+packages from PyPI is a strictly forbidden thing, but it should be always done
+consciously and with an understanding of the related risk.</p>
+<p>Fortunately, there is an easy solution to this problem: environment isolation. There are
+various tools that allow the isolation of the Python runtime environment at different levels
+of system abstraction. The main idea is to isolate project dependencies from packages that
+are required by different projects and/or system services. The benefits of this approach are
+as follows:</p>
+<ul class="simple">
+<li><p>It solves the Project X depends on version 1.x but, Project Y needs 4.x dilemma. The developer can work on multiple projects with different dependencies that may even collide without the risk of affecting each other.</p></li>
+<li><p>The project is no longer constrained by versions of packages that are provided in the developer’s system distribution repositories.</p></li>
+<li><p>There is no risk of breaking other system services that depend on certain package versions, because new package versions are only available inside such an environment.</p></li>
+<li><p>A list of packages that are project dependencies can be easily frozen, so it is very easy to reproduce such an environment on another computer.</p></li>
+</ul>
+<p>If you’re working on multiple projects in parallel, you’ll quickly find that is impossible to
+maintain their dependencies without any kind of isolation.</p>
+<div class="section" id="application-level-isolation-versus-system-level-isolation">
+<h3>2.1 Application-level isolation versus system-level isolation<a class="headerlink" href="#application-level-isolation-versus-system-level-isolation" title="Permalink to this headline">¶</a></h3>
+<p>The easiest and most lightweight approach to isolation is to use application-level virtual
+environments. These focus on isolating the Python interpreter and the packages available
+within it. Such environments are very easy to set up, and are very often just enough to
+ensure proper isolation during the development of small projects and packages.</p>
+<p>Unfortunately, in some cases, this may not be enough to ensure enough consistency and
+reproducibility. Despite the fact that software written in Python is usually considered very
+portable, it is still very easy to run into issues that occur only on selected systems or even
+specific distributions of such systems (for example, Ubuntu versus Gentoo). This is very
+common in large and complex projects, especially if they depend on compiled Python
+extensions or internal components of the hosting operating system.</p>
+<p>In such cases, system-level isolation is a good addition to the workflow. This kind of
+approach usually tries to replicate and isolate complete operating systems with all of its
+libraries and crucial system components, either with classical system virtualization tools
+(for example, VMWare, Parallels, and VirtualBox) or container systems (for example,
+Docker and Rocket).</p>
+</div>
+<div class="section" id="python-s-venv">
+<h3>2.2. Python’s venv<a class="headerlink" href="#python-s-venv" title="Permalink to this headline">¶</a></h3>
+<p>There are several ways to isolate Python at runtime. The simplest and most obvious,
+although hardest to maintain, is to manually change the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> and <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>
+environment variables and/or move the Python binary to a different, customized place
+where we want to store our project’s dependencies, in order to affect the way that it
+discovers available packages. Fortunately, there are several tools available that can help in
+maintaining the virtual environments and packages that are installed for these
+environments. These are mainly <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> and <code class="docutils literal notranslate"><span class="pre">venv</span></code>. What they do under the hood is, in
+fact, the same that we would do manually. The actual strategy depends on the specific tool
+implementation, but generally they are more convenient to use and can provide additional
+benefits.</p>
+<p>To create new virtual environment, you can simply use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3.7 -m venv ENV
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">ENV</span></code> should be replaced by the desired name for the new environment. This will
+create a new <code class="docutils literal notranslate"><span class="pre">ENV</span></code> directory in the current working directory path. Inside, it will contain a
+few new directories:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bin/</span></code>: This is where the new Python executable and scripts/executables provided by other packages are stored.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lib/</span></code> and <code class="docutils literal notranslate"><span class="pre">include/</span></code>: These directories contain the supporting library files for new Python inside the virtual environment. The new packages will be installed in ENV/lib/pythonX.Y/site-packages/.</p></li>
+</ul>
+<p>Once the new environment has been created, it needs to be activated in the current shell
+session using UNIX’s source command: <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">ENV/bin/activate</span></code></p>
+<p>This changes the state of the current shell sessions by affecting its environment variables. In
+order to make the user aware that they have activated the virtual environment, it will
+change the shell prompt by appending the (<code class="docutils literal notranslate"><span class="pre">ENV</span></code>) string at its beginning. To illustrate this,
+here is an example session that creates a new environment and activates it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python -m venv example
+$ <span class="nb">source</span> example/bin/activate
+<span class="o">(</span>example<span class="o">)</span> $ which python
+/home/swistakm/example/bin/python
+<span class="o">(</span>example<span class="o">)</span> $ deactivate
+$ which python
+/usr/local/bin/python
+</pre></div>
+</div>
+<p>The important thing to note about <code class="docutils literal notranslate"><span class="pre">venv</span></code> is that it depends completely on its state, as stored
+on a filesystem. It does not provide any additional abilities to track what packages should
+be installed in it. These virtual environments are also not portable, and should not be
+moved to another system/machine. This means that the new virtual environment needs to
+be created from scratch for each new application deployment. Because of this, there is a
+good practice that’s used by <code class="docutils literal notranslate"><span class="pre">venv</span></code> users to store all project dependencies in
+the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file (this is the naming convention), as shown in the following
+code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lines followed by hash (#) are treated as a comments</span>
+<span class="c1"># strict version names are best for reproducibility</span>
+<span class="n">eventlet</span><span class="o">==</span><span class="mf">0.17</span><span class="o">.</span><span class="mi">4</span>
+<span class="n">graceful</span><span class="o">==</span><span class="mf">0.1</span><span class="o">.</span><span class="mi">1</span>
+<span class="c1"># for projects that are well tested with different</span>
+<span class="c1"># dependency versions the relative version specifiers</span>
+<span class="c1"># are acceptable too</span>
+<span class="n">falcon</span><span class="o">&gt;=</span><span class="mf">0.3</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="o">&lt;</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="c1"># packages without versions should be avoided unless</span>
+<span class="c1"># latest release is always required/desired</span>
+<span class="n">pytz</span>
+</pre></div>
+</div>
+<p>With such files, all dependencies can be easily installed using <code class="docutils literal notranslate"><span class="pre">pip</span></code>, because it accepts the
+requirements file as its output: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p>
+<p>What needs to be remembered is that the requirements file is not always the ideal solution,
+because it does not define the exact list of dependencies, only those that are to be installed.
+So, the whole project can work without problems in some development environments but
+will fail to start in others if the requirements file is outdated and does not reflect the actual
+state of the environment. There is, of course, the <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> command, which prints all
+packages in the current environment, but it should not be used blindly. It will output
+everything, even packages that are not used in the project but are installed only for testing.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>For Windows users, <code class="docutils literal notranslate"><span class="pre">venv</span></code> under Windows uses a different naming
+convention for its internal structure of directories. You need to
+use <code class="docutils literal notranslate"><span class="pre">Scripts/</span></code>, <code class="docutils literal notranslate"><span class="pre">Libs/</span></code>, and <code class="docutils literal notranslate"><span class="pre">Include/</span></code> instead of <code class="docutils literal notranslate"><span class="pre">bin/</span></code>, <code class="docutils literal notranslate"><span class="pre">lib/</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">include/</span></code>, to better match development conventions on that
+operating system. The commands that are used for activating/deactivating
+the environment are also different; you need to
+use <code class="docutils literal notranslate"><span class="pre">ENV/Scripts/activate.bat</span></code> and <code class="docutils literal notranslate"><span class="pre">ENV/Scripts/deactivate.bat</span></code>
+instead of using source on activate and deactivate scripts.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The Python <code class="docutils literal notranslate"><span class="pre">venv</span></code> module provides an additional <code class="docutils literal notranslate"><span class="pre">pyvenv</span></code> command-line
+script; since Python 3.6, it has been marked as deprecated and its usage is
+officially discouraged, as the <code class="docutils literal notranslate"><span class="pre">pythonX.Y</span> <span class="pre">-m</span> <span class="pre">venv</span></code> command is explicit
+about what version of Python will be used to create new environments,
+unlike the <code class="docutils literal notranslate"><span class="pre">pyvenv</span></code> script.</p>
+</div>
+</div>
+<div class="section" id="system-level-environment-isolation">
+<h3>2.3. System-level environment isolation<a class="headerlink" href="#system-level-environment-isolation" title="Permalink to this headline">¶</a></h3>
+<p>In most cases, software implementation can iterate quickly because developers reuse a lot
+of existing components. Don’t Repeat Yourself: this is a popular rule and motto of many
+programmers. Using other packages and modules to include them in the code base is only a
+part of that culture. What can also be considered under reused components are binary
+libraries, databases, system services, third-party APIs, and so on. Even whole operating
+systems should be considered as being reused.</p>
+<p>The backend services of web-based applications are a great example of how complex such
+applications can be. The simplest software stack usually consists of a few layers (starting
+from the lowest):</p>
+<ul class="simple">
+<li><p>A database or other kind of storage</p></li>
+<li><p>The application code implemented in Python</p></li>
+<li><p>An HTTP server, such as Apache or NGINX</p></li>
+</ul>
+<p>Of course, such stacks can be even simpler, but it is very unlikely. In fact, big applications
+are often so complex that it is hard to distinguish single layers. Big applications can use
+many different databases, be divided into multiple independent processes, and use many
+other system services for caching, queuing, logging, service discovery, and so on. Sadly,
+there are no limits for complexity, and it seems that code simply follows the second law of
+thermodynamics.</p>
+<p>What is really important is that not all software stack elements can be isolated on the level
+of Python runtime environments. No matter whether it is an HTTP server, such as Nginx,
+or RDBMS, such as PostgreSQL, they are usually available in different versions on different
+systems. Making sure that everyone in a development team uses the same versions of every
+component is very hard without the proper tools. It is theoretically possible that all
+developers in a team working on a single project will be able to get the same versions of
+services on their development boxes. But all this effort is futile if they do not use the same
+operating system as they do in the production environment. Forcing a programmer to work
+on something else rather than their beloved system of choice is impossible.</p>
+<p>The problem lies in the fact that portability is still a big challenge. Not all services will work
+exactly the same in production environments as they do on the developer’s machines, and
+this is very unlikely to change. Even Python can behave differently on different systems,
+despite how much work is put in to make it cross-platform. Usually, this is well
+documented and happens only in places that depend directly on system calls, but relying
+on the programmer’s ability to remember a long list of compatibility quirks is quite an
+error-prone strategy.</p>
+<p>A popular solution to this problem is isolating whole systems as an application
+environment. This is usually achieved by leveraging different types of system virtualization
+tools. Virtualization, of course, reduces performance; but with modern computers that have
+hardware support for virtualization, the performance loss is usually negligible. On the
+other hand, the list of possible gains is very long:</p>
+<ul class="simple">
+<li><p>The development environment can exactly match the system version and services used in production, which helps to solve compatibility issues</p></li>
+<li><p>Definitions for system configuration tools, such as Puppet, Chef, or Ansible (if used), can be reused to configure the development environment</p></li>
+<li><p>The newly hired team members can easily hop into the project if the creation of such environments is automated</p></li>
+<li><p>The developers can work directly with low-level system features that may not be available on operating systems they use for work, for example, File System in User Space (FUSE), which is not available in Windows.</p></li>
+</ul>
+<div class="section" id="virtual-development-environments-using-vagrant">
+<h4>2.3.1. Virtual development environments using Vagrant<a class="headerlink" href="#virtual-development-environments-using-vagrant" title="Permalink to this headline">¶</a></h4>
+<p>Vagrant currently seems to be one of the most popular tools for developers to manage
+virtual machines for the purpose of local development. It provides a simple and convenient
+way to describe development environments with all system dependencies in a way that
+is directly tied to the source code of your project. It is available for Windows, Mac OS, and a
+few popular Linux distributions (refer to <a class="reference external" href="https://www.vagrantup.com">https://www.vagrantup.com</a>). It does not have
+any additional dependencies. Vagrant creates new development environments in the form
+of virtual machines or containers. The exact implementation depends on a choice of
+virtualization providers. VirtualBox is the default provider, and it is bundled with the
+Vagrant installer, but additional providers are available as well. The most notable choices
+are VMware, Docker, Linux Containers (LXC), and Hyper-V.</p>
+<p>The most important configuration is provided to Vagrant in a single file
+named <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code>. It should be independent for every project. The following are the
+most important things it provides:</p>
+<ul class="simple">
+<li><p>Choice of virtualization provider</p></li>
+<li><p>A box, which is used as a virtual machine image</p></li>
+<li><p>Choice of provisioning method</p></li>
+<li><p>Shared storage between the VM and VM’s host</p></li>
+<li><p>Ports that need to be forwarded between VM and its host</p></li>
+</ul>
+<p>The syntax language for Vagrantfile is Ruby. The example configuration file provides a
+good template to start the project and has an excellent documentation, so the knowledge of
+this language is not required. Template configuration can be created using a single
+command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant init
+</pre></div>
+</div>
+<p>This will create a new file named <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> in the current working directory. The best
+place to store this file is usually the root of the related project sources. This file is already a
+valid configuration that will create a new VM using the default provider and base box
+image. The default <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> content that’s created with the <code class="docutils literal notranslate"><span class="pre">vagrant</span> <span class="pre">init</span></code> command
+contains a lot of comments that will guide you through the complete configuration process.</p>
+<p>The following is a minimal example of <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> for the Python 3.7 development
+environment based on the Ubuntu operating system, with some sensible defaults that,
+among others, enable port 80 forwarding in case you want to do some web development
+with Python:</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- mode: ruby -*-</span>
+<span class="c1"># vi: set ft=ruby :</span>
+<span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+ <span class="c1"># Every Vagrant development environment requires a box.</span>
+ <span class="c1"># You can search for boxes at https://vagrantcloud.com/search.</span>
+ <span class="c1"># Here we use Bionic version Ubuntu system for x64 architecture.</span>
+ <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;ubuntu/bionic64&quot;</span>
+ <span class="c1"># Create a forwarded port mapping which allows access to a specific</span>
+ <span class="c1"># port within the machine from a port on the host machine and only</span>
+ <span class="c1"># allow access via 127.0.0.1 to disable public access</span>
+ <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;forwarded_port&quot;</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="ss">host_ip</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span>
+ <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="s2">&quot;virtualbox&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+ <span class="c1"># Display the VirtualBox GUI when booting the machine</span>
+ <span class="n">vb</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="kp">false</span>
+ <span class="c1"># Customize the amount of memory on the VM:</span>
+ <span class="n">vb</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="s2">&quot;1024&quot;</span>
+ <span class="k">end</span>
+ <span class="c1"># Enable provisioning with a shell script.</span>
+ <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provision</span> <span class="s2">&quot;shell&quot;</span><span class="p">,</span> <span class="ss">inline</span><span class="p">:</span> <span class="o">&lt;&lt;-</span><span class="dl">SHELL</span>
+<span class="sh"> apt-get update</span>
+<span class="sh"> apt-get install python3.7 -y</span>
+<span class="dl"> SHELL</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>In the preceding example, we have set an additional provision of system packages with
+simple shell script. When you feel that <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code> is ready, you can run your virtual
+machine using the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant up
+</pre></div>
+</div>
+<p>The initial start can take a few minutes, because the actual box image must be downloaded
+from the web. There are also some initialization processes that may take a while every time
+the existing VM is brought up, and the amount of time depends on the choice of provider,
+image, and your system’s performance. Usually, this takes only a couple of seconds. Once
+the new Vagrant environment is up and running, developers can connect to it through SSH
+using the following shorthand:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant ssh
+</pre></div>
+</div>
+<p>This can be done anywhere in the project source tree below the location of <code class="docutils literal notranslate"><span class="pre">Vagrantfile</span></code>.
+For the developers’ convenience, Vagrant will traverse all directories above the user’s
+current working directory in the filesystem tree, looking for the configuration file and
+matching it with the related VM instance. Then, it establishes the secure shell connection, so
+the development environment can be interacted with just like an ordinary remote machine.
+The only difference is that the whole project source tree (root defined as the location
+of Vagrantfile) is available on the VM’s filesystem under <code class="docutils literal notranslate"><span class="pre">/vagrant/</span></code>. This directory is
+automatically synchronized with your host filesystem, so you can normally work in the IDE
+or editor of your choice run on the host, and can treat the SSH session to your Vagrant VM
+just like a normal local Terminal session.</p>
+</div>
+<div class="section" id="virtual-environments-using-docker">
+<h4>2.3.2. Virtual environments using Docker<a class="headerlink" href="#virtual-environments-using-docker" title="Permalink to this headline">¶</a></h4>
+<p>Containers are an alternative to full machine virtualization. It is a lightweight method of
+virtualization, where the kernel and operating system allow multiple isolated user space
+instances to be run. OS is shared between containers and the host, so it theoretically
+requires less overhead than in full virtualization. Such a container contains only application
+code and its system-level dependencies, but, from the perspective of processes running
+inside, it looks like a completely isolated system environment.</p>
+<p>Software containers got their popularity mostly thanks to Docker, which is one of the
+available implementations. Docker allows to describe its container in the form of a simple
+text document called <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. Containers from such definitions can be built and
+stored. It also supports incremental changes, so if new things are added to the container
+then it does not need to be recreated from scratch.</p>
+<div class="section" id="containerization-versus-virtualization">
+<h5>2.3.2.1. Containerization versus virtualization<a class="headerlink" href="#containerization-versus-virtualization" title="Permalink to this headline">¶</a></h5>
+<p>Different tools, such as Docker and Vagrant, seem to overlap in features: but the main
+difference between them is the reason why these tools were built. Vagrant, as we
+mentioned earlier, is built primarily as a tool for development. It allows us to bootstrap the
+whole virtual machine with a single command, but does not allow us to simply pack such
+an environment as a complete deliverable artifact and deploy or release it. Docker, on the
+other hand, is built exactly for that purpose: preparing complete containers that can be
+sent and deployed to production as a whole package. If implemented well, this can greatly
+improve the process of product deployment. Because of that, using Docker and similar
+solutions (Rocket for example) during development only makes more sense if such
+containers are also to be used in the deployment process on production.</p>
+<p>Due to some implementation nuances, the environments that are based on containers may
+sometimes behave differently than environments based on virtual machines. If you decide
+to use containers for development, but don’t decide to use them on target production
+environments, you’ll lose some of the consistency guarantees that were the main reason for
+environment isolation. But, if you already use containers in your target production
+environments, then you should always replicate production conditions rather than using
+the same technique. Fortunately, Docker, which is currently the most popular container
+solution, provides an amazing <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> tool that makes the management of local
+containerized environments extremely easy.</p>
+</div>
+<div class="section" id="writing-your-first-dockerfile">
+<h5>2.3.2.2. Writing your first Dockerfile<a class="headerlink" href="#writing-your-first-dockerfile" title="Permalink to this headline">¶</a></h5>
+<p>Every Docker-based environment starts with <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. Dockerfile is a format description
+of how to create a Docker image. You can think about the Docker images in a similar way to
+how you would think about images of virtual machines. It is a single file (composed of
+many layers) that encapsulates all system libraries, files, source code, and other
+dependencies that are required to execute your application.</p>
+<p>Every layer of a Docker image is described in the Dockerfile by a single instruction in the
+following format: <code class="docutils literal notranslate"><span class="pre">INSTRUCTION</span> <span class="pre">arguments</span></code>.</p>
+<p>Docker supports plenty of instructions, but the most basic ones that you need to know in
+order to get started are as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">&lt;image-name&gt;</span></code>: This describes the base image that your image will be based on.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COPY</span> <span class="pre">&lt;src&gt;...</span> <span class="pre">&lt;dst&gt;</span></code>: This copies files from the local build context (usually project files) and adds them to the container’s filesystem.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">&lt;src&gt;...</span> <span class="pre">&lt;dst&gt;</span></code>: This works similarly to COPY but automatically unpacks archives and allows &lt;src&gt; to be URLs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">&lt;command&gt;</span></code>: This runs specified commands on top of previous layers, and commits changes that this command made to the filesystem as a new image layer.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ENTRYPOINT</span> <span class="pre">[&quot;&lt;executable&gt;&quot;,</span> <span class="pre">&quot;&lt;param&gt;&quot;,</span> <span class="pre">...]</span></code>: This configures the default command to be run as your container. If no entry point is specified anywhere in the image layers, then Docker defaults to /bin/sh -c.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CMD</span> <span class="pre">[&quot;&lt;param&gt;&quot;,</span> <span class="pre">...]</span></code>: This specifies the default parameters for image entry points. Knowing that the default entry point for Docker is /bin/sh -c, this instruction can also take the form of CMD [“&lt;executable&gt;”, “&lt;param&gt;”, …], although it is recommended to define the target executable directly in the ENTRYPOINT instruction and use CMD only for default arguments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WORKDIR</span> <span class="pre">&lt;dir&gt;</span></code>: This sets the current working directory for any of the following RUN, CMD, ENTRYPOINT, COPY, and ADD instructions.</p></li>
+</ul>
+<p>To properly illustrate the typical structure of <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>, let’s assume that we want to
+dockerize the built-in Python web server available through the <code class="docutils literal notranslate"><span class="pre">http.server</span></code> module with
+some predefined static files that this server should serve. The structure of our project files
+could be as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
+├── Dockerfile
+├── README
+└── static
+    ├── index.html
+    └── picture.jpg
+</pre></div>
+</div>
+<p>Locally, you could run that Python’s <code class="docutils literal notranslate"><span class="pre">http.server</span></code> on a default HTTP port with the
+following simple command:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span><span class="o">.</span><span class="mi">7</span> <span class="o">-</span><span class="n">m</span> <span class="n">http</span><span class="o">.</span><span class="n">server</span> <span class="o">--</span><span class="n">directory</span> <span class="n">static</span><span class="o">/</span> <span class="mi">80</span>
+</pre></div>
+</div>
+<p>This example is of course, very trivial, and using Docker for it is using a sledgehammer to
+crack a nut. So, just for the purpose of this example, let’s pretend that we have a lot of code
+in the project that generates these static files. We would like to deliver only these static files,
+and not the code that generates them. Let’s also assume that the recipients of our image
+know how to use Docker but don’t know how to use Python.</p>
+<p>So, what we want to achieve is the following:</p>
+<ul class="simple">
+<li><p>Hide some complexity from the user—especially the fact that we use Python and the HTTP server that’s built-in into Python</p></li>
+<li><p>Package Python3.7 executable with all its dependencies and all static files primarily available in our project directory</p></li>
+<li><p>Provide some defaults to run the server on port 80</p></li>
+</ul>
+<p>With all these requirements, our Dockerfile could take the following form:</p>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="c"># Let&#39;s define base image.</span>
+<span class="c"># &quot;python&quot; is official Python image.</span>
+<span class="c"># The &quot;slim&quot; versions are sensible starting</span>
+<span class="c"># points for other lightweight Python-based images</span>
+<span class="k">FROM</span> <span class="s">python:3.7-slim</span>
+
+<span class="c"># In order to keep image clean let&#39;s switch</span>
+<span class="c"># to selected working directory. &quot;/app/&quot; is</span>
+<span class="c"># commonly used for that purpose.</span>
+<span class="k">WORKDIR</span><span class="s"> /app/</span>
+
+<span class="c"># These are our static files copied from</span>
+<span class="c"># project source tree to the current working</span>
+<span class="c"># directory.</span>
+<span class="k">COPY</span> static/ static/
+
+<span class="c"># We would run &quot;python -m http.server&quot; locally</span>
+<span class="c"># so lets make it an entry point.</span>
+<span class="k">ENTRYPOINT</span> <span class="p">[</span><span class="s2">&quot;python3.7&quot;</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;http.server&quot;</span><span class="p">]</span>
+
+<span class="c"># We want to serve files from static/ directory</span>
+<span class="c"># on port 80 by default so set this as default arguments</span>
+<span class="c"># of the built-in Python HTTP server</span>
+<span class="k">CMD</span> <span class="p">[</span><span class="s2">&quot;--directory&quot;</span><span class="p">,</span> <span class="s2">&quot;static/&quot;</span><span class="p">,</span> <span class="s2">&quot;80&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-containers">
+<h5>2.3.2.3. Running containers<a class="headerlink" href="#running-containers" title="Permalink to this headline">¶</a></h5>
+<p>Before your container can be started, you’ll first need to build an image defined in the
+<code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. You can build the image using the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker build -t &lt;name&gt; &lt;path&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">&lt;name&gt;</span></code> argument allows us to name the image with a readable identifier. It is
+totally optional, but without it you won’t be able to easily reference a newly created image.
+The <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> argument specifies the path to the directory where your Dockerfile is located.
+Let’s assume that we were already running the command from the root of the project we
+presented in the previous section, and we want to tag our image with the name
+webserver. The docker build command invocation will be following, and its output
+may be as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker build -t webserver .
+
+Sending build context to Docker daemon <span class="m">4</span>.608kB
+Step <span class="m">1</span>/5 : FROM python:3.7-slim
+<span class="m">3</span>.7-slim: Pulling from library/python
+802b00ed6f79: Pull <span class="nb">complete</span>
+cf9573ca9503: Pull <span class="nb">complete</span>
+b2182f7db2fb: Pull <span class="nb">complete</span>
+37c0dde21a8c: Pull <span class="nb">complete</span>
+a6c85c69b6b4: Pull <span class="nb">complete</span>
+Digest:
+sha256:b73537137f740733ef0af985d5d7e5ac5054aadebfa2b6691df5efa793f9fd6d
+Status: Downloaded newer image <span class="k">for</span> python:3.7-slim
+ ---&gt; a3aec6c4b7c4
+Step <span class="m">2</span>/5 : WORKDIR /app/
+ ---&gt; Running in 648a5bb2d9ab
+Removing intermediate container 648a5bb2d9ab
+ ---&gt; a2489d084377
+Step <span class="m">3</span>/5 : COPY static/ static/
+ ---&gt; 958a04fa5fa8
+Step <span class="m">4</span>/5 : ENTRYPOINT <span class="o">[</span><span class="s2">&quot;python3.7&quot;</span>, <span class="s2">&quot;-m&quot;</span>, <span class="s2">&quot;http.server&quot;</span>, <span class="s2">&quot;--bind&quot;</span>, <span class="s2">&quot;80&quot;</span><span class="o">]</span>
+ ---&gt; Running in ec9f2a63c472
+Removing intermediate container ec9f2a63c472
+ ---&gt; 991f46cf010a
+Step <span class="m">5</span>/5 : CMD <span class="o">[</span><span class="s2">&quot;--directory&quot;</span>, <span class="s2">&quot;static/&quot;</span><span class="o">]</span>
+ ---&gt; Running in 60322d5a9e9e
+Removing intermediate container 60322d5a9e9e
+ ---&gt; 40c606a39f7a
+Successfully built 40c606a39f7a
+Successfully tagged webserver:latest
+</pre></div>
+</div>
+<p>Once created, you can inspect the list of available images using the docker images
+command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker images
+
+REPOSITORY      TAG         IMAGE ID        CREATED         SIZE
+webserver       latest      40c606a39f7a    <span class="m">2</span> minutes ago   143MB
+python          <span class="m">3</span>.7-slim    a3aec6c4b7c4    <span class="m">2</span> weeks ago     143MB
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The 143 MB of image for a simple Python image may seem like a lot, but it
+isn’t really anything to worry about. For the sake of brevity, we have used
+a base image that is simple to use. There are other images that have been
+crafted specially to minimize this size, but these are usually dedicated to
+more experienced Docker users. Also, thanks to the layered structure of
+Docker images, if you’re using many containers, the base layers can be
+cached and reused, so an eventual space overhead is rarely an issue.</p>
+</div>
+<p>Once your image is built and tagged, you can run a container using the docker run
+command. Our container is an example of a web service, so we will have to additionally tell
+Docker that we want to publish the container’s ports by binding them locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -it --rm -p <span class="m">80</span>:80 webserver
+</pre></div>
+</div>
+<p>Here is an explanation of the specific arguments of the preceding command:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-it</span></code>: These are actually two concatenated options: <code class="docutils literal notranslate"><span class="pre">-i</span></code> and <code class="docutils literal notranslate"><span class="pre">-t</span></code>. <code class="docutils literal notranslate"><span class="pre">-i</span></code> (like interactive) keeps STDIN open, even if the container process is detached, and <code class="docutils literal notranslate"><span class="pre">-t</span></code> (like tty) allocates pseudo-TTY for the container. In short, thanks to these two options, we will be able to see live logs from <code class="docutils literal notranslate"><span class="pre">http.server</span></code> and ensure that the keyboard interrupt will cause the process to exit. It will simply behave the same way as we would start Python, straight from the command line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rm</span></code>: Tells Docker to automatically remove container when it exits.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">80:80</span></code>: Tells Docker to publish the container’s port 80 by binding port 80 on the host’s interface.</p></li>
+</ul>
+</div>
+<div class="section" id="setting-up-complex-environments">
+<h5>2.3.2.4. Setting up complex environments<a class="headerlink" href="#setting-up-complex-environments" title="Permalink to this headline">¶</a></h5>
+<p>While the basic usage of Docker is pretty straightforward for basic setups, it can be bit
+overwhelming once you start to use it in multiple projects. It is really easy to forget about
+specific command-line options, or which ports should be published on which images. But
+things start to be really complicated when you have one service that needs to communicate
+with others. Single docker containers should only contain one running process.</p>
+<p>This means that you really shouldn’t put any additional process supervision tools, such as
+Supervisor and Circus, and should instead set up multiple containers that communicate
+with each other. Each service may use a completely different image, provide different
+configuration options, and expose ports that may or may not overlap.</p>
+<p>The best tool that you can use in both simple and complex scenarios is Compose. Compose
+is usually distributed with Docker, but in some Linux distributions (for example, Ubuntu),
+it may not be available by default, and must be installed as a separate package from the
+packages repository. Compose provides a powerful command-line utility named <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code>,
+and allows you to describe multi-container applications using the YAML syntax.</p>
+<p>Compose expects the specially named <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file to be in your project
+directory. An example of such a file for our previous project could be as follows:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+     <span class="nt">webserver</span><span class="p">:</span>
+         <span class="c1"># this tell Compose to build image from</span>
+         <span class="c1"># local (.) directory</span>
+         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+         <span class="c1"># this is equivalent to &quot;-p&quot; option of</span>
+         <span class="c1"># the &quot;docker build&quot; command</span>
+         <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+         <span class="c1"># this is equivalent to &quot;-t&quot; option of</span>
+         <span class="c1"># the &quot;docker build&quot; command</span>
+         <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>If you create such a docker-compose.yml file in your project, then your whole application
+environment can be started and stopped with two simple commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose up
+docker-compose down
+</pre></div>
+</div>
+</div>
+<div class="section" id="reducing-the-size-of-containers">
+<h5>2.3.2.5. Reducing the size of containers<a class="headerlink" href="#reducing-the-size-of-containers" title="Permalink to this headline">¶</a></h5>
+<p>A common concern of new Docker users is the size of their container images. It’s true that
+containers provide a lot of space overhead compared to plain Python packages, but it is
+usually nothing if we compare the size of images for virtual machines. However, it is still
+very common to host many services on a single virtual machine, but with a container-based
+approach, you should definitely have a separate image for every service. This means that
+with a lot of services, the overhead may become noticeable.</p>
+<p>If you want to limit the size of your images, you can use two complementary techniques:</p>
+<ol class="arabic simple">
+<li><p>Use a base image that is designed specifically for that purpose: Alpine Linux is an example of a compact Linux distribution that is specifically tailored to provide very small and lightweight Docker images. The base image is only 5 MB in size, and provides an elegant package manager that allows you to keep your images compact, too.</p></li>
+<li><p>Take into consideration the characteristics of the Docker overlay filesystem: Docker images consist of layers where each layer encapsulates the difference in the root filesystem between itself and the previous layer. Once the layer is committed the size of the image cannot be reduced. This means that if you need a system package as a build dependency, and it may be later discarded from the image, then instead of using multiple RUN instructions, it may be better to do everything in a single RUN instruction with chained shell commands to avoid excessive layer commits.</p></li>
+</ol>
+<p>These two techniques can be illustrated by the following Dockerfile:</p>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="c"># Here we use bare alpine to illustrate</span>
+<span class="c"># package management as it lacks Python</span>
+<span class="c"># by default. For Python projects in general</span>
+<span class="c"># the &#39;python:3.7-alpine&#39; is probably better</span>
+<span class="c"># choice.</span>
+<span class="k">FROM</span> <span class="s">alpine:3.7</span>
+
+<span class="c"># Add python3 package as alpine image lacks it by default</span>
+<span class="k">RUN</span> apk add python3
+
+<span class="c"># Run multiple commands in single RUN instruction</span>
+<span class="c"># so space can be reclaimed after the &#39;apk del py3-pip&#39;</span>
+<span class="c"># command because image layer is committed only after</span>
+<span class="c"># whole whole instruction.</span>
+<span class="k">RUN</span> apk add py3-pip <span class="o">&amp;&amp;</span> <span class="se">\</span>
+ pip3 install django <span class="o">&amp;&amp;</span> <span class="se">\</span>
+ apk del py3-pip
+</pre></div>
+</div>
+</div>
+<div class="section" id="addressing-services-inside-of-a-compose-environment">
+<h5>2.3.2.6. Addressing services inside of a Compose environment<a class="headerlink" href="#addressing-services-inside-of-a-compose-environment" title="Permalink to this headline">¶</a></h5>
+<p>Complex applications often consist of multiple services that communicate with each other.
+Compose allows us to define such applications with ease. The following is an example
+<code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file that defines the application as a composition of two services:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+    <span class="nt">webserver</span><span class="p">:</span>
+        <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+        <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+        <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="nt">database</span><span class="p">:</span>
+        <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres</span>
+        <span class="nt">restart</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+</pre></div>
+</div>
+<p>The preceding configuration defines two services:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">webserver</span></code>: This is a main application service container with images built from the local Dockerfile</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">database</span></code>: This is a PostgreSQL database container from an official postgres Docker image</p></li>
+</ul>
+<p>We assume that the <code class="docutils literal notranslate"><span class="pre">webserver</span></code> service wants to communicate with the <code class="docutils literal notranslate"><span class="pre">database</span></code> service
+over the network. In order to set up such communications, we need to know the service IP
+address or hostname so that it can be used as an application configuration. Thankfully,
+Compose is a tool that was designed exactly for such scenarios, so it will make it a lot more
+easier for us.</p>
+<p>Whenever you start your environment with the <code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">up</span></code> command, Compose
+will create a dedicated Docker network by default, and will register all services in that
+network using their names as their hostnames. This means that the <code class="docutils literal notranslate"><span class="pre">webserver</span></code> service can
+use the <code class="docutils literal notranslate"><span class="pre">database:5432</span></code> address to communicate with its database (5432 is the default
+PostgreSQL port), and any other service in that Compose applicant will be able to access
+the HTTP endpoint of the webserver service under the <code class="docutils literal notranslate"><span class="pre">http://webserver:80</span></code> address.</p>
+<p>Even though the service hostnames in Compose are easily predictable, it isn’t good practice
+to hardcode any addresses in your application or its configuration. The best approach
+would be to provide them as environment variables that can be read by an application on
+startup. The following example shows how arbitrary environment variables can be defined
+for each service in a <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+     <span class="nt">webserver</span><span class="p">:</span>
+         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+         <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+         <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+         <span class="nt">environment</span><span class="p">:</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DATABASE_HOSTNAME=database</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DATABASE_PORT=5432</span>
+
+     <span class="nt">database</span><span class="p">:</span>
+         <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres</span>
+         <span class="nt">restart</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="communicating-between-multiple-compose-environments">
+<h5>2.3.2.7. Communicating between multiple Compose environments<a class="headerlink" href="#communicating-between-multiple-compose-environments" title="Permalink to this headline">¶</a></h5>
+<p>If you build a system composed of multiple independent services and/or applications, you
+will very likely want to keep their code in multiple independent code repositories
+(projects). The <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> files for every Compose application are usually kept
+in the same code repository as the application code. The default network that was created
+by Compose for a single application is isolated from the networks of other applications. So,
+what can you do if you suddenly want your multiple independent applications to
+communicate with each other?</p>
+<p>Fortunately, this is another thing that is extremely easy with Compose. The syntax of
+the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file allows you to define a named external Docker network as
+the default network for all services defined in that configuration. The following is an
+example configuration that defines an external network named <code class="docutils literal notranslate"><span class="pre">my-interservicenetwork</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+     <span class="nt">default</span><span class="p">:</span>
+        <span class="nt">external</span><span class="p">:</span>
+            <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-interservice-network</span>
+
+<span class="nt">services</span><span class="p">:</span>
+     <span class="nt">webserver</span><span class="p">:</span>
+         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+         <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+         <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+         <span class="nt">environment</span><span class="p">:</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DATABASE_HOSTNAME=database</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DATABASE_PORT=5432</span>
+
+     <span class="nt">database</span><span class="p">:</span>
+         <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres</span>
+         <span class="nt">restart</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+</pre></div>
+</div>
+<p>Such external networks are not managed by Compose, so you’ll have to create it manually
+with the docker network create command, as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker network create my-interservice-network
+</pre></div>
+</div>
+<p>Once you have done this, you can use this external network in other <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>
+files for all applications that should have their services registered in the same network. The
+following is an example configuration for other applications that will be able to
+communicate with both <code class="docutils literal notranslate"><span class="pre">database</span></code> and <code class="docutils literal notranslate"><span class="pre">webserver</span></code> services over <code class="docutils literal notranslate"><span class="pre">my-interservicenetwork</span></code>, even though
+they are not defined in the same <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&#39;3&#39;</span>
+<span class="nt">networks</span><span class="p">:</span>
+     <span class="nt">default</span><span class="p">:</span>
+        <span class="nt">external</span><span class="p">:</span>
+            <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-interservice-network</span>
+<span class="nt">services</span><span class="p">:</span>
+     <span class="nt">other-service</span><span class="p">:</span>
+         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+         <span class="nt">ports</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&quot;80:80&quot;</span>
+         <span class="nt">tty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+         <span class="nt">environment</span><span class="p">:</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DATABASE_HOSTNAME=database</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DATABASE_PORT=5432</span>
+             <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">WEBSERVER_ADDRESS=http://webserver:80</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="popular-productivity-tools">
+<h2>3. Popular productivity tools<a class="headerlink" href="#popular-productivity-tools" title="Permalink to this headline">¶</a></h2>
+<p>Productivity tool is bit of a vague term. On one hand, almost every open source code
+package that has been released and is available online is a kind of productivity booster: it
+provides ready-to-use solutions to some problem, so that no one needs to spend time on it
+(ideally speaking). On the other hand, you could say that the whole of Python is about
+productivity, and both are undoubtedly true. Almost everything in this language and
+community surrounding it seems to be designed in order to make software development as
+productive as possible.</p>
+<p>This creates a positive feedback loop. Since writing code is fun and easy, a lot of
+programmers use their free time to create tools that make it even easier and fun. And this
+fact will be used here as a basis for a very subjective and non-scientific definition of a
+productivity tool: a piece of software that makes development easier and more fun.</p>
+<p>By nature, productivity tools focus mainly on certain elements of the development process,
+such as testing, debugging, and managing packages, and are not core parts of products that
+they help to build. In some cases, they may not even be referred to anywhere in the project’s
+codebase, despite being used on a daily basis.</p>
+<p>The most important productivity tools, <code class="docutils literal notranslate"><span class="pre">pip</span></code> and <code class="docutils literal notranslate"><span class="pre">venv</span></code>, were already discussed earlier.
+Some of them have packages for specific problems, such as profiling and testing,
+which have their own chapters in this book. This section is dedicated to other tools that are
+really worth mentioning, but have no specific chapter in this book where they could be
+introduced.</p>
+<div class="section" id="custom-python-shells">
+<h3>3.1. Custom Python shells<a class="headerlink" href="#custom-python-shells" title="Permalink to this headline">¶</a></h3>
+<p>Python programmers spend a lot of time in interactive interpreter sessions. It is very good
+for testing small code snippets, accessing documentation, or even debugging code at
+runtime. The default interactive Python session is very simple, and does not provide many
+features, such as tab completion or code introspection helpers. Fortunately, the default
+Python shell can be easily extended and customized.</p>
+<p>If you use an interactive shell very often, you can easily modify the behavior of it prompt.
+Python at startup reads the <code class="docutils literal notranslate"><span class="pre">PYTHONSTARTUP</span></code> environment variable, looking for the path of
+the custom initializations script. Some operating system distributions where Python is a
+common system component (for example, Linux, macOS) may be already preconfigured to
+provide a default startup script. It is commonly found in the users, home directory under
+the <code class="docutils literal notranslate"><span class="pre">.pythonstartup</span></code> name. These scripts often use the <code class="docutils literal notranslate"><span class="pre">readline</span></code> module (based on the
+GNU readline library) together with <code class="docutils literal notranslate"><span class="pre">rlcompleter</span></code> in order to provide interactive tab
+completion and command history.</p>
+<p>If you don’t have a default python startup script, you can easily build your own. A basic
+script for command history and tab completion can be as simple as the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">atexit</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">readline</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Completion unavailable: readline module not available&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+     <span class="kn">import</span> <span class="nn">rlcompleter</span>
+     <span class="c1"># tab completion</span>
+     <span class="n">readline</span><span class="o">.</span><span class="n">parse_and_bind</span><span class="p">(</span><span class="s1">&#39;tab: complete&#39;</span><span class="p">)</span>
+     <span class="c1"># Path to history file in user&#39;s home directory.</span>
+     <span class="c1"># Can use your own path.</span>
+     <span class="n">history_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">],</span> <span class="s1">&#39;.python_shell_history&#39;</span><span class="p">)</span>
+     <span class="k">try</span><span class="p">:</span>
+        <span class="n">readline</span><span class="o">.</span><span class="n">read_history_file</span><span class="p">(</span><span class="n">history_file</span><span class="p">)</span>
+     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+     <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">readline</span><span class="o">.</span><span class="n">write_history_file</span><span class="p">,</span> <span class="n">history_file</span><span class="p">)</span>
+     <span class="k">del</span> <span class="n">os</span><span class="p">,</span> <span class="n">history_file</span><span class="p">,</span> <span class="n">readline</span><span class="p">,</span> <span class="n">rlcompleter</span>
+</pre></div>
+</div>
+<p>Create this file in your home directory and call it <code class="docutils literal notranslate"><span class="pre">.pythonstartup</span></code>. Then, add
+a <code class="docutils literal notranslate"><span class="pre">PYTHONSTARTUP</span></code> variable in your environment using the path of your file.</p>
+<div class="section" id="setting-up-the-pythonstartup-environment-variable">
+<h4>3.1.1. Setting up the PYTHONSTARTUP environment variable<a class="headerlink" href="#setting-up-the-pythonstartup-environment-variable" title="Permalink to this headline">¶</a></h4>
+<p>If you are running Linux or macOS, the simplest way is to create the startup script in your
+home folder. Then, link it with a <code class="docutils literal notranslate"><span class="pre">PYTHONSTARTUP</span></code> environment variable that’s been set in
+the system shell startup script. For example, Bash and Korn shell use the <code class="docutils literal notranslate"><span class="pre">.profile</span></code> file,
+where you can insert a line, as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONSTARTUP</span><span class="o">=</span>~/.pythonstartup
+</pre></div>
+</div>
+<p>If you are running Windows, it is easy to set a new environment variable as an
+administrator in the system preferences, and save the script in a common place instead of
+using a specific user location.</p>
+<p>Writing on the PYTHONSTARTUP script may be a good exercise, but creating a good custom
+shell all alone is a challenge that only a few can find time for. Fortunately, there are a few
+custom Python shell implementations that immensely improve the experience of interactive
+sessions in Python.</p>
+</div>
+<div class="section" id="ipython">
+<h4>3.1.2. IPython<a class="headerlink" href="#ipython" title="Permalink to this headline">¶</a></h4>
+<p>IPython
+(<a class="reference external" href="https://ipython.readthedocs.io/en/stable/overview.html">https://ipython.readthedocs.io/en/stable/overview.html</a>)
+provides an extended Python command shell. Among the features that it provides, the most interesting
+ones are as follows:</p>
+<ul class="simple">
+<li><p>Dynamic object introspection</p></li>
+<li><p>System shell access from the prompt</p></li>
+<li><p>Profiling direct support</p></li>
+<li><p>Debugging facilities</p></li>
+</ul>
+<p>Now, IPython is a part of the larger project called Jupyter, which provides interactive
+notebooks with live code that can be written in many different languages.</p>
+</div>
+<div class="section" id="bpython">
+<h4>3.1.3. bpython<a class="headerlink" href="#bpython" title="Permalink to this headline">¶</a></h4>
+<p>bpython (<a class="reference external" href="https://bpython-interpreter.org/">https://bpython-interpreter.org/</a>) advertises itself as a fancy interface
+to the Python interpreter. Here are some of the accented features on the projects page:</p>
+<ul class="simple">
+<li><p>In-line syntax highlighting</p></li>
+<li><p>Readline-like autocomplete with suggestions displayed as you type</p></li>
+<li><p>Expected parameter list for any Python function</p></li>
+<li><p>Auto-indentation</p></li>
+<li><p>Python 3 support</p></li>
+</ul>
+</div>
+<div class="section" id="ptpython">
+<h4>3.1.4. ptpython<a class="headerlink" href="#ptpython" title="Permalink to this headline">¶</a></h4>
+<p>ptpython (<a class="reference external" href="https://github.com/jonathanslenders/ptpython/">https://github.com/jonathanslenders/ptpython/</a>) is another
+approach to the topic of advanced Python shells. What is interesting about this project is that core prompt
+utilities implementation is available as a separate package, called <code class="docutils literal notranslate"><span class="pre">prompt_toolkit</span></code> (from
+the same author). This allows us to easily create various aesthetically pleasing interactive
+command-line interfaces.</p>
+<p>It is often compared to bpython in functionalities, but the main difference is that it enables
+compatibility mode with IPython and its syntax enables additional features, such
+as %pdb, %cpaste, or %profile.</p>
+</div>
+</div>
+<div class="section" id="incorporating-shells-in-your-own-scripts-and-programs">
+<h3>3.2. Incorporating shells in your own scripts and programs<a class="headerlink" href="#incorporating-shells-in-your-own-scripts-and-programs" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes, there is a need to incorporate a read-eval-print loop (REPL), similar to Python’s
+interactive session, inside of your own software. This allows for easier experimentation
+with your code and inspection of its internal state. The simplest module that allows for
+emulating Python’s interactive interpreter already comes with the standard library and is
+named code.</p>
+<p>The script that starts interactive sessions consists of one import and single function call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">code</span>
+<span class="n">code</span><span class="o">.</span><span class="n">interact</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can easily do some minor tuning, such as modify a prompt value or add banner and
+exit messages, but anything more fancy will require a lot more work. If you want to have
+more features, such as code highlighting, completion, or direct access to the system shell, it
+is always better to use something that was already built by someone. Fortunately, all of the
+interactive shells that were mentioned in the previous section can be embedded in your
+own program as easily as the code module.</p>
+<p>The following are examples of how to invoke all of the previously mentioned shells inside
+of your code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">IPython</span>
+<span class="n">IPython</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">bpython</span>
+<span class="n">bpython</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">ptpython.repl</span> <span class="kn">import</span> <span class="n">embed</span>
+<span class="n">embed</span><span class="p">(</span><span class="nb">globals</span><span class="p">(),</span> <span class="nb">locals</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="interactive-debuggers">
+<h3>3.3. Interactive debuggers<a class="headerlink" href="#interactive-debuggers" title="Permalink to this headline">¶</a></h3>
+<p>Code debugging is an integral element of the software development process. Many
+programmers can spend most of their life using only extensive logging
+and print statements as their primary debugging tools, but most professional developers
+prefer to rely on some kind of debugger.</p>
+<p>Python already ships with a built-in interactive debugger called <code class="docutils literal notranslate"><span class="pre">pdb</span></code> (refer
+to <a class="reference external" href="https://docs.python.org/3/library/pdb.html">https://docs.python.org/3/library/pdb.html</a>). It can be invoked from
+the command line on the existing script, so Python will enter post-mortem debugging if the program exits
+abnormally:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pdb</span> <span class="n">script</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Post-mortem debugging, while useful, does not cover every scenario. It is useful only when
+the application exits with some exception if the bug occurs. In many cases, faulty code just
+behaves abnormally, but does not exit unexpectedly. In such cases, custom breakpoints can
+be set on a specific line of code using this single-line idiom:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pdb</span>
+<span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will cause the Python interpreter to start the debugger session on this line during
+runtime.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pdb</span></code> is very useful for tracing issues, and at first glance it may look very familiar to the wellknown
+GNU Debugger (GDB). Because Python is a dynamic language, the <code class="docutils literal notranslate"><span class="pre">pdb</span></code> session is
+very similar to an ordinary interpreter session. This means that the developer is not limited
+to tracing code execution, but can call any code and even perform module imports.</p>
+<p>Sadly, because of its roots (<code class="docutils literal notranslate"><span class="pre">bdb</span></code>), your first experience with <code class="docutils literal notranslate"><span class="pre">pdb</span></code> can be a bit overwhelming
+due to the existence of cryptic short-letter debugger commands such as <code class="docutils literal notranslate"><span class="pre">h</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">s</span></code>, <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>, and <code class="docutils literal notranslate"><span class="pre">r</span></code>.
+When in doubt, the <code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">pdb</span></code> command which can be typed during the debugger session,
+will provide extensive usage and additional information.</p>
+<p>The debugger session in <code class="docutils literal notranslate"><span class="pre">pdb</span></code> is also very simple and does not provide additional features
+such as tab completion or code highlighting. Fortunately, there are a few packages available
+on PyPI that provide such features from alternative Python shells, as mentioned in the
+previous section. The most notable examples are as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ipdb</span></code>: This is a separate package based on ipython</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ptpdb</span></code>: This is a separate package based on ptpython</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bpdb</span></code>: This is bundled with bpython</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../distribution/index.html" class="btn btn-neutral float-right" title="Code distribution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../how_python_works/index.html" class="btn btn-neutral float-left" title="How does Python work?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
