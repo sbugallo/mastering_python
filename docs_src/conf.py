@@ -131,6 +131,7 @@ htmlhelp_basename = 'mastering_pythondoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
+latex_toplevel_sectioning = "part"
 
 latex_elements = {
     'papersize': 'a4paper',
