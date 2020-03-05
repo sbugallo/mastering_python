@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                04/03/2020
+                05/03/2020
               </div>
             
           
@@ -161,6 +161,407 @@
             
   <div class="section" id="standalone-executables">
 <h1>4. Standalone executables<a class="headerlink" href="#standalone-executables" title="Permalink to this headline">¶</a></h1>
+<p>Creating standalone executables is a commonly overlooked topic in materials that cover
+packaging of Python code. This is mainly because Python lacks proper tools in its standard
+library that could allow programmers to create simple executables that could be run by
+users without the need to install the Python interpreter.</p>
+<p>Compiled languages have a big advantage over Python in that they allow you to create an
+executable application for the given system architecture that could be run by users in a way
+that does not require from them any knowledge of the underlying technology. Python code,
+when distributed as a package, requires the Python interpreter in order to be run. This
+creates a big inconvenience for users who do not have enough technical proficiency.</p>
+<p>Developer-friendly operating systems, such as macOS or most Linux distributions, come
+with Python interpreter preinstalled. So, for their users, the Python-based application still
+could be distributed as a source package that relies on a specific <strong>interpreter directive</strong> in the
+main script file that is popularly called <strong>shebang</strong>. For most of Python applications, this takes
+the following form:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+</pre></div>
+</div>
+<p>Such directive when used as a first line of script will mark it to be interpreted in the default
+Python version for the given environment. This can, of course, take a more detailed form
+that requires a specific Python version such as <code class="docutils literal notranslate"><span class="pre">python3.4</span></code>, <code class="docutils literal notranslate"><span class="pre">python3</span></code>, <code class="docutils literal notranslate"><span class="pre">python2</span></code> and so on.
+Note that this will work in most popular POSIX systems, but isn’t portable at all. This
+solution relies on the existence of specific Python versions and also the availability of
+an <code class="docutils literal notranslate"><span class="pre">env</span></code> executable exactly at <code class="docutils literal notranslate"><span class="pre">/usr/bin/env</span></code>. Both of these assumptions may fail on some
+operating systems. Also, shebang will not work on Windows at all. Additionally,
+bootstrapping of the Python environment on Windows can be a challenge even for
+experienced developers, so you cannot expect that nontechnical users will be able to do that
+by themselves.</p>
+<p>The other thing to consider is the simple user experience in the desktop environment. Users
+usually expect that applications can be run from the desktop by simply clicking on them.
+Not every desktop environment will support that with Python applications distributed as a
+source.</p>
+<p>So it would be best if we are able to create a binary distribution that would work as any
+other compiled executable. Fortunately, it is possible to create an executable that has both
+the Python interpreter and our project embedded. This allows users to open our application
+without caring about Python or any other dependency.</p>
+<div class="section" id="when-standalone-executables-useful">
+<h2>4.1. When standalone executables useful?<a class="headerlink" href="#when-standalone-executables-useful" title="Permalink to this headline">¶</a></h2>
+<p>Standalone executables are useful in situations where simplicity of the user experience is
+more important than the user’s ability to interfere with the applications code. Note that the
+fact that you are distributing applications as executables only makes code reading or
+modification harder, not impossible. It is not a way to secure application code and should
+only be used as a way to make interacting with the application simpler.</p>
+<p>Standalone executables should be a preferred way of distributing applications for
+nontechnical end users and also seems to be the only reasonable way of distributing any
+Python application for Windows.</p>
+<p>Standalone executables are usually a good choice for the following:</p>
+<ul class="simple">
+<li><p>Applications that depend on specific Python versions that may not be easily available on the target operating systems</p></li>
+<li><p>Applications that rely on modified precompiled CPython sources</p></li>
+<li><p>Applications with graphical interfaces</p></li>
+<li><p>Projects that have many binary extensions written in different languages</p></li>
+<li><p>Games</p></li>
+</ul>
+</div>
+<div class="section" id="popular-tools">
+<h2>4.2. Popular tools<a class="headerlink" href="#popular-tools" title="Permalink to this headline">¶</a></h2>
+<p>Python does not have any built-in support for building standalone executables.
+Fortunately, there are some community projects solving that problem with varied amounts
+of success. The following four are the most notable:</p>
+<ul class="simple">
+<li><p>PyInstaller</p></li>
+<li><p>cx_Freeze</p></li>
+<li><p>py2exe</p></li>
+<li><p>py2app</p></li>
+</ul>
+<p>Each one of them is slightly different in use and also each one of them has slightly different
+limitations. Before choosing your tool, you need to decide which platform you want to
+target, because every packaging tool can support only a specific set of operating systems.</p>
+<p>It is best if you make such a decision at the very beginning of the project’s life. None of
+these tools, of course, requires deep interaction in your code, but if you start building
+standalone packages early, you can automate the whole process and save future integration
+time and costs. If you leave this for later, you may find yourself in a situation where the
+project is built in such a sophisticated way that none of the available tools will work.
+Providing a standalone executable for such a project will be problematic and will take a lot
+of your time.</p>
+<div class="section" id="pyinstaller">
+<h3>4.2.1. PyInstaller<a class="headerlink" href="#pyinstaller" title="Permalink to this headline">¶</a></h3>
+<p>PyInstaller (<a class="reference external" href="http://www.pyinstaller.org">http://www.pyinstaller.org</a>)
+is by far the most advanced program to freeze
+Python packages into standalone executables. It provides the most extensive multiplatform
+compatibility among every available solution at the moment, so it is the most highly
+recommended one. PyInstaller supports the following platforms:</p>
+<ul class="simple">
+<li><p>Windows (32-bit and 64-bit)</p></li>
+<li><p>Linux (32-bit and 64-bit)</p></li>
+<li><p>macOS (32-bit and 64-bit)</p></li>
+<li><p>FreeBSD, Solaris, and AIX</p></li>
+</ul>
+<p>Supported versions of Python are Python 2.7 and Python 3.3, 3.4, and 3.5. It is available on
+PyPI, so it can be installed in your working environment using pip. If you have problems
+installing it this way, you can always download the installer from the project’s page.</p>
+<p>Unfortunately, cross-platform building (cross-compilation) is not supported, so if you want
+to build your standalone executable for a specific platform, then you need to perform
+building on that platform. This is not a big problem today with the advent of many
+virtualization tools. If you don’t have a specific system installed on your computer, you can
+always use Vagrant, which will provide you with the desired operating system as a virtual
+machine.</p>
+<p>Usage for simple applications is pretty straightforward. Let’s assume our application is
+contained in the script named <code class="docutils literal notranslate"><span class="pre">myscript.py</span></code> . This is a simple hello world application. We
+want to create a standalone executable for Windows users and we have our sources located
+under <code class="docutils literal notranslate"><span class="pre">D://dev/app</span></code> in the filesystem. Our application can be bundled with the following
+short command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pyinstaller myscript.py
+<span class="m">2121</span> INFO: PyInstaller: <span class="m">3</span>.1
+<span class="m">2121</span> INFO: Python: <span class="m">2</span>.7.10
+<span class="m">2121</span> INFO: Platform: Windows-7-6.1.7601-SP1
+<span class="m">2121</span> INFO: wrote D:<span class="se">\d</span>ev<span class="se">\a</span>pp<span class="se">\m</span>yscript.spec
+<span class="m">2137</span> INFO: UPX is not available.
+<span class="m">2138</span> INFO: Extending PYTHONPATH with paths <span class="o">[</span><span class="s1">&#39;D:\\dev\\app&#39;</span>, <span class="s1">&#39;D:\\dev\\app&#39;</span><span class="o">]</span>
+<span class="m">2138</span> INFO: checking Analysis
+<span class="m">2138</span> INFO: Building Analysis because out00-Analysis.toc is non existent
+<span class="m">2138</span> INFO: Initializing module dependency graph...
+<span class="m">2154</span> INFO: Initializing module graph hooks...
+<span class="m">2325</span> INFO: running Analysis out00-Analysis.toc
+<span class="o">(</span>...<span class="o">)</span>
+<span class="m">25884</span> INFO: Updating resource <span class="nb">type</span> <span class="m">24</span> name <span class="m">2</span> language <span class="m">1033</span>
+</pre></div>
+</div>
+<p>PyInstaller’s standard output is quite long, even for simple applications, so it was truncated
+in the preceding example for the sake of brevity. If run on Windows, the resulting structure
+of directories and files will be as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree /0066
+│   ├─── myscript.py
+│   └─── myscript.spec
+│
+├───build
+│    └───myscript
+│           ├─── myscript.exe
+│           ├─── myscript.exe.manifest
+│           ├─── out00-Analysis.toc
+│           ├─── out00-COLLECT.toc
+│           ├─── out00-EXE.toc
+│           ├─── out00-PKG.pkg
+│           ├─── out00-PKG.toc
+│           ├─── out00-PYZ.pyz
+│           ├─── out00-PYZ.toc
+│           └─── warnmyscript.txt
+│
+└───dist
+    └───myscript
+            ├─── bz2.pyd
+            ├─── Microsoft.VC90.CRT.manifest
+            ├─── msvcm90.dll
+            ├─── msvcp90.dll
+            ├─── msvcr90.dll
+            ├─── myscript.exe
+            ├─── myscript.exe.manifest
+            ├─── python27.dll
+            ├─── <span class="k">select</span>.pyd
+            ├─── unicodedata.pyd
+            └───_hashlib.pyd
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">dist/myscript</span></code> directory contains the built application that can now be distributed to
+the users. Note that whole directory must be distributed. It contains all the additional files
+that are required to run our application (DLLs, compiled extension libraries, and so on). A
+more compact distribution can be obtained with the <code class="docutils literal notranslate"><span class="pre">--onefile</span></code> switch of
+the <code class="docutils literal notranslate"><span class="pre">pyinstaller</span></code> command as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pyinstaller --onefile myscript.py
+<span class="o">(</span>...<span class="o">)</span>
+
+$ tree /f
+├───build
+│    └───myscript
+│           ├─── myscript.exe.manifest
+│           ├─── out00-Analysis.toc
+│           ├─── out00-EXE.toc
+│           ├─── out00-PKG.pkg
+│           ├─── out00-PKG.toc
+│           ├─── out00-PYZ.pyz
+│           ├─── out00-PYZ.toc
+│           └─── warnmyscript.txt
+│
+└───dist
+    └───myscript
+            └─── myscript.exe
+</pre></div>
+</div>
+<p>When built with the <code class="docutils literal notranslate"><span class="pre">--onefile</span></code> option, the only file you need to distribute to other users is
+the single executable found in the <code class="docutils literal notranslate"><span class="pre">dist</span></code> directory (here, <code class="docutils literal notranslate"><span class="pre">myscript.exe</span></code>). For small
+applications, this is probably the preferred option.</p>
+<p>One of the side effects of running the <code class="docutils literal notranslate"><span class="pre">pyinstaller</span></code> command is the creation of
+the <code class="docutils literal notranslate"><span class="pre">*.spec</span></code> file. This is an auto generated Python module containing specification on how
+to create executables from your sources. This is the example specification file created
+automatically for <code class="docutils literal notranslate"><span class="pre">myscript.py</span></code> code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="n">block_cipher</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">([</span><span class="s1">&#39;myscript.py&#39;</span><span class="p">],</span>
+             <span class="n">pathex</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">dev</span><span class="se">\\</span><span class="s1">app&#39;</span><span class="p">],</span>
+             <span class="n">binaries</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">datas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">hiddenimports</span><span class="o">=</span><span class="p">[],</span>
+             <span class="n">hookspath</span><span class="o">=</span><span class="p">[],</span>
+             <span class="n">runtime_hooks</span><span class="o">=</span><span class="p">[],</span>
+             <span class="n">excludes</span><span class="o">=</span><span class="p">[],</span>
+             <span class="n">win_no_prefer_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">win_private_assemblies</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">cipher</span><span class="o">=</span><span class="n">block_cipher</span><span class="p">)</span>
+<span class="n">pyz</span> <span class="o">=</span> <span class="n">PYZ</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">pure</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">zipped_data</span><span class="p">,</span> <span class="n">cipher</span><span class="o">=</span><span class="n">block_cipher</span><span class="p">)</span>
+<span class="n">exe</span> <span class="o">=</span> <span class="n">EXE</span><span class="p">(</span><span class="n">pyz</span><span class="p">,</span>
+          <span class="n">a</span><span class="o">.</span><span class="n">scripts</span><span class="p">,</span>
+          <span class="n">a</span><span class="o">.</span><span class="n">binaries</span><span class="p">,</span>
+          <span class="n">a</span><span class="o">.</span><span class="n">zipfiles</span><span class="p">,</span>
+          <span class="n">a</span><span class="o">.</span><span class="n">datas</span><span class="p">,</span>
+          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;myscript&#39;</span><span class="p">,</span>
+          <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+          <span class="n">strip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+          <span class="n">upx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+          <span class="n">console</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This <code class="docutils literal notranslate"><span class="pre">.spec</span></code> file contains all <code class="docutils literal notranslate"><span class="pre">pyinstaller</span></code> arguments specified earlier. This is very useful if
+you have performed a lot of customizations to your build. Once created, you can use it as
+an argument to the <code class="docutils literal notranslate"><span class="pre">pyinstaller</span></code> command instead of your Python script as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pyinstaller.exe myscript.spec
+</pre></div>
+</div>
+<p>Note that this is a real Python module, so you can extend it and perform more complex
+customizations to the building procedure. Customizing the <code class="docutils literal notranslate"><span class="pre">.spec</span></code> file is especially useful
+when you are targeting many different platforms. Also, not all of the <code class="docutils literal notranslate"><span class="pre">pyinstaller</span></code> options
+are available through the command-line interface and can be used only when
+modifying <code class="docutils literal notranslate"><span class="pre">.spec</span></code> file.</p>
+<p>PyInstaller is an extensive tool, which by its usage is very simple for the great majority of
+programs. Anyway, thorough reading of its documentation is recommended if you are
+interested in using it as a tool to distribute your applications.</p>
+</div>
+<div class="section" id="cx-freeze">
+<h3>4.2.2. cx_Freeze<a class="headerlink" href="#cx-freeze" title="Permalink to this headline">¶</a></h3>
+<p>cx_Freeze ( <a class="reference external" href="http://cx-freeze.sourceforge.net/">http://cx-freeze.sourceforge.net/</a>)
+is another tool for creating standalone
+executables. It is a simpler solution than PyInstaller, but also supports the following three
+major platforms:</p>
+<ul class="simple">
+<li><p>Windows</p></li>
+<li><p>Linux</p></li>
+<li><p>macOS</p></li>
+</ul>
+<p>Like PyInstaller, it does not allow you to perform cross-platform builds, so you need to
+create your executables on the same operating system you are distributing to. The major
+disadvantage of cx_Freeze is that it does not allow you to create real single-file executables.
+Applications built with it need to be distributed with related DLL files and libraries.
+Assuming that we have the same application as featured in the PyInstaller section, the
+example usage is very simple as well:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cxfreeze myscript.py
+copying C:<span class="se">\P</span>ython27<span class="se">\l</span>ib<span class="se">\s</span>ite-packages<span class="se">\c</span>x_Freeze<span class="se">\b</span>ases<span class="se">\C</span>onsole.exe -&gt;
+D:<span class="se">\d</span>ev<span class="se">\a</span>pp<span class="se">\d</span>ist<span class="se">\m</span>yscript.exe
+copying C:<span class="se">\W</span>indows<span class="se">\s</span>ystem32<span class="se">\p</span>ython27.dll -&gt;
+D:<span class="se">\d</span>ev<span class="se">\a</span>pp<span class="se">\d</span>ist<span class="se">\p</span>ython27.dll
+writing zip file D:<span class="se">\d</span>ev<span class="se">\a</span>pp<span class="se">\d</span>ist<span class="se">\m</span>yscript.exe
+<span class="o">(</span>...<span class="o">)</span>
+copying C:<span class="se">\P</span>ython27<span class="se">\D</span>LLs<span class="se">\b</span>z2.pyd -&gt; D:<span class="se">\d</span>ev<span class="se">\a</span>pp<span class="se">\d</span>ist<span class="se">\b</span>z2.pyd
+copying C:<span class="se">\P</span>ython27<span class="se">\D</span>LLs<span class="se">\u</span>nicodedata.pyd -&gt; D:<span class="se">\d</span>ev<span class="se">\a</span>pp<span class="se">\d</span>ist<span class="se">\u</span>nicodedata.pyd
+</pre></div>
+</div>
+<p>Resulting structure of files is as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree /f
+│   └─── myscript.py
+│
+└───dist
+    ├─── bz2.pyd
+    ├─── myscript.exe
+    ├─── python27.dll
+    └─── unicodedata.pyd
+</pre></div>
+</div>
+<p>Instead of providing the own format for build specification (like PyInstaller does),
+cx_Freeze extends the distutils package. This means you can configure how your
+standalone executable is built with the familiar setup.py script. This makes cx_Freeze very
+convenient if you already distribute your package
+using setuptools or distutils because additional integration requires only small
+changes to your setup.py script. Here is an example of such a setup.py script
+using cx_Freeze.setup() for creating standalone executables on Windows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">cx_Freeze</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">Executable</span>
+
+<span class="c1"># Dependencies are automatically detected, but it might need fine tuning.</span>
+<span class="n">build_exe_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">],</span> <span class="s2">&quot;excludes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;tkinter&quot;</span><span class="p">]}</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;myscript&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;My Hello World application!&quot;</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;build_exe&quot;</span><span class="p">:</span> <span class="n">build_exe_options</span>
+    <span class="p">},</span>
+    <span class="n">executables</span><span class="o">=</span><span class="p">[</span><span class="n">Executable</span><span class="p">(</span><span class="s2">&quot;myscript.py&quot;</span><span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>With such a file, the new executable can be created using the new <code class="docutils literal notranslate"><span class="pre">build_exe</span></code> command
+added to the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py build_exe
+</pre></div>
+</div>
+<p>The usage of <code class="docutils literal notranslate"><span class="pre">cx_Freeze</span></code> seems a bit easier than PyInstaller’s, and <code class="docutils literal notranslate"><span class="pre">distutils</span></code> integration is
+a very useful feature. Unfortunately this project may cause some trouble for inexperienced
+developers due to the following reasons:</p>
+<ul class="simple">
+<li><p>Installation using pip may be problematic under Windows.</p></li>
+<li><p>The official documentation is very brief and lacking in some places.</p></li>
+</ul>
+</div>
+<div class="section" id="py2exe-and-py2app">
+<h3>4.2.3. py2exe and py2app<a class="headerlink" href="#py2exe-and-py2app" title="Permalink to this headline">¶</a></h3>
+<p>py2exe (<a class="reference external" href="http://www.py2exe.org">http://www.py2exe.org</a>) and py2app
+(<a class="reference external" href="https:://py2app.readthedocs.io/en/latest/">https:://py2app.readthedocs.io/en/latest/</a>)
+are two complementary programs that integrate with Python packaging either
+via <code class="docutils literal notranslate"><span class="pre">distutils</span></code> or <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> in order to create standalone executables. Here they are
+mentioned together because they are very similar in both usage and their limitations. The
+major drawback of py2exe and py2app is that they target only a single platform:</p>
+<ul class="simple">
+<li><p>py2exe allows building Windows executables.</p></li>
+<li><p>py2app allows building macOS apps.</p></li>
+</ul>
+<p>Because the usage is very similar and requires only modification of the setup.py script,
+these packages complement each other. The documentation of the py2app project provides
+the following example of the setup.py script, which allows you to build standalone
+executables with the right tool (either py2exe or py2app) depending on the platform used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+
+
+<span class="n">mainscript</span> <span class="o">=</span> <span class="s1">&#39;MyApplication.py&#39;</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+    <span class="n">extra_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;py2app&#39;</span><span class="p">],</span>
+        <span class="n">app</span><span class="o">=</span><span class="p">[</span><span class="n">mainscript</span><span class="p">],</span>
+        <span class="c1"># Cross-platform applications generally expect sys.argv to</span>
+        <span class="c1"># be used for opening files.</span>
+        <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">py2app</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">argv_emulation</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="p">)</span>
+<span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+    <span class="n">extra_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;py2exe&#39;</span><span class="p">],</span>
+        <span class="n">app</span><span class="o">=</span><span class="p">[</span><span class="n">mainscript</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">extra_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="c1"># Normally unix-like platforms will use &quot;setup.py install&quot;</span>
+    <span class="c1"># and install the main script as such</span>
+        <span class="n">scripts</span><span class="o">=</span><span class="p">[</span><span class="n">mainscript</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">setup</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MyApplication&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">extra_options</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>With such a script, you can build your Windows executable using the python <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>
+<code class="docutils literal notranslate"><span class="pre">py2exe</span></code> command and macOS app using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">py2app</span></code>. Cross-compilation
+is, of course, not possible.</p>
+<p>Despite py2app and py2exe having obvious limitations and offering less elasticity than
+PyInstaller or cx_Freeze, it is always good to be familiar with them. In some cases,
+PyInstaller or cx_Freeze might fail to build the executable for the project properly. In such
+situations, it is always worth checking whether other solutions can handle your code.</p>
+</div>
+<div class="section" id="security-of-python-code-in-executable-packages">
+<h3>4.3. Security of Python code in executable packages<a class="headerlink" href="#security-of-python-code-in-executable-packages" title="Permalink to this headline">¶</a></h3>
+<p>It is important to know that standalone executables do not make the application code
+secure by any means. It is not an easy task to decompile the embedded code from such
+executable files, but it is definitely doable. What is even more important is that the results
+of such decompilation (if done with proper tools) might look strikingly similar to original
+sources.</p>
+<p>This fact makes standalone Python executables not a viable solution for closed source
+projects where leaking of the application code could harm the organization. So, if your
+whole business can be copied simply by copying the source code of you application, then
+you should think of other ways to distribute the application. Maybe providing software as
+a service will be a better choice for you.</p>
+</div>
+<div class="section" id="making-decompilation-harder">
+<h3>4.3.1. Making decompilation harder<a class="headerlink" href="#making-decompilation-harder" title="Permalink to this headline">¶</a></h3>
+<p>As already said, there is no reliable way to secure applications from decompilation with the
+tools available at the moment. Still, there are some ways to make this process harder. But
+harder does not mean less probable. For some of us, the most tempting challenges are the
+hardest ones. And we all know that the eventual price in this challenge is very high—the
+code that you tried to secure.</p>
+<p>Usually the process of decompilation consists of the following steps:</p>
+<ol class="arabic simple">
+<li><p>Extracting the project’s binary representation of bytecode from standalone executables</p></li>
+<li><p>Mapping of a binary representation to bytecode of a specific Python version</p></li>
+<li><p>Translation of bytecode to AST</p></li>
+<li><p>Re-creation of sources directly from AST</p></li>
+</ol>
+<p>Providing the exact solutions for deterring developers from such reverse engineering of
+standalone executables would be pointless for obvious reasons. So here are only some ideas
+for hampering the decompilation process or devaluing its results:</p>
+<ul class="simple">
+<li><p>Removing any code metadata available at runtime (docstrings) so the eventual results will be a bit less readable.</p></li>
+<li><p>Modifying the bytecode values used by the CPython interpreter; so conversion from binary to bytecode and later to AST requires more effort.</p></li>
+<li><p>Using a version of CPython sources modified in such a complex way that even if decompiled sources of the application are available, they are useless without decompiling the modified CPython binary.</p></li>
+<li><p>Using obfuscation scripts on sources before bundling them into an executable, which will make sources less valuable after the decompilation.</p></li>
+</ul>
+<p>Such solutions make the development process a lot harder. Some of the preceding ideas
+require a very deep understanding of Python runtime, but each one of them is riddled with
+many pitfalls and disadvantages. Mostly, they only defer what is anyway inevitable. Once
+your trick is broken, it renders all your additional efforts a waste of time and resources.</p>
+<p>The only reliable way to not allow your closed code to leak outside of your application is to
+not ship it directly to users in any form. And this is only possible if other aspects of your
+organization security stay airtight.</p>
+</div>
+</div>
 </div>
 
 

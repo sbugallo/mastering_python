@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                04/03/2020
+                05/03/2020
               </div>
             
           
@@ -161,6 +161,197 @@
             
   <div class="section" id="namespace-packages">
 <h1>2. Namespace packages<a class="headerlink" href="#namespace-packages" title="Permalink to this headline">¶</a></h1>
+<p><em>The Zen of Python</em> that you can read after writing <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">this</span></code> in the interpreter session
+says the following about namespaces:</p>
+<p><em>“Namespaces are one honking great idea-let’s do more of those!”</em></p>
+<p>And this can be understood in at least two ways. The first is a namespace in context of the
+language. We all use the following namespaces without even knowing:</p>
+<ul class="simple">
+<li><p>The global namespace of a module</p></li>
+<li><p>The local namespace of the function or method invocation</p></li>
+<li><p>The class namespace</p></li>
+</ul>
+<p>The other kind of namespaces can be provided at the packaging level. These are <strong>namespace
+packages</strong>. This is often an overlooked feature of Python packaging that can be very useful
+in structuring the package ecosystem in your organization or in a very large project.</p>
+<p>Namespace packages can be understood as a way of grouping related packages, where each
+of these packages can be installed independently.</p>
+<p>Namespace packages are especially useful if you have components of your application
+developed, packaged, and versioned independently but you still want to access them from
+the same namespace. This also helps to make clear to which organization or project every
+package belongs. For instance, for some imaginary Acme company, the common
+namespace could be <code class="docutils literal notranslate"><span class="pre">acme</span></code>. Therefore this organization could create the
+general <code class="docutils literal notranslate"><span class="pre">acme</span></code> namespace package that could serve as a container for other packages from
+this organization. For example, if someone from Acme wants to contribute to this
+namespace with, for example, an SQL-related library, they can create a
+new <code class="docutils literal notranslate"><span class="pre">acme.sql</span></code> package that registers itself in the acme namespace.</p>
+<p>It is important to know what’s the difference between normal and namespace packages and
+what problem they solve. Normally (without namespace packages), you would create a
+package called <code class="docutils literal notranslate"><span class="pre">acme</span></code> with an <code class="docutils literal notranslate"><span class="pre">sql</span></code> subpackage/submodule with the following file structure:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree acme/
+acme/
+├── acme
+│    ├── __init__.py
+│    └── sql
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">3</span> files
+</pre></div>
+</div>
+<p>Whenever you want to add a new subpackage, let’s say <code class="docutils literal notranslate"><span class="pre">templating</span></code>, you are forced to
+include it in the source tree of <code class="docutils literal notranslate"><span class="pre">acme</span></code> as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree acme/
+acme/
+├── acme
+│   ├── __init__.py
+│   ├── sql
+│   │    └── __init__.py
+│   └── templating
+│        └── __init__.py
+└── setup.py
+
+<span class="m">3</span> directories, <span class="m">4</span> files
+</pre></div>
+</div>
+<p>Such an approach makes independent development
+of <code class="docutils literal notranslate"><span class="pre">acme.sql</span></code> and <code class="docutils literal notranslate"><span class="pre">acme.templating</span></code> almost impossible. The <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script will also
+have to specify all dependencies for every subpackage. So it is impossible (or at least very
+hard) to have an installation of some of the <code class="docutils literal notranslate"><span class="pre">acme</span></code> components optional. Also, with enough
+subpackages it is practically impossible to avoid dependency conflicts.</p>
+<p>With namespace packages, you can store the source tree for each of these subpackages
+independently as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree acme.sql/
+acme.sql/
+├── acme
+│    └── sql
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">2</span> files
+
+
+$ tree acme.templating/
+acme.templating/
+├── acme
+│   └── templating
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">2</span> files
+</pre></div>
+</div>
+<p>And you can also register them independently in PyPI or any package index you use. Users
+can choose which of the subpackages they want to install from the acme namespace as
+follows, but they never install the general <code class="docutils literal notranslate"><span class="pre">acme</span></code> package (it doesn’t even have to exist):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install acme.sql acme.templating
+</pre></div>
+</div>
+<p>Note that independent source trees are not enough to create namespace packages in
+Python. You need a bit of additional work if you don’t want your packages to not overwrite
+each other. Also proper handling may be different depending on the Python language
+version you target. Details of that are described in the next two sections.</p>
+<div class="section" id="implicit-namespace-packages">
+<h2>2.1. Implicit namespace packages<a class="headerlink" href="#implicit-namespace-packages" title="Permalink to this headline">¶</a></h2>
+<p>If you use and target only Python 3, then there is good news for you. PEP 420 (Implicit
+Namespace Packages) introduced a new way to define namespace packages. It is part of
+the standards track and became an official part of the language since version 3.3. In short,
+every directory that contains Python packages or modules (including namespace packages
+too) is considered a namespace package if it does not contain the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file. So, the
+following are examples of file structures presented in the previous section:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree acme.sql/
+acme.sql/
+├── acme
+│    └── sql
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">2</span> files
+
+
+$ tree acme.templating/
+acme.templating/
+├── acme
+│   └── templating
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">2</span> files
+</pre></div>
+</div>
+<p>They are enough to define that acme is a namespace package under Python 3.3 and later.
+Minimal <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> for <code class="docutils literal notranslate"><span class="pre">acme.templating</span></code> package will look like following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;acme.templating&#39;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acme.templating&#39;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Unfortunately, the <code class="docutils literal notranslate"><span class="pre">setuptools.find_packages()</span></code> function does not support PEP 420 at
+the time of writing this section. This may change in the future. Also, a requirement to
+explicitly define a list of packages seems to be a very small price to pay for easy integration
+of namespace packages.</p>
+</div>
+<div class="section" id="namespace-packages-in-previous-python-versions">
+<h2>2.2. Namespace packages in previous Python versions<a class="headerlink" href="#namespace-packages-in-previous-python-versions" title="Permalink to this headline">¶</a></h2>
+<p>You can’t use implicit namespace packages (PEP 420 layout) in Python versions older than
+3.3. Still, the concept of namespace packages is very old and was commonly used for years
+in such mature projects such as Zope. It means that it is definitely possible to use
+namespace packages in older version of Python. Actually, there are several ways to define
+that the package should be treated as a namespace.</p>
+<p>The simplest one is to create a file structure for each component that resembles an ordinary
+package layout without implicit namespace packages and leave everything to <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>.</p>
+<p>So, the example layout for <code class="docutils literal notranslate"><span class="pre">acme.sql</span></code> and a <code class="docutils literal notranslate"><span class="pre">cme.templating</span></code> could be the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree acme.sql/
+acme.sql/
+├── acme
+│    ├── __init__.py
+│    └── sql
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">3</span> files
+
+
+$ tree acme.templating/
+acme.templating/
+├── acme
+│    ├── __init__.py
+│    └── templating
+│       └── __init__.py
+└── setup.py
+
+<span class="m">2</span> directories, <span class="m">3</span> files
+</pre></div>
+</div>
+<p>Note that for both <code class="docutils literal notranslate"><span class="pre">acme.sql</span></code> and <code class="docutils literal notranslate"><span class="pre">acme.templating</span></code>, there is an additional source
+file, <code class="docutils literal notranslate"><span class="pre">acme/__init__.py</span></code>. This file must be left empty. The <code class="docutils literal notranslate"><span class="pre">acme</span></code> namespace package will be
+created if we provide its name as a value of the <code class="docutils literal notranslate"><span class="pre">namespace_packages</span></code> keyword argument
+of the <code class="docutils literal notranslate"><span class="pre">setuptools.setup()</span></code> function as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;acme.templating&#39;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acme.templating&#39;</span><span class="p">],</span>
+    <span class="n">namespace_packages</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acme&#39;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Easiest does not mean best. The <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> module in order to register a new namespace
+will call for the <code class="docutils literal notranslate"><span class="pre">pkg_resources.declare_namespace()</span></code> function in
+your <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file. It will happen even if the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file is empty. Anyway, as
+the official documentation says, it is your own responsibility to declare namespaces in
+the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file, and this implicit behavior of <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> may be dropped in the
+future. In order to be safe and future-proof, you need to add the following line to
+the <code class="docutils literal notranslate"><span class="pre">acme/__init__.py</span></code> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">__import__</span><span class="p">(</span><span class="s1">&#39;pkg_resources&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">declare_namespace</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This line will make your namespace package safe from potential future changes regarding
+namespace packages in the <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> module.</p>
+</div>
 </div>
 
 
