@@ -14,6 +14,7 @@ Index
     :maxdepth: 3
 
     parts/craftmanship/index
+    parts/structures_algorithms/index
     parts/quality/index
     parts/optimization/index
     parts/technical_architecture/index

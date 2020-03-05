@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Deployment &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="prev" title="Packaging" href="../packaging/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                05/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Code distribution</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../packaging/index.html">Packaging</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-twelve-factor-app">1. The Twelve-factor app</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#approaches-to-deployment-automation">2. Approaches to deployment automation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#package-index-or-index-mirror">3. Package index or index mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-conventions-and-practices">4. Common conventions and practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-instrumentation-and-monitoring">5. Code instrumentation and monitoring</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Code distribution</a> &raquo;</li>
+        
+      <li>Deployment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/distribution/chapters/deployment/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+      
+        <a href="../packaging/index.html" class="btn btn-neutral float-left" title="Packaging" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="deployment">
+<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">¶</a></h1>
+<p>Even perfect code (if it exists) is useless if it is not able to run. So, in order to serve any
+purpose, our code needs to be installed on the target machine (computer) and executed.
+The process of making a specific version of your application or service available to end
+users is called deployment.</p>
+<p>In the case of desktop applications, this seems to be simple as your job ends with providing
+a downloadable package with an optional installer, if necessary. It is the user’s
+responsibility to download and install the package in their environment. Your
+responsibility is to make this process as easy and convenient as possible. Proper packaging
+is still not a simple task, but some tools were already explained in the previous chapter.</p>
+<p>Surprisingly, things get more complicated when your code is not a standalone product. If
+your application only provides a service that is being sold to users, then it is your
+responsibility to run it on your own infrastructure. This scenario is typical for a web
+application or any X as a service product. In such a situation, the code is deployed to set off
+remote machines that are physically accessible to the developers. This is especially true if
+you are already a user of cloud computing services such as Amazon Web Services (AWS)
+or Heroku.</p>
+<div class="section" id="the-twelve-factor-app">
+<h2>1. The Twelve-factor app<a class="headerlink" href="#the-twelve-factor-app" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="approaches-to-deployment-automation">
+<h2>2. Approaches to deployment automation<a class="headerlink" href="#approaches-to-deployment-automation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="package-index-or-index-mirror">
+<h2>3. Package index or index mirror<a class="headerlink" href="#package-index-or-index-mirror" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="common-conventions-and-practices">
+<h2>4. Common conventions and practices<a class="headerlink" href="#common-conventions-and-practices" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="code-instrumentation-and-monitoring">
+<h2>5. Code instrumentation and monitoring<a class="headerlink" href="#code-instrumentation-and-monitoring" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../packaging/index.html" class="btn btn-neutral float-left" title="Packaging" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
