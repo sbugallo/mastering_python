@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="References" href="../../../references/index.html" />
     <link rel="prev" title="Packaging" href="../packaging/index.html" /> 
 </head>
 
@@ -65,7 +66,7 @@
             
             
               <div class="version">
-                05/03/2020
+                09/03/2020
               </div>
             
           
@@ -100,14 +101,30 @@
 <li class="toctree-l2"><a class="reference internal" href="../packaging/index.html">Packaging</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Deployment</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-twelve-factor-app">1. The Twelve-factor app</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#approaches-to-deployment-automation">2. Approaches to deployment automation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#package-index-or-index-mirror">3. Package index or index mirror</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#common-conventions-and-practices">4. Common conventions and practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#approaches-to-deployment-automation">2. Approaches to deployment automation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-fabric-for-deployment-automation">2.1. Using Fabric for deployment automation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#index-mirroring">3. Index mirroring</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pypi-mirroring">3.1. PyPI mirroring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bundling-additional-resources-with-your-python-package">3.2. Bundling additional resources with your Python package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#common-conventions-and-practices">4. Common conventions and practices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-filesystem-hierarchy">4.1. The filesystem hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#isolation">4.2. Isolation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-process-supervision-tools">4.3. Using process supervision tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application-code-running-in-user-space">4.4. Application code running in user space</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-reverse-http-proxies">4.5. Using reverse HTTP proxies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reloading-processes-gracefully">4.6. Reloading processes gracefully</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#code-instrumentation-and-monitoring">5. Code instrumentation and monitoring</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
 </ul>
 
             
@@ -171,6 +188,8 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
+        <a href="../../../references/index.html" class="btn btn-neutral float-right" title="References" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
       
         <a href="../packaging/index.html" class="btn btn-neutral float-left" title="Packaging" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
@@ -201,18 +220,1275 @@ you are already a user of cloud computing services such as Amazon Web Services (
 or Heroku.</p>
 <div class="section" id="the-twelve-factor-app">
 <h2>1. The Twelve-factor app<a class="headerlink" href="#the-twelve-factor-app" title="Permalink to this headline">¶</a></h2>
+<p>The main requirement for painless deployment is building your application in a way that
+ensures that this process will be simple and as streamlined as possible. This is mostly about
+removing obstacles and encouraging well-established practices. Following such common
+practices is especially important in organizations where only specific people are responsible
+for development (the developers team or Dev for short) and different people are
+responsible for deploying and maintaining the execution environments (the operations
+team or Ops for short).</p>
+<p>All tasks related to server maintenance, monitoring, deployment, configuration, and so on
+are often put into one single bag called <strong>operations</strong>. Even in organizations that have no
+separate teams for operational tasks, it is common that only some of the developers are
+authorized to do deployment tasks and maintain the remote servers. The common name for
+such a position is DevOps. Also, it isn’t such an unusual situation that every member of the
+development team is responsible for operations, so everyone in such a team can be called
+DevOps.</p>
+<p>No matter how your organization is structured and what the responsibilities of each
+developer are, everyone should know how operations work and how code is deployed to
+the remote servers because, in the end, the execution environment and its configuration is a
+hidden part of the product you are building.</p>
+<p>The following common practices and conventions are important mainly for the following
+reasons:</p>
+<ul class="simple">
+<li><p>At every company people quit and new ones are hired. By using best approaches, you are making it easier for fresh team members to jump into the project. You can never be sure that new employees are already familiar with common practices for system configuration and running applications in a reliable way, but you can at least make their fast adaptation more probable.</p></li>
+<li><p>In organizations where only some people are responsible for deployments, it simply reduces the friction between the operations and development teams.</p></li>
+</ul>
+<p>A good source of such practices that encourage building easy deployable apps is a
+manifesto called the <strong>Twelve-Factor App</strong>. It is a general language-agnostic methodology for
+building software-as-a-service apps. One of its purposes is making applications easier to
+deploy, but it also highlights other topics such as maintainability or making applications
+easier to scale.</p>
+<p>As its name says, the Twelve-Factor App consists of 12 rules:</p>
+<ul class="simple">
+<li><p><strong>Code base</strong>: One code base tracked in revision control and many deploys</p></li>
+<li><p><strong>Dependencies</strong>: Explicitly declare and isolate dependencies</p></li>
+<li><p><strong>Config</strong>: Store configurations in the environment</p></li>
+<li><p><strong>Backing services</strong>: Treat backing services as attached resources</p></li>
+<li><p><strong>Build, release, run</strong>: Strictly separate build and run stages</p></li>
+<li><p><strong>Processes</strong>: Execute the app as one or more stateless processes</p></li>
+<li><p><strong>Port binding</strong>: Export services via port binding</p></li>
+<li><p><strong>Concurrency</strong>: Scale out via the process model</p></li>
+<li><p><strong>Disposability</strong>: Maximize robustness with fast startup and graceful shutdown</p></li>
+<li><p><strong>Dev/prod parity</strong>: Keep development, staging, and production as similar as possible</p></li>
+<li><p><strong>Logs</strong>: Treat logs as event streams</p></li>
+<li><p><strong>Admin processes</strong>: Run administration/management tasks as one-off processes</p></li>
+</ul>
+<p>Extending each of these rules here is a bit pointless because the official page of Twelve-
+Factor App methodology (<a class="reference external" href="http://12factor.net/">http://12factor.net/</a>) contains extensive rationale for each
+app factor with examples of tools for different frameworks and environments.
+This chapter tries to stay consistent with the preceding manifesto, so we will discuss some
+of them in detail when necessary. The techniques and examples that are presented may
+sometimes slightly diverge from these 12 factors, but remember that these rules are not
+carved in stone. They are great as long as they serve the purpose. In the end, what matters
+is the working application (product) and not being compatible with some arbitrary
+methodology.</p>
 </div>
 <div class="section" id="approaches-to-deployment-automation">
 <h2>2. Approaches to deployment automation<a class="headerlink" href="#approaches-to-deployment-automation" title="Permalink to this headline">¶</a></h2>
+<p>With the advent of application containerization (Docker and similar technologies), modern
+software provisioning tools (for example, Puppet, Chef, Ansible, and Salt),
+and infrastructure management systems (for example, Terraform and SaltStack)
+development and operations teams have a variety of ways in which they can organize and
+manage their code deployments and configuration of remote systems. Each solution has
+pros and cons, so advanced automation tools should be chosen very wisely with respect to
+the favored development processes and methodologies.</p>
+<p>Fast paced teams that use microservice architecture and deploy code often (maybe even
+simultaneously in parallel versions) will definitely favor container orchestration systems
+such as Kubernetes or use dedicated services provided by their cloud vendor (for example,
+AWS). Teams that build old-style big monolithic applications and run them on their own
+bare-metal servers might want to use more low-level automation and software provisioning
+systems. Actually, there is no rule and you can find teams of every size using every possible
+approach to software provisioning, code deployments, and application orchestration. The
+limiting factors here are resources and knowledge.</p>
+<p>That’s why it’s really hard to briefly provide a set of common tools and solutions that
+would fit the needs and capabilities of every developer and every team. Because of that, in
+this chapter, we will focus only on a pretty simple approach to automation using Fabric.
+We could say that this is outdated. And that’s probably true. What seem to be the most
+modern are container orchestrations systems in the style of Kubernetes that allow you to
+leverage Docker containers for fast, maintainable, scalable, and reproducible environments.
+But these systems have quite a steep learning curve and it’s impossible to introduce them in
+just a few sections of a single chapter. Fabric, on the other hand, is very simple and easy to
+grasp so it is a really great tool to introduce someone to the concept of automation.</p>
+<div class="section" id="using-fabric-for-deployment-automation">
+<h3>2.1. Using Fabric for deployment automation<a class="headerlink" href="#using-fabric-for-deployment-automation" title="Permalink to this headline">¶</a></h3>
+<p>For very small projects, it may be possible to deploy your code by hand, that is, by manually
+typing the sequence of commands through the remote shells that are necessary to install a
+new version of code and execute it on a remote shell. Anyway, even for an average-sized
+project, this is error-prone and tedious and should be considered a waste of most of the
+precious resource you have, your own time.</p>
+<p>The solution for that is automation. The simple thumb rule could be the following:</p>
+<p><em>“If you needed to perform the same task manually at least twice, you should automate it so you won’t need to do it for the third time.”</em></p>
+<p>There are various tools that allow you to automate different things, including the following:</p>
+<ul class="simple">
+<li><p>Remote execution tools such as Fabric are used for on-demand automated execution of code on multiple remote hosts.</p></li>
+<li><p>Configuration management tools such as Chef, Puppet, CFEngine, Salt, and Ansible are designed for automatized configuration of remote hosts (execution environments). They can be used to set up backing services (databases, caches, and so on), system permissions, users, and so on. Most of them can be used also as a tool for remote execution (such as Fabric) but, depending on their architecture, this may be more or less convenient.</p></li>
+</ul>
+<p>Configuration management solutions is a complex topic. The
+truth is that the simplest remote execution frameworks have the lowest entry barrier and
+are the most popular choice, at least for small projects. In fact, every configuration
+management tool that provides a way to declaratively specify configuration of your
+machines has a remote execution layer implemented somewhere deep inside.</p>
+<p>Also, some configuration management tools may not be best suited for actual automated
+code deployment. One such example is Puppet, which really discourages the explicit
+running of any shell commands. This is why many people choose to use both types of
+solution to complement each other: configuration management for setting up a system-level
+environment and on-demand remote execution for application deployment.</p>
+<p>Fabric (<a class="reference external" href="http://www.fabfile.org/">http://www.fabfile.org/</a> ) is so far the most popular solution used by
+Python developers to automate remote execution. It is a Python library and command-line tool for
+streamlining the use of SSH for application deployment or systems administration tasks.
+We will focus on it because it is relatively easy to start with. Keep in mind that, depending
+on your needs, it may not be the best solution to your problems. Anyway, it is a great
+example of a utility that can add some automation to your operations, if you don’t have any
+yet.</p>
+<p>You could, of course, automate all of the work using only Bash scripts but this is very
+tedious and error-prone. Python has more convenient ways for string processing and
+encourages code modularization. Fabric is in fact only a tool for gluing the execution of
+commands via SSH. It means that you still need to know how to use the command-line
+interface and its utilities in your remote environment.</p>
+<p>So, if you want to strictly follow the Twelve-Factor App methodology, you should not
+maintain its code in the source tree of the deployed application.</p>
+<p>Complex projects are, in fact, very often built from various components maintained as
+separate code bases, so this is another reason why it is a good approach to have one
+separate repository for all of the project component configurations and Fabric scripts. This
+makes deployment of different services more consistent and encourages good code reuse.</p>
+<p>To start working with Fabric, you need to install the <code class="docutils literal notranslate"><span class="pre">fabric</span></code> package (using <code class="docutils literal notranslate"><span class="pre">pip</span></code>) and
+create a script named <code class="docutils literal notranslate"><span class="pre">fabfile.py</span></code>. That script is usually located in the root of your project.
+Note that <code class="docutils literal notranslate"><span class="pre">fabfile.py</span></code> can be considered a part of your project configuration.</p>
+<p>But before we create our <code class="docutils literal notranslate"><span class="pre">fabfile</span></code> let’s define some initial utilities that will help us to set up
+the project remotely. Here’s a module that we will call <code class="docutils literal notranslate"><span class="pre">fabutils</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># Let&#39;s assume we have private package repository created</span>
+<span class="c1"># using &#39;devpi&#39; project</span>
+<span class="n">PYPI_URL</span> <span class="o">=</span> <span class="s1">&#39;http://devpi.webxample.example.com&#39;</span>
+
+<span class="c1"># This is arbitrary location for storing installed releases.</span>
+<span class="c1"># Each release is a separate virtual environment directory</span>
+<span class="c1"># which is named after project version. There is also a</span>
+<span class="c1"># symbolic link &#39;current&#39; that points to recently deployed</span>
+<span class="c1"># version. This symlink is an actual path that will be used</span>
+<span class="c1"># for configuring the process supervision tool for example:</span>
+<span class="c1"># .</span>
+<span class="c1"># ├── 0.0.1</span>
+<span class="c1"># ├── 0.0.2</span>
+<span class="c1"># ├── 0.0.3</span>
+<span class="c1"># ├── 0.1.0</span>
+<span class="c1"># └── current -&gt; 0.1.0/</span>
+
+<span class="n">REMOTE_PROJECT_LOCATION</span> <span class="o">=</span> <span class="s2">&quot;/var/projects/webxample&quot;</span>
+<span class="k">def</span> <span class="nf">prepare_release</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Prepare a new release by creating source distribution and</span>
+<span class="sd">    uploading to out private package repository</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;python setup.py build sdist&#39;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;twine upload --repository-url </span><span class="si">{PYPI_URL}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get current project version from setuptools &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="s1">&#39;python setup.py --version&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">switch_versions</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Switch versions by replacing symlinks atomically &quot;&quot;&quot;</span>
+    <span class="n">new_version_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+    <span class="n">temporary</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="s1">&#39;next&#39;</span><span class="p">)</span>
+    <span class="n">desired</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="s1">&#39;current&#39;</span><span class="p">)</span>
+
+    <span class="c1"># force symlink (-f) since probably there is a one already</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ln -fsT </span><span class="si">{new_version_path}</span><span class="s2"> </span><span class="si">{temporary}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># mv -T ensures atomicity of this operation</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mv -Tf </span><span class="si">{temporary}</span><span class="s2"> </span><span class="si">{desired}</span><span class="s2">&quot;</span> <span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="package-index-or-index-mirror">
-<h2>3. Package index or index mirror<a class="headerlink" href="#package-index-or-index-mirror" title="Permalink to this headline">¶</a></h2>
+<p>An example of a final fabfile that defines a simple deployment procedure will look like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fabric</span> <span class="kn">import</span> <span class="n">task</span>
+<span class="kn">from</span> <span class="nn">.fabutils</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">uptime</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run uptime command on remote host - for testing connection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;uptime&quot;</span><span class="p">)</span>
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Deploy application with packaging in mind &quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">get_version</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="n">pip_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;pip&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test -d </span><span class="si">{REMOTE_PROJECT_LOCATION}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># it may not exist for initial deployment on fresh host</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mkdir -p </span><span class="si">{REMOTE_PROJECT_LOCATION}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">c</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">):</span>
+        <span class="c1"># create new virtual environment using venv</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;python3 -m venv </span><span class="si">{version}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{pip_path}</span><span class="s2"> install webxample==</span><span class="si">{version}</span><span class="s2"> --index-url </span><span class="si">{PYPI_URL}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">switch_versions</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+    <span class="c1"># let&#39;s assume that Circus is our process supervision tool</span>
+    <span class="c1"># of choice.</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;circusctl restart webxample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Every function decorated with <code class="docutils literal notranslate"><span class="pre">&#64;task</span></code> is now treated as an available subcommand to
+the fab utility provided with the fabric package. You can list all of the available
+subcommands using the <code class="docutils literal notranslate"><span class="pre">-l</span></code> or <code class="docutils literal notranslate"><span class="pre">--list</span></code> switch. The code is shown in the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ fab --list
+Available commands:
+    deploy Deploy application with packaging in mind
+    uptime Run uptime <span class="nb">command</span> on remote host - <span class="k">for</span> testing connection.
+</pre></div>
+</div>
+<p>Now, you can deploy the application to the given environment type with only the
+following single shell command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ fab -H myhost.example.com deploy
+</pre></div>
+</div>
+<p>Note that the preceding <code class="docutils literal notranslate"><span class="pre">fabfile</span></code> serves only illustrative purposes. In your own code, you
+might want to provide extensive failure handling and try to reload the application without
+the need to restart the web worker process. Also, some of the techniques presented here
+may not be obvious right now but will be explained later in this chapter. These include the
+following:</p>
+<ul class="simple">
+<li><p>Deploying an application using the private package repository</p></li>
+<li><p>Using Circus for process supervision on the remote host</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="index-mirroring">
+<h2>3. Index mirroring<a class="headerlink" href="#index-mirroring" title="Permalink to this headline">¶</a></h2>
+<p>These are three main reasons why you might want to run your own index of Python
+packages:</p>
+<ul class="simple">
+<li><p>The official Python Package Index does not have any availability guarantees. It is run by Python Software Foundation thanks to numerous donations. Because of that, it means that this site can be down at the most inconvenient time. You don’t want to stop your deployment or packaging process in the middle due to PyPI outage.</p></li>
+<li><p>It is useful to have reusable components written in Python properly packaged, even for the closed source that will never be published publicly. It simplifies code base because packages that are used across the company for different projects do not need to be vendored. You can simply install them from the repository. This simplifies maintenance for such shared code and might reduce development costs for the whole company if it has many teams working on different projects.</p></li>
+<li><p>It is a very good practice to have your entire project packaged using <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>. Then, deployment of the new application version is often as simple as running <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--update</span> <span class="pre">my-application</span></code>.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>Code vendoring</strong> is a practice of including sources of the external package
+in the source code (repository) of other projects. It is usually done when
+the project’s code depends on a specific version of some external package
+that may also be required by other packages (and in a completely different
+version).</p>
+<p>For instance, the popular <code class="docutils literal notranslate"><span class="pre">requests</span></code> package uses some version
+of <code class="docutils literal notranslate"><span class="pre">urllib3</span></code> in its source tree because it is very tightly coupled to it and is
+very unlikely to work with any other version of urllib3 . An example of
+a module that is particularly often used by others is <code class="docutils literal notranslate"><span class="pre">six</span></code>. It can be found
+in sources of numerous popular projects such as Django
+(<code class="docutils literal notranslate"><span class="pre">django.utils.six</span></code>), Boto (<code class="docutils literal notranslate"><span class="pre">boto.vendored.six</span></code>), or Matplotlib
+(<code class="docutils literal notranslate"><span class="pre">matplotlib.externals.six</span></code>).</p>
+<p>Although vendoring is practiced even by some large and successful open
+source projects, it should be avoided if possible. This has justifiable usage
+only in certain circumstances and should not be treated as a substitute of
+package dependency management.</p>
+</div>
+<div class="section" id="pypi-mirroring">
+<h3>3.1. PyPI mirroring<a class="headerlink" href="#pypi-mirroring" title="Permalink to this headline">¶</a></h3>
+<p>The problem of PyPI outages can be somehow mitigated by allowing the installation tools
+to download packages from one of its mirrors. In fact, the official Python Package Index is
+already served through <strong>Content Delivery Network (CDN)</strong>, so it is intrinsically mirrored.
+This does not change the fact that it seems to have some bad days from time to time. Using
+unofficial mirrors is not a solution here because it might raise some security concerns.</p>
+<p>The best solution is to have your own PyPI mirror that will have all of the packages you
+need. The only party that will use it is you, so it will be much easier to ensure proper
+availability. The other advantage is that whenever this service goes down, you don’t need
+to rely on someone else to bring it up. The mirroring tool maintained and recommended by
+PyPA is <strong>bandersnatch</strong>
+(<a class="reference external" href="https://pypi.python.org/pypi/bandersnatch">https://pypi.python.org/pypi/bandersnatch</a>). It allows you to
+mirror the whole content of Python Package Index and it can be provided as the <code class="docutils literal notranslate"><span class="pre">index-url</span></code>
+option for the repository section in the <code class="docutils literal notranslate"><span class="pre">.pypirc</span></code> file (as explained in the previous
+chapter). This mirror does not accept uploads and does not have the web part of PyPI.
+Anyway, beware! A full mirror might require hundreds of gigabytes of storage and its size
+will continue to grow over time.</p>
+<p>But why stop at a simple mirror while we have a much better alternative? There is a very
+low chance that you will require a mirror of the whole package index. Even with a project
+that has hundreds of dependencies, it will be only a minor fraction of all of the available
+packages. Also, not being able to upload your own private package is a huge limitation of
+such a simple mirror. It seems that the added value of using bandersnatch is very low for
+such a high price. And this is true in most situations. If the package mirror is to be
+maintained only for single or a few projects, a much better approach is to
+use <strong>devpi</strong> (<a class="reference external" href="http://doc.devpi.net/">http://doc.devpi.net/</a>). It is a PyPI-compatible package index
+implementation that provides both of the following:</p>
+<ul class="simple">
+<li><p>A private index to upload nonpublic packages</p></li>
+<li><p>Index mirroring</p></li>
+</ul>
+<p>The main advantage of devpi over bandersnatch is how it handles mirroring. It can, of
+course, do a full general mirror of other indexes like bandersnatch does, but it is not its
+default behavior. Instead of doing a rather expensive backup of the whole repository, it
+maintains mirrors for packages that were already requested by clients. So, whenever a
+package is requested by the installation tool (<code class="docutils literal notranslate"><span class="pre">pip</span></code>, <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, and <code class="docutils literal notranslate"><span class="pre">easy_install</span></code>), if it
+does not exist in the local mirror, the devpi server will attempt to download it from the
+mirrored index (usually PyPI) and serve. Once the package is downloaded, the devpi will
+periodically check for its updates to maintain a fresh state of its mirror.</p>
+<p>The mirroring approach leaves a slight risk of failure when you request a new package that
+was not yet mirrored when the upstream package index has an outage. Anyway, this risk is
+reduced, thanks to the fact that in most deployments you will depend only on packages
+that were already mirrored in the index. The mirror state for packages that were already
+requested has eventual consistency guarantee and new versions will be downloaded
+automatically. This seems to be a very reasonable trade off.</p>
+<p>Now let’s see how to properly bundle and build additional non-Python resources in your
+Python application.</p>
+</div>
+<div class="section" id="bundling-additional-resources-with-your-python-package">
+<h3>3.2. Bundling additional resources with your Python package<a class="headerlink" href="#bundling-additional-resources-with-your-python-package" title="Permalink to this headline">¶</a></h3>
+<p>Modern web applications have a lot of dependencies and often require a lot of steps to
+properly install on the remote host. For instance, the typical bootstrapping process for a
+new version of the application on a remote host consists of the following steps:</p>
+<ol class="arabic simple">
+<li><p>Create a new virtual environment for isolation.</p></li>
+<li><p>Move the project code to the execution environment.</p></li>
+<li><p>Install the latest project requirements (usually from the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file).</p></li>
+<li><p>Synchronize or migrate the database schema.</p></li>
+<li><p>Collect static files from project sources and external packages to the desired location.</p></li>
+<li><p>Compile localization files for applications available in different languages.</p></li>
+</ol>
+<p>For more complex sites, there might be lot of additional tasks mostly related to frontend
+code that is independent from previously defined tasks, as in the following example:</p>
+<ol class="arabic simple">
+<li><p>Generate CSS files using preprocessors such as SASS or LESS.</p></li>
+<li><p>Perform minification, obfuscation, and/or concatenation of static files (JavaScript and CSS files).</p></li>
+<li><p>Compile code written in JavaScript superset languages (CoffeeScript, TypeScript, and so on) to native JS.</p></li>
+<li><p>Preprocess response template files (minification, style inlining, and so on).</p></li>
+</ol>
+<p>Nowadays, for these kind of applications that require a lot of additional assets to be
+prepared, most developers would probably use Docker images. Dockerfiles allow you to
+easily define all of the steps that are necessary to bundle all assets with your application
+image. But if you don’t use Docker, it means that all of these steps must be automated using
+other tools such as Make, Bash, Fabric, or Ansible. Still, it is not a good idea to do all of
+these steps directly on the remote hosts where the application is being installed. Here are
+the reasons:</p>
+<ul class="simple">
+<li><p>Some of the popular tools for processing static assets can be either CPU or memory intensive. Running them in production environments can destabilize your application execution.</p></li>
+<li><p>These tools very often will require additional system dependencies that may not be required for the normal operation of your projects. These are mostly additional runtime environments such as JVM, Node, or Ruby. This adds complexity to configuration management and increases the overall maintenance costs.</p></li>
+<li><p>If you are deploying your application to multiple servers (tens, hundreds, or thousands), you are simply repeating a lot of work that could be done once. If you have your own infrastructure, then you may not experience the huge increase of costs, especially if you perform deployments in periods of low traffic. But if you run cloud computing services in the pricing model that charges you extra for spikes in load or generally for execution time, then this additional cost may be substantial on a proper scale.</p></li>
+<li><p>Most of these steps just take a lot of time. You are installing your code on remote servers, so the last thing you want is to have your connection interrupted by some network issue. By keeping the deployment process quick, you are lowering the chance of deployment interruption.</p></li>
+</ul>
+<p>Obviously, the results of these predeployment steps can’t be included in your application
+code repository either. Simply, there are things that must be done with every release and
+you can’t change that. It is obviously a place for proper automation but the clue is to do it in
+the right place and at the right time.</p>
+<p>Most of the things, such as static collection and code/asset preprocessing, can be done
+locally or in a dedicated environment, so the actual code that is deployed to the remote
+server requires only a minimal amount of on-site processing. The following are the most
+notable of such deployment steps, either in the process of building distribution or installing
+a package:</p>
+<ol class="arabic simple">
+<li><p>Installation of Python dependencies and transferring of static assets (CSS files and JavaScript) to the desired location can be handled as a part of the <code class="docutils literal notranslate"><span class="pre">install</span></code> command of the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script.</p></li>
+<li><p>Preprocessing of code (processing JavaScript supersets, minification/obfuscation/concatenation of assets, and running SASS or LESS) and things such as localized text compilation (for example, <code class="docutils literal notranslate"><span class="pre">compilemessages</span></code> in Django) can be a part of the <code class="docutils literal notranslate"><span class="pre">sdist</span></code>/<code class="docutils literal notranslate"><span class="pre">bdist</span></code> command of the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script.</p></li>
+</ol>
+<p>Inclusion of preprocessed code other than Python can be easily handled with the
+proper <code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code> file. Dependencies are, of course, best provided as
+an <code class="docutils literal notranslate"><span class="pre">install_requires</span></code> argument of the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> function call from
+the setuptools package.</p>
+<p>Packaging the whole application, of course, will require some additional work from you,
+such as providing your own custom <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> commands or overriding the existing
+ones, but it gives you a lot of advantages and makes project deployment a lot faster and
+reliable.</p>
+<p>Let’s use a Django-based project (in Django 1.9 version) as an example. I have chosen this
+framework because it seems to be the most popular Python project of this type, so there is a
+high chance that you already know it a bit. A typical structure of files in such a project
+might look like the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree . -I __pycache__ --dirsfirst
+.
+├── webxample
+│    ├── conf
+│    │    ├── __init__.py
+│    │    ├── settings.py
+│    │    ├── urls.py
+│    │    └── wsgi.py
+│    ├── locale
+│    │    ├── de
+│    │    │    └── LC_MESSAGES
+│    │    │         └── django.po
+│    │    ├── en
+│    │    │    └── LC_MESSAGES
+│    │    │         └── django.po
+│    │    └── pl
+│    │         └── LC_MESSAGES
+│    │              └── django.po
+│    ├── myapp
+│    │    ├── migrations
+│    │    │    └── __init__.py
+│    │    ├── static
+│    │    │    ├── js
+│    │    │    │    └── myapp.js
+│    │    │    └── sass
+│    │    │         └── myapp.scss
+│    │    ├── templates
+│    │    │    ├── index.html
+│    │    │    └── some_view.html
+│    │    ├── __init__.py
+│    │    ├── admin.py
+│    │    ├── apps.py
+│    │    ├── models.py
+│    │    ├── tests.py
+│    │    └── views.py
+│    ├── __init__.py
+│    └── manage.py
+├── MANIFEST.in
+├── README.md
+└── setup.py
+<span class="m">15</span> directories, <span class="m">23</span> files
+</pre></div>
+</div>
+<p>Note that this slightly differs from the usual Django project template. By default, the name
+of the package that contains the WSGI application, the settings module, and the URL
+configuration has the same name as the project. Because we decided to take the packaging
+approach, this would be named as <code class="docutils literal notranslate"><span class="pre">webxample</span></code>. This can cause some confusion, so it is
+better to rename it to <code class="docutils literal notranslate"><span class="pre">conf</span></code>. Without digging into the possible implementation details, let’s
+just make the following few simple assumptions:</p>
+<ul class="simple">
+<li><p>Our example application has some external dependencies. Here, it will be two popular Django packages: <code class="docutils literal notranslate"><span class="pre">djangorestframework</span></code> and <code class="docutils literal notranslate"><span class="pre">django-allauth</span></code>, plus one non-Django package: <code class="docutils literal notranslate"><span class="pre">gunicorn</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">djangorestframework</span></code> and <code class="docutils literal notranslate"><span class="pre">django-allauth</span></code> are provided as <code class="docutils literal notranslate"><span class="pre">INSTALLED_APPS</span></code> in the <code class="docutils literal notranslate"><span class="pre">webexample.webexample.settings</span></code> module.</p></li>
+<li><p>The application is localized in three languages (German, English, and Polish) but we don’t want to store the compiled <code class="docutils literal notranslate"><span class="pre">gettext</span></code> messages in the repository.</p></li>
+<li><p>We are tired of vanilla CSS syntax, so we decided to use a more powerful SCSS language that we translate into CSS using SASS.</p></li>
+</ul>
+<p>Knowing the structure of the project, we can write our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script in a way that
+makes <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> handle the following:</p>
+<ul class="simple">
+<li><p>Compilation of SCSS files under <code class="docutils literal notranslate"><span class="pre">webxample/myapp/static/scss</span></code></p></li>
+<li><p>Compilation of <code class="docutils literal notranslate"><span class="pre">gettext</span></code> messages under <code class="docutils literal notranslate"><span class="pre">webexample/locale</span></code> from <code class="docutils literal notranslate"><span class="pre">.po</span></code> to <code class="docutils literal notranslate"><span class="pre">.mo</span></code> format</p></li>
+<li><p>Installation of the requirements</p></li>
+<li><p>A new script that provides an entry point to the package, so we will have the custom command instead of the <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> script</p></li>
+</ul>
+<p>We have a bit of luck here: Python binding for <code class="docutils literal notranslate"><span class="pre">libsass</span></code>, a C/C++ port of the SASS engine,
+provides some integration with <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> and <code class="docutils literal notranslate"><span class="pre">distutils</span></code>. With only a little
+configuration, it provides a custom setup.py command for running the SASS compilation.
+This is shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;webxample&#39;</span><span class="p">,</span>
+    <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;libsass == 0.6.0&#39;</span><span class="p">],</span>
+    <span class="n">sass_manifests</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;webxample.myapp&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;static/sass&#39;</span><span class="p">,</span> <span class="s1">&#39;static/css&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>So, instead of running the <code class="docutils literal notranslate"><span class="pre">sass</span></code> command manually or executing a subprocess in
+the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script, we can type python <code class="docutils literal notranslate"><span class="pre">setup.py</span> <span class="pre">build_scss</span></code> and have our SCSS files
+compiled to CSS. This is still not enough. It makes our life a bit easier but we want the
+whole distribution fully automated so there is only one step for creating new releases. To
+achieve this goal, we are forced to override some of the existing <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> distribution
+commands.</p>
+<p>The example <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file that handles some of the project preparation steps through
+packaging might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span>
+<span class="kn">from</span> <span class="nn">distutils.cmd</span> <span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span> <span class="nn">distutils.command.build</span> <span class="kn">import</span> <span class="n">build</span> <span class="k">as</span> <span class="n">_build</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">django.core.management.commands.compilemessages</span> \
+    <span class="kn">import</span> <span class="nn">Command</span> <span class="k">as</span> <span class="nn">CompileCommand</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># note: during installation django may not be available</span>
+    <span class="n">CompileCommand</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># this environment is requires</span>
+
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+    <span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s2">&quot;webxample.conf.settings&quot;</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">build_messages</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Custom command for building gettext messages in Django &quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;compile gettext messages&quot;&quot;&quot;</span>
+    <span class="n">user_options</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">initialize_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">finalize_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">CompileCommand</span><span class="p">:</span>
+            <span class="n">CompileCommand</span><span class="p">()</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span>
+                <span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">locales</span><span class="o">=</span><span class="p">[],</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;could not build translations&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">build</span><span class="p">(</span><span class="n">_build</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Overridden build command that adds additional build steps &quot;&quot;&quot;</span>
+    <span class="n">sub_commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;build_messages&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;build_sass&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">]</span> <span class="o">+</span> <span class="n">_build</span><span class="o">.</span><span class="n">sub_commands</span>
+
+    <span class="n">setup</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;webxample&#39;</span><span class="p">,</span>
+        <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span>
+            <span class="s1">&#39;libsass == 0.6.0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;django == 1.9.2&#39;</span>
+        <span class="p">],</span>
+        <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span>
+            <span class="s1">&#39;django == 1.9.2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;gunicorn == 19.4.5&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;djangorestframework == 3.3.2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;django-allauth == 0.24.1&#39;</span>
+        <span class="p">],</span>
+        <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
+        <span class="n">sass_manifests</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;   webxample.myapp&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;static/sass&#39;</span><span class="p">,</span> <span class="s1">&#39;static/css&#39;</span><span class="p">)</span>
+        <span class="p">},</span>
+        <span class="n">cmdclass</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;build_messages&#39;</span><span class="p">:</span> <span class="n">build_messages</span><span class="p">,</span>
+            <span class="s1">&#39;build&#39;</span><span class="p">:</span> <span class="n">build</span>
+        <span class="p">},</span>
+        <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;webxample = webxample.manage:main&#39;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>With such an implementation, we can build all assets and create the source distribution of a
+package for the <code class="docutils literal notranslate"><span class="pre">webxample</span></code> project using the following single Terminal command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py build sdist
+</pre></div>
+</div>
+<p>If you already have your own package index (created with devpi), you can add
+the <code class="docutils literal notranslate"><span class="pre">install</span></code> subcommand or use <code class="docutils literal notranslate"><span class="pre">twine</span></code> so this package will be available for installation
+with <code class="docutils literal notranslate"><span class="pre">pip</span></code> in your organization. If we look into a structure of source distribution created
+with our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script, we can see that it contains the following
+compiled <code class="docutils literal notranslate"><span class="pre">gettext</span></code> messages and CSS style sheets generated from SCSS files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tar -xvzf dist/webxample-0.0.0.tar.gz <span class="m">2</span>&gt; /dev/null
+$ tree webxample-0.0.0/ -I __pycache__ --dirsfirst
+webxample-0.0.0/
+├── webxample
+│    ├── conf
+│    │    ├── __init__.py
+│    │    ├── settings.py
+│    │    ├── urls.py
+│    │    └── wsgi.py
+│    ├── locale
+│    │    ├── de
+│    │    │    └── LC_MESSAGES
+│    │    │         ├── django.mo
+│    │    │         └── django.po
+│    │    ├── en
+│    │    │    └── LC_MESSAGES
+│    │    │         ├── django.mo
+│    │    │         └── django.po
+│    │    └── pl
+│    │         └── LC_MESSAGES
+│    │              ├── django.mo
+│    │              └── django.po
+│    ├── myapp
+│    │    ├── migrations
+│    │    │    └── __init__.py
+│    │    ├── static
+│    │    │    ├── js
+│    │    │    │    └── myapp.js
+│    │    │    └── sass
+│    │    │         └── myapp.scss.css
+│    │    ├── templates
+│    │    │    ├── index.html
+│    │    │    └── some_view.html
+│    │    ├── __init__.py
+│    │    ├── admin.py
+│    │    ├── apps.py
+│    │    ├── models.py
+│    │    ├── tests.py
+│    │    └── views.py
+│    ├── __init__.py
+│    └── manage.py
+├── webxample.egg-info
+│    ├── PKG-INFO
+│    ├── SOURCES.txt
+│    ├── dependency_links.txt
+│    ├── requires.txt
+│    └── top_level.txt
+├── MANIFEST.in
+├── README.md
+└── setup.py
+<span class="m">16</span> directories, <span class="m">33</span> files
+</pre></div>
+</div>
+<p>The additional benefit of using this approach is that we were able to provide our own entry
+point for the project in place of Django’s default <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> script. Now, we can run any
+Django management command using this entry point, for instance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ webxample migrate
+$ webxample collectstatic
+$ webxample runserver
+</pre></div>
+</div>
+<p>This required a little change in the <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> script for compatibility with
+the <code class="docutils literal notranslate"><span class="pre">entry_points</span></code> argument in <code class="docutils literal notranslate"><span class="pre">setup()</span></code>, so the main part of its code is wrapped with
+the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function call. This is shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+        <span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s2">&quot;webxample.conf.settings&quot;</span>
+    <span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">django.core.management</span> <span class="kn">import</span> <span class="n">execute_from_command_line</span>
+    <span class="n">execute_from_command_line</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Unfortunately, a lot of frameworks (including Django) are not designed with the idea of
+packaging your projects that way in mind. It means that, depending on the advancement of
+your application, converting it to a package may require a lot of changes. In Django, this
+often means rewriting many of the implicit imports and updating a lot of configuration
+variables in your settings file.</p>
+<p>The other problem here is consistency of releases created using Python packaging. If
+different team members are authorized to create application distribution, it is crucial that
+this process takes place in the same replicable environment. Especially when you do a lot of
+asset preprocessing, it is possible that the package created in two different environments
+will not look the same, even if it is created from the same code base. This may be due to
+different versions of tools used during the build process. The best practice is to move the
+distribution responsibility to some continuous integration/delivery system such as Jenkins,
+Buildbot, Travis CI, or similar. The additional advantage is that you can assert that the
+package passes all of the required tests before going to distribution. You can even make the
+automated deployment as a part of such a continuous delivery system.</p>
+<p>Mind that although distributing your code as Python packages using <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> might
+seem elegant, it is actually not simple and effortless. It has potential to greatly simplify your
+deployments and so it is definitely worth trying but it comes with the cost of increased
+complexity. If your preprocessing pipeline for your application grows too complex, you
+should definitely consider building Docker images and deploying your application as
+containers.</p>
+<p>Deployment with Docker requires some additional setup and orchestration but in the long
+term saves a lot of time and resources that are otherwise required to maintain repeatable
+build environments and complex preprocessing pipelines.</p>
+</div>
 </div>
 <div class="section" id="common-conventions-and-practices">
 <h2>4. Common conventions and practices<a class="headerlink" href="#common-conventions-and-practices" title="Permalink to this headline">¶</a></h2>
+<p>There are a set of common conventions and practices for deployment that not every
+developer may know but are obvious for anyone who did some operations in their life. As
+explained in this chapter’s introduction, it is crucial to know at least a few of them, even if
+you are not responsible for code deployment and operations, because it will allow you to
+make better design decisions during the development.</p>
+<div class="section" id="the-filesystem-hierarchy">
+<h3>4.1. The filesystem hierarchy<a class="headerlink" href="#the-filesystem-hierarchy" title="Permalink to this headline">¶</a></h3>
+<p>The most obvious conventions that may come into your mind are probably about filesystem
+hierarchy and user naming. If you are looking for such suggestions here, then you will be
+disappointed. There is, of course, a <strong>Filesystem Hierarchy Standard (FHS)</strong> that defines the
+directory structure and directory contents in Unix and Unix-like operating systems, but it is
+really hard to find the actual OS distribution that is fully compliant with FHS. If system
+designers and programmers cannot obey such standards, it is very hard to expect the same
+from its administrators. During my experience, I’ve seen application code deployed almost
+everywhere it is possible, including nonstandard custom directories in the root filesystem
+level. Almost always the people behind such decisions had really strong arguments for
+doing so. The only suggestions in this matter that I can give you are as follows:</p>
+<ul class="simple">
+<li><p>Choose wisely and avoid surprises.</p></li>
+<li><p>Be consistent across all of the available infrastructure of your project.</p></li>
+<li><p>Try to be consistent across your organization (the company you work in).</p></li>
+</ul>
+<p>What really helps is to document conventions for your project. Just remember to make sure
+that this documentation is accessible for every interested team member and that everyone
+knows that such a document exists.</p>
+</div>
+<div class="section" id="isolation">
+<h3>4.2. Isolation<a class="headerlink" href="#isolation" title="Permalink to this headline">¶</a></h3>
+<p>Reasons for isolation as well as recommended tools were already discussed.
+These are: better environment reproducibility
+and solving the inevitable problems of dependency conflicts. For the purpose of
+deployments, there is only one important thing to add. You should always isolate project
+dependencies for each release of your application. In practice, it means that, whenever you
+deploy a new version of the application, you should create a new isolated environment for
+this release (using <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> or <code class="docutils literal notranslate"><span class="pre">venv</span></code>). Old environments should be left for some time on
+your hosts, so that, in case of issues, you can easily perform a rollback to one of the older
+versions of your application.</p>
+<p>Creating fresh environments for each release helps in managing their clean state and
+compliance with a list of provided dependencies. By fresh environment we mean creating a
+new directory tree in the filesystem instead of updating already existing files.
+Unfortunately, it may make it a bit harder to perform things such as the graceful reload of
+services, which is much easier to achieve if the environment is updated in place.</p>
+</div>
+<div class="section" id="using-process-supervision-tools">
+<h3>4.3. Using process supervision tools<a class="headerlink" href="#using-process-supervision-tools" title="Permalink to this headline">¶</a></h3>
+<p>Applications on remote servers are never usually expected to quit. If it is a web application,
+its HTTP server process will indefinitely wait for new connections and requests and will
+exit only if some unrecoverable error occurs.</p>
+<p>It is, of course, not possible to run it manually in shell and have a never-ending SSH
+connection. Using <code class="docutils literal notranslate"><span class="pre">nohup</span></code>, <code class="docutils literal notranslate"><span class="pre">screen</span></code>, or <code class="docutils literal notranslate"><span class="pre">tmux</span></code> to semi-daemonize the process is not an option.
+Doing so is like designing your service to fail.</p>
+<p>What you need is to have some process supervision tool that can start and manage your
+application process. Before choosing the right one, you need to make sure it does the
+following things:</p>
+<ul class="simple">
+<li><p>Restarts the service if it quits</p></li>
+<li><p>Reliably tracks its state</p></li>
+<li><p>Captures its stdout / stderr streams for logging purposes</p></li>
+<li><p>Runs a process with specific user/group permissions</p></li>
+<li><p>Configures system environment variables</p></li>
+</ul>
+<p>Most of the Unix and Linux distributions have some built-in tools/subsystems for process
+supervision such as <code class="docutils literal notranslate"><span class="pre">initd</span></code> scripts, <code class="docutils literal notranslate"><span class="pre">upstart</span></code>, and <code class="docutils literal notranslate"><span class="pre">runit</span></code>. Unfortunately, in most cases, they
+are not well suited for running user-level application code and are really hard to maintain.
+In particular, writing reliable <code class="docutils literal notranslate"><span class="pre">init.d</span></code> scripts is a real challenge because it requires a lot of
+Bash scripting that is hard to do it right. Some Linux distributions such as Gentoo have a
+redesigned approach to <code class="docutils literal notranslate"><span class="pre">init.d</span></code> scripts, so writing them is a lot easier. Anyway, locking
+yourself to a specific OS distribution just for the purpose of a single process supervision
+tool is not a good idea.</p>
+<p>Two popular tools in the Python community for managing application processes are
+Supervisor (<a class="reference external" href="http://supervisord.org">http://supervisord.org</a> ) and Circus
+(<a class="reference external" href="https://circus.readthedocs.org/en/latest/">https://circus.readthedocs.org/en/latest/</a> ).
+They are both very similar in
+configuration and usage. Circus is a bit younger than Supervisor because it was created to
+address some weaknesses of the latter. They both can be configured in simple INI-like
+configuration format. They are not limited to running Python processes and can be
+configured to manage any application. It is hard to say which one is better because they
+both provide very similar functionality. Anyway, Supervisor does not run on Python 3, so it
+does not get our approval. While it is not a problem to run Python 3 processes under
+Supervisor’s control, I will take it as an excuse and feature only the example of the Circus
+configuration.</p>
+<p>Let’s assume that we want to run the <code class="docutils literal notranslate"><span class="pre">webxample</span></code> application
+using <code class="docutils literal notranslate"><span class="pre">gunicorn</span></code> webserver under Circus control. In production, we would
+probably run Circus under an applicable system-level process supervision tool
+(<code class="docutils literal notranslate"><span class="pre">initd</span></code>, <code class="docutils literal notranslate"><span class="pre">upstart</span></code>, and <code class="docutils literal notranslate"><span class="pre">runit</span></code>), especially if it was installed from the system packages
+repository. For the sake of simplicity, we will run this locally inside of the virtual
+environment. The minimal configuration file (here named <code class="docutils literal notranslate"><span class="pre">circus.ini</span></code>) that allows us to
+run our application in Circus looks like this:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[watcher:webxample]</span>
+<span class="na">cmd</span> <span class="o">=</span> <span class="s">/path/to/venv/dir/bin/gunicorn webxample.conf.wsgi:application</span>
+<span class="na">numprocesses</span> <span class="o">=</span> <span class="s">1</span>
+</pre></div>
+</div>
+<p>Now, the circus process can be run with this configuration file as the execution argument:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ circusd circus.ini
+<span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 circus<span class="o">[</span><span class="m">1776</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> Starting master on pid <span class="m">1776</span>
+<span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 circus<span class="o">[</span><span class="m">1776</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> Arbiter now waiting <span class="k">for</span> commands
+<span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 circus<span class="o">[</span><span class="m">1776</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> webxample started
+<span class="o">[</span><span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 +0100<span class="o">]</span> <span class="o">[</span><span class="m">1778</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> Starting gunicorn <span class="m">19</span>.4.5
+<span class="o">[</span><span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 +0100<span class="o">]</span> <span class="o">[</span><span class="m">1778</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> Listening at: http://127.0.0.1:8000 <span class="o">(</span><span class="m">1778</span><span class="o">)</span>
+<span class="o">[</span><span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 +0100<span class="o">]</span> <span class="o">[</span><span class="m">1778</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> Using worker: sync
+<span class="o">[</span><span class="m">2016</span>-02-15 <span class="m">08</span>:34:34 +0100<span class="o">]</span> <span class="o">[</span><span class="m">1781</span><span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> Booting worker with pid: <span class="m">1781</span>
+</pre></div>
+</div>
+<p>Now, you can use the <code class="docutils literal notranslate"><span class="pre">circusctl</span></code> command to run an interactive session and control all
+managed processes using simple commands. Here is an example of such a session:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ circusctl
+circusctl <span class="m">0</span>.13.0
+webxample: active
+<span class="o">(</span>circusctl<span class="o">)</span> stop webxample
+ok
+<span class="o">(</span>circusctl<span class="o">)</span> status
+webxample: stopped
+<span class="o">(</span>circusctl<span class="o">)</span> start webxample
+ok
+<span class="o">(</span>circusctl<span class="o">)</span> status
+webxample: active
+</pre></div>
+</div>
+<p>Of course, both of the mentioned tools have a lot more features available. All of them are
+explained in their documentation, so before making your choice, you should read them
+carefully.</p>
+</div>
+<div class="section" id="application-code-running-in-user-space">
+<h3>4.4. Application code running in user space<a class="headerlink" href="#application-code-running-in-user-space" title="Permalink to this headline">¶</a></h3>
+<p>Your application code should be always run in user space. This means it must not be
+executed under super-user privileges. If you design your application following the Twelve-
+Factor App, it is possible to run your application under a user that has almost no privileges.
+The conventional name for the user that owns no files and is in no privileged groups
+is <code class="docutils literal notranslate"><span class="pre">nobody</span></code>; anyway, the actual recommendation is to create a separate user for each
+application daemon. The reason for that is system security. It is to limit the damage that a
+malicious user can do if it gains control over your application process. In Linux, processes
+of the same user can interact with each other, so it is important to have different
+applications separated at the user level.</p>
+</div>
+<div class="section" id="using-reverse-http-proxies">
+<h3>4.5. Using reverse HTTP proxies<a class="headerlink" href="#using-reverse-http-proxies" title="Permalink to this headline">¶</a></h3>
+<p>Multiple Python WSGI-compliant web servers can easily serve HTTP traffic all by
+themselves without the need of any other web server on top of them. It is still very common
+to hide them behind a reverse proxy such as NGINX or Apache. A reverse proxy creates an
+additional HTTP server layer that proxies requests and responses between clients and your
+application and appears to your Python server as though it is the requesting client. Reverse
+proxies are useful for the following variety of reasons:</p>
+<ul class="simple">
+<li><p>TLS/SSL termination is usually better handled by top-level web servers such as NGINX and Apache. This allows the Python application to speak only simple HTTP protocol (instead of HTTPS), so complexity and configuration of secure communication channels are left for the reverse proxy.</p></li>
+<li><p>Unprivileged users cannot bind low ports (in the range of 0-1000), but the HTTP protocol should be served to the users on port 80, and HTTPS should be served on port 443. To do this, you must run the process with super-user privileges. Usually, it is safer to have your application serving on a high port or on a Unix domain socket and use that as an upstream for reverse proxy that is run under the more privileged user.</p></li>
+<li><p>Usually, NGINX can serve static assets (images, JS, CSS, and other media) more efficiently than Python code. If you configure it as a reverse proxy, then it is only a few more lines of configuration to serve static files through it.</p></li>
+<li><p>When a single host needs to serve multiple applications from different domains, Apache or NGINX are indispensable for creating virtual hosts for different domains served on the same port.</p></li>
+<li><p>Reverse proxies can improve performance by adding additional caching layers or can be configured as simple load balancers. Reverse proxies can also apply compression (for example, gzip) to responses in order to limit the amount of required network bandwidth.</p></li>
+</ul>
+<p>Some of the web servers actually are recommended to be run behind a proxy such as
+NGINX. For example, <code class="docutils literal notranslate"><span class="pre">gunicorn</span></code> is a very robust WSGI-based server that can give
+exceptional performance results if its clients are fast as well. On the other hand, it does not
+handle slow clients well, so it is easily susceptible to the denial of service attacks based on a
+slow client connection. Using a proxy server that is able to buffer slow clients is the best
+way to solve this problem.</p>
+<p>Mind that, with proper infrastructure, it is possible to almost completely get rid of reverse
+proxies in your architecture. Nowadays, things such as SSL termination and compression
+can be easily handled with load balancing services such as AWS Load Balancer. Static and
+media assets are also better served through Content Delivery Networks (CDNs) that can
+also be used to cache other responses of your service.</p>
+<p>The mentioned requirement to serve HTTP/HTTPS traffic on low 80/433 ports (that cannot
+be bound by unprivileged users) is also no longer a problem if the only entry points that
+your clients communicate with are your load balancers and CDN. Still, even with that kind
+of architecture, it does not necessarily mean that your system does not facilitate reverse
+proxies at all. For instance, many load balancers support proxy protocol. It means that a
+load balancer may appear to your application as though it is the requesting client. In such
+scenarios, the load balancer acts as it were in fact a reverse proxy.</p>
+</div>
+<div class="section" id="reloading-processes-gracefully">
+<h3>4.6. Reloading processes gracefully<a class="headerlink" href="#reloading-processes-gracefully" title="Permalink to this headline">¶</a></h3>
+<p>The ninth rule of Twelve-Factor App methodology deals with process disposability and
+says that you should maximize robustness with fast start up times and graceful shutdowns.
+While fast start up time is quite self-explanatory, the graceful shutdowns require some
+additional discussion.</p>
+<p>In the scope of web applications, if you terminate the server process in a non-graceful way,
+it will quit immediately without the time to finish processing requests and reply with
+proper responses to connected clients. In the best scenario case, if you use some kind of
+reverse proxy, then the proxy might reply to the connected clients with some generic error
+response (for example, 502 Bad Gateway), even though it is not the right way to notify
+users that you have restarted your application and have deployed a new release.</p>
+<p>According to the Twelve-Factor App, the web serving process should be able to quit
+gracefully upon receiving the Unix <code class="docutils literal notranslate"><span class="pre">SIGTERM</span></code> signal. This means the server should stop
+accepting new connections, finish processing all of the pending requests, and then quit with
+some exit code when there is nothing more to do.</p>
+<p>Obviously, when all of the serving processes quit or start their shutdown procedure, you
+are not able to process new requests any longer. This means your service will still
+experience an outage. So there is an additional step you need to perform—start new
+workers that will be able to accept new connections while the old ones are gracefully
+quitting. Various Python WSGI-compliant web server implementations allow you to reload
+the service gracefully without any downtime.</p>
+<p>The most popular Python web servers are Gunicorn and uWSGI, which provide the
+following functionality:</p>
+<ul class="simple">
+<li><p>Gunicorn’s master process upon receiving the <code class="docutils literal notranslate"><span class="pre">SIGHUP</span></code> signal (<code class="docutils literal notranslate"><span class="pre">kill</span> <span class="pre">-HUP</span> <span class="pre">&lt;process-pid&gt;</span></code>) will start new workers (with new code and configuration) and attempt a graceful shutdown on the old ones.</p></li>
+<li><p>uWSGI has at least three independent schemes for doing graceful reloads. Each of them is too complex to explain briefly, but its official documentation provides full information on all of the possible options.</p></li>
+</ul>
+<p>Today, graceful reloads are a standard in deploying web applications. Gunicorn seems to
+have an approach that is the easiest to use but also leaves you with the least flexibility.
+Graceful reloads in uWSGI on the other hand allow much better control on reloads but
+require more effort to automate and set up. Also, how you handle graceful reloads in your
+automated deploys is also affected by what supervision tools you use and how they are
+configured. For instance, in Gunicorn, graceful reloads are as simple as the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">kill</span> -HUP &lt;gunicorn-master-process-pid&gt;
+</pre></div>
+</div>
+<p>But, if you want to properly isolate project distributions by separating virtual environments
+for each release and configure process supervision using symbolic links (as presented in
+the <code class="docutils literal notranslate"><span class="pre">fabfile</span></code> example earlier), you will shortly notice that this feature of Gunicorn may not
+work as expected. For more complex deployments, there is still no system-level solution
+available that will work for you out-of-the-box. You will always have to do a bit of hacking
+and sometimes this will require a substantial level of knowledge about low-level system
+implementation details.</p>
+<p>In such complex scenarios, it is usually better to solve the problem on a higher level of
+abstraction. If you finally decide to run your applications as containers and distribute new
+releases as new container images (it is strongly advised), then you can leave the
+responsibility of graceful reloads to your container orchestration system of choice (for
+example, Kubernetes) that can usually handle various reloading strategies out-of-the-box.</p>
+<p>Even without advanced container orchestration systems, you can do graceful reloading on
+the infrastructure level. For instance, AWS Elastic Load Balancer is able to gracefully switch
+traffic from your old application instances (for example, EC2 hosts) to new ones. Once old
+application instances receive no new traffic and are done handling their requests, they can
+be simply terminated without any observable outage to your service. Other cloud
+providers, of course, usually provide analogous features in their service portfolio.</p>
+</div>
 </div>
 <div class="section" id="code-instrumentation-and-monitoring">
 <h2>5. Code instrumentation and monitoring<a class="headerlink" href="#code-instrumentation-and-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Our work does not end on writing an application and deploying it to target the execution
+environment. It is possible to write an application, which after deployment will not require
+any further maintenance, although it is very unlikely. In reality, we need to ensure that it is
+properly observed for errors and performance.
+To be sure that your product works as expected, you need to properly handle application
+logs and monitor the necessary application metrics. This often includes the following:
+Monitoring web application access logs for various HTTP status codes
+A collection of process logs that may contain information about runtime errors
+and various warnings
+Monitoring usage of system resources (CPU load, memory, network traffic, I/O
+performance, disk usage, and so on) on the remote hosts where the application is
+run
+Monitoring application-level performance and metrics that are business
+performance indicators (customer acquisition, revenue, conversion rates, and so
+on)
+Luckily, there are a lot of free tools available for instrumenting your code and monitoring
+its performance. Most of them are very easy to integrate.
+Logging errors with Sentry/Raven is explained in the next section.
+Logging errors – Sentry/Raven
+The truth is painful. No matter how precisely your application is tested, your code will
+eventually fail at some point. This can be anything—unexpected exception, resource
+exhaustion, crash of some backing service, network outage, or simply an issue in the
+external library. Some of the possible issues (such as resource exhaustion) can be predicted
+and prevented in advance with proper monitoring. Unfortunately, there will
+always be something that passes your defenses, no matter how much you try.
+What you can do instead is to prepare for such scenarios and make sure that no error
+passes unnoticed. In most cases, any unexpected failure scenario results in an exception
+raised by the application and logged through the logging system. This can
+be stdout , stderr , log file, or whatever output you have configured for logging.
+Depending on your implementation, this may or may not result in the application quitting
+with some system exit code.
+[ 264 ]Deploying the Code
+Chapter 8
+You could, of course, depend solely on the log files stored in the filesystem for finding and
+monitoring your application errors. Unfortunately, observing errors in plain textual form is
+quite painful and does not scale well beyond anything more complex than running code in
+development. You will eventually be forced to use some services designed for log collection
+and analysis. Proper log processing is very important for other reasons (that will be
+explained a bit later) but does not work well for tracking and debugging errors. The reason
+is simple. The most common form of error logs is just Python stack trace. If you stop only
+on that, you will shortly realize that it is not enough in finding the root cause of your issues.
+This is especially true when errors occur in unknown patterns or in certain load conditions.
+What you really need is as much context information about the error occurrence as
+possible. It is also very useful to have a full history of the errors that occurred in the
+production environment that you can browse and search in some convenient way.
+One of the most common tools that gives such capabilities is Sentry
+( <a class="reference external" href="https://getsentry.com">https://getsentry.com</a> ). It is a battle-tested service for tracking exceptions and collecting
+crash reports. It is available as open source, written in Python, and originated as a tool for
+backend web developers. Now, it outgrew its initial ambitions and has support for many
+more languages, including PHP, Ruby, and JavaScript but still stays the most popular tool
+of choice for many Python web developers.
+Exception stack tracebacks in web applications
+It is common that web applications do not exit on unhandled exceptions
+because HTTP servers are obliged to return an error response with a
+status code from the 5XX group if any server error occurs. Most Python
+web frameworks do such things by default. In such cases, the exception is,
+in fact, handled either on the internal web framework level or by the
+WSGI server middleware. Anyway, this will usually still result in the
+exception stack trace being printed (usually on standard output).
+The Sentry is available as a paid software-as-a-service model, but it is open source, so it can
+be hosted for free on your own infrastructure. The library that provides integration with
+Sentry is sentry-sdk (available on PyPI). If you haven’t worked with it yet and want to
+test it but have no access to your own Sentry server, then you can easily sign up for a free
+trial on Sentry’s on-premise service site. Once you have access to a Sentry server and have
+created a new project, you will obtain a string called Data Source Name (DSN). This DSN
+string is the minimal configuration setting needed to integrate your application with sentry.
+It contains protocol, credentials, server location, and your organization/project identifier in
+the following form:
+‘{PROTOCOL}://{PUBLIC_KEY}:<a class="reference external" href="mailto:{SECRET_KEY}&#37;&#52;&#48;{HOST}/{PATH}{PROJECT_ID">{SECRET_KEY}<span>&#64;</span>{HOST}/{PATH}{PROJECT_ID</a>}’
+[ 265 ]Deploying the Code
+Chapter 8
+Once you have DSN, the integration is pretty straightforward, as shown in the following
+code:
+import sentry_sdk
+sentry_sdk.init(
+dsn=’<a class="reference external" href="https:/">https:/</a>/&lt;key&gt;:&lt;secret&gt;&#64;app.getsentry.com/&lt;project&gt;’
+)
+try:
+1 / 0
+except Exception as e:
+sentry_sdk.capture_exception(e)
+Sentry and Raven
+The old library for Sentry integration is Raven. It is still maintained and
+available on PyPI but is being phased out, so it is best to start your Sentry
+integration using the newer python-sdk package. It is possible though
+that some framework integrations or Raven extensions haven’t been
+ported to new SDK, so in such situations, integration using Raven is still a
+feasible integration path.
+Sentry SDK has numerous integrations with most popular Python frameworks such as
+Django, Flask, Celery, or Pyramid to make integration easier. These integrations will
+automatically provide additional context that is specific to the given framework. If your
+web framework of choice does not have a dedicated support, the sentry-sdk package
+provides generic WSGI middleware that makes it compatible with any WSGI-based web
+servers, as shown in the following code:
+from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
+sentry_sdk.init(
+dsn=’<a class="reference external" href="https:/">https:/</a>/&lt;key&gt;:&lt;secret&gt;&#64;app.getsentry.com/&lt;project&gt;’
+)
+# …
+# note: application is some WSGI application object defined earlier
+application = SentryWsgiMiddleware(application)
+[ 266 ]Deploying the Code
+Chapter 8
+The other notable integration is the ability to track messages logged through Python’s built-
+in logging module. Enabling such support requires only the following few additional lines
+of code:
+import logging
+import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
+sentry_logging = LoggingIntegration(
+level=logging.INFO,
+event_level=logging.ERROR,
+)
+sentry_sdk.init(
+dsn=’<a class="reference external" href="https:/">https:/</a>/&lt;key&gt;:&lt;secret&gt;&#64;app.getsentry.com/&lt;project&gt;’,
+integrations=[sentry_logging],
+)
+Capturing of logging messages may have caveats, so make sure to read the official
+documentation on that topic if you are interested in such a feature. This should save you
+from unpleasant surprises.
+The last note is about running your own Sentry as a way to save some money. There ain’t no
+such thing as a free lunch. You will eventually pay additional infrastructure costs and Sentry
+will be just another service to maintain. Maintenance = additional work = costs! As your
+application grows, the number of exceptions grow, so you will be forced to scale Sentry as
+you scale your product. Fortunately, this is a very robust project, but will not give you any
+value if overwhelmed with too much load. Also, keeping Sentry prepared for a catastrophic
+failure scenario where thousands of crash reports per second can be sent is a real challenge.
+So you must decide which option is really cheaper for you, and whether you have enough
+resources to do all of this by yourself. There is, of course, no such dilemma if security
+policies in your organization deny sending any data to third parties. If so, just host it on
+your own infrastructure. There are costs, of course, but ones that are definitely worth
+paying.
+Next, we will discuss the monitoring system and application metrics.
+Monitoring system and application metrics
+When it comes to monitoring performance, the amount of tools to choose from may be
+overwhelming. If you have high expectations, then it is possible that you will need to use a
+few of them at the same time.
+[ 267 ]Deploying the Code
+Chapter 8
+Munin ( <a class="reference external" href="http://munin-monitoring.org">http://munin-monitoring.org</a> ) is one of the popular choices used by many
+organizations regardless of the technology stack they use. It is a great tool for analyzing
+resource trends and provides a lot of useful information, even with a default installation
+without additional configuration. Its installation consists of the following two main
+components:
+The Munin master that collects metrics from other nodes and serves metrics
+graphs
+The Munin node that is installed on a monitored host, which gathers local
+metrics and sends it to the Munin master
+The master node and most of the plugins are written in Perl. There are also node
+implementations in other languages: munin-node-c is written in C
+( <a class="reference external" href="https://github.com/munin-monitoring/munin-c">https://github.com/munin-monitoring/munin-c</a> ) and munin-node-python is written in
+Python ( <a class="reference external" href="https://github.com/agroszer/munin-node-python">https://github.com/agroszer/munin-node-python</a> ). Munin comes with a huge
+number of plugins available in its contrib repository. This means it provides out-of-the-
+box support for most of the popular databases and system services. There are even plugins
+for monitoring popular Python web servers, such as uWSGI or Gunicorn.
+The main drawback of Munin is the fact that it serves graphs as static images and actual
+plotting configuration is included in specific plugin configurations. This does not help in
+creating flexible monitoring dashboards and comparing metric values from different
+sources at the same graph. But this is the price we need to pay for simple installation and
+versatility. Writing your own plugins is quite simple. There is the munin-python package
+( <a class="reference external" href="http://python-munin.readthedocs.org/en/latest/">http://python-munin.readthedocs.org/en/latest/</a> ) that helps to write Munin plugins in
+Python.
+Unfortunately, the architecture of Munin that assumes that there is always a separate
+monitoring daemon process on every host that is responsible for collection of metrics may
+not be the best solution for monitoring custom application performance metrics. It is indeed
+very easy to write your own Munin plugins, but under the assumption that the monitoring
+process can already report its performance statistics in some way.
+If you want to collect some custom application-level metrics, it might be necessary to
+aggregate and store them in some temporary storage until reporting to a custom Munin
+plugin. It makes creation of custom metrics more complicated, so you might want to
+consider other solutions for such purposes.
+[ 268 ]Deploying the Code
+Chapter 8
+The other popular solution that makes it especially easy to collect custom metrics is StatsD
+( <a class="reference external" href="https://github.com/etsy/statsd">https://github.com/etsy/statsd</a> ). It’s a network daemon written in Node.js that listens
+to various statistics such as counters, timers, and gauges. It is very easy to integrate, thanks
+to the simple protocol based on UDP. It is also easy to use the Python package
+named statsd for sending metrics to the StatsD daemon, as follows:
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+import statsd
+c = statsd.StatsClient(‘localhost’, 8125)
+c.incr(‘foo’) # Increment the ‘foo’ counter.
+c.timing(‘stats.timed’, 320) # Record a 320ms ‘stats.timed’.
+Because UDP is a connectionless protocol, it has a very low performance overhead on the
+application code, so it is very suitable for tracking and measuring custom events inside the
+application code.
+Unfortunately, StatsD is the only metrics collection daemon, so it does not provide any
+reporting features. You need other processes that are able to process data from StatsD in
+order to see the actual metrics graphs. The most popular choice is Graphite
+( <a class="reference external" href="http://graphite.readthedocs.org">http://graphite.readthedocs.org</a> ). It does mainly the following two things:
+Stores numeric time-series data
+Renders graphs of this data on demand
+Graphite provides you with the ability to save graph presets that are highly customizable.
+You can also group many graphs into thematic dashboards. Graphs are, similar to Munin,
+rendered as static images, but there is also the JSON API that allows other frontends to read
+graph data and render it by other means.
+One of the great dashboard plugins integrated with Graphite is Grafana
+( <a class="reference external" href="http://grafana.org">http://grafana.org</a> ). It is really worth trying because it has way better usability than
+plain Graphite dashboards. Graphs provided in Grafana are fully interactive and easier to
+manage.
+Graphite is unfortunately a bit of a complex project. It is not a monolithic service and
+consists of the following three separate components:
+Carbon: This is a daemon written using Twisted that listens for time-series data.
+whisper: This is a simple database library for storing time-series data.
+graphite webapp: This is a Django web application that renders graphs on-
+demand as static images (using Cairo library) or as JSON data.
+[ 269 ]Deploying the Code
+Chapter 8
+When used with the StatsD project, the statsd daemon sends its data to
+the carbon daemon. This makes the full solution a rather complex stack of various
+applications, where each of them is written using completely different technology. Also,
+there are no preconfigured graphs, plugins, and dashboards available, so you will need to
+configure everything by yourself. This is a lot of work at the beginning and it is very easy to
+miss something important. This is the reason why it might be a good idea to use Munin as a
+monitoring backup, even if you decide to have Graphite as your core monitoring service.
+Another good monitoring solution for arbitrary metric collection is Prometheus. It has a
+completely different architecture than Munin and StatsD. Instead of relying on monitored
+applications or daemons to push metrics in configured intervals, Prometheus actively pulls
+metrics directly from the source using the HTTP protocol. This requires monitored services
+to store (and sometimes preprocess) metrics internally and expose them on HTTP
+endpoints.
+Fortunately, Prometheus comes with a handful of libraries for various languages and
+frameworks to make this kind of integration as easy as possible. There are also various
+exporters that act as bridges between Prometheus and other monitoring systems. So, if you
+already use other monitoring solutions, it is usually very easy to migrate gradually to a
+Prometheus architecture. Prometheus also wonderfully integrates with Grafana.
+In the next section, we will see how to deal with application logs.
+Dealing with application logs
+While solutions such as Sentry are usually way more powerful than ordinary textual output
+stored in files, logs will never die. Writing some information to a standard output or file is
+one of the simplest things that an application can do and this should never be
+underestimated. There is a risk that messages sent to Sentry by Raven will not get
+delivered. The network can fail. Sentry’s storage can get exhausted or may not be able to
+handle the incoming load. Your application might crash before any message is sent (with a
+segmentation fault, for example). These are only a few of the possible scenarios.
+What is less likely is that your application won’t be able to log messages that are going to be
+written to the filesystem. It is still possible, but let’s be honest, if you face such a condition
+where logging fails, probably you have a lot more burning issues than some missing log
+messages.
+Remember that logs are not only about errors. Many developers used to think about logs
+only as a source of data that is useful when debugging issues and/or that can be used to
+perform some kind of forensics.
+[ 270 ]Deploying the Code
+Chapter 8
+Definitely, less of them try to use it as a source for generating application metrics or to do
+some statistical analysis. But logs may be a lot more useful than that. They can even be a
+core of the product implementation. A great example of building a product with logs is
+Amazon’s article presenting example architecture for the real-time bidding service, where
+everything is centered around access log collection and processing.
+See <a class="reference external" href="https://aws.amazon.com/blogs/aws/real-time-ad-impression-bids-using-dynamod">https://aws.amazon.com/blogs/aws/real-time-ad-impression-bids-using-dynamod</a>
+b/
+Let’s discuss the basic low-level log practices.
+Basic low-level log practices
+The Twelve-Factor App manifesto says that logs should be treated as event streams. So, the
+log file is not a log by itself, but only an output format. The fact that they are streams means
+they represent time ordered events. In raw, they are typically in a plaintext format with one
+line per event, although in some cases they may span across multiple lines (this is typical
+for any back traces related to runtime errors).
+According to the Twelve-Factor App methodology, the application should never be aware
+of the format in which logs are stored. This means that writing to the file, or log rotation
+and retention should never be maintained by the application code.
+These are the responsibilities of the environment in which the applications is run. This may
+be confusing because a lot of frameworks provide functions and classes for managing log
+files as well as rotation, compression, and retention utilities. It is tempting to use them
+because everything can be contained in your application code base, but actually it is an
+anti-pattern that should be avoided.
+The best practices for dealing with logs are as follows:
+The application should always write logs unbuffered to the standard output
+( stdout ).
+The execution environment should be responsible for collection and routing of
+logs to the final destination.
+The main part of the mentioned execution environment is usually some kind of process
+supervision tool. The popular Python solutions, such as Supervisor or Circus, are the first
+ones responsible for dealing with log collection and routing. If logs are to be stored in the
+local filesystem, then only they should write to actual log files.
+[ 271 ]Deploying the Code
+Chapter 8
+Both Supervisor and Circus are also capable of handling log rotation and retention for
+managed processes but you should really consider whether this is a path that you want to
+take. Successful operations are mostly about simplicity and consistency. Logs of your own
+application are probably not the only ones that you want to process and archive. If you use
+Apache or NGINX as a reverse proxy, you might want to collect their access logs.
+You might also want to store and process logs for caches and databases. If you are running
+some popular Linux distribution, then the chances are very high that each of these services
+have their own log files processed (rotated, compressed, and so on) by the popular utility
+named logrotate . My strong recommendation is to forget about Supervisor’s and Circus’
+log rotation capabilities for the sake of consistency with other system
+services. logrotate is way more configurable and also supports compression.
+logrotate and Supervisor/Circus
+There is an important thing to know when using logrotate with
+Supervisor or Circus. Rotation of logs will always happen while process
+Supervisor still has open descriptor to rotated logs. If you don’t take
+proper countermeasures, then new events will be still written to the file
+descriptor that was already deleted by logrotate . As a result, nothing
+more will be stored in a filesystem. Solutions to this problem are quite
+simple. Configure logrotate for log files of processes managed by
+Supervisor or Circus with the copytruncate option. Instead of moving
+the log file after rotation, it will copy it and truncate the original file to
+zero size in place. This approach does not invalidate any of the existing
+file descriptors and processes that are already running can write to log
+files uninterrupted. Supervisor can also accept the SIGUSR2 signal that
+will make it reopen all of the file descriptors. It may be included as
+the postrotate script in the logrotate configuration. This second
+approach is more economical in the terms of I/O operations, but is also
+less reliable and harder to maintain.
+Different tools for log processing are explained in the next section.
+[ 272 ]Deploying the Code
+Chapter 8
+Tools for log processing
+If you have no experience in working with big amounts of logs, you will eventually gain it
+when working with a product that has some substantial load. You will shortly notice that a
+simple approach based on storing them in files and backing them up in some persistent
+storage for later retrieval is not enough. Without proper tools, this will become crude and
+expensive. Simple utilities such as logrotate help you only to ensure that the hard disk is
+not overloaded by the ever-increasing amount of new events, although splitting and
+compressing log files only helps in the data archival process but does not make data
+retrieval or analysis simpler.
+When working with distributed systems that span across multiple nodes, it is nice to have a
+single central point from which all logs can be retrieved and analyzed. This requires a log
+processing flow that goes way beyond simple compression and backing up. Fortunately,
+this is a well-known problem so there are many tools available that aim to solve it.
+One of the popular choices among many developers is Logstash. This is the log collection
+daemon that can observe active log files, parse log entries, and send them to the backing
+service in a structured form. The choice of backing stays almost always the
+same—Elasticsearch. Elasticsearch is the search engine built on top of Lucene. Among text
+search capabilities, it has a unique data aggregation framework that fits extremely well into
+the purpose of log analysis. The other addition to this pair of tools is Kibana. It is a very
+versatile monitoring, analysis, and visualization platform for Elasticsearch. The way that
+these three tools complement each other is the reason why almost always they are used
+together as a single stack for log processing.
+The integration of existing services with Logstash is very simple because it can listen on
+existing log file changes for the new events with only minimal changes in your logging
+configuration. It parses logs in textual form and has preconfigured support for some of the
+popular log formats, such as Apache/NGINX access logs. Logstash can be complemented
+with Beats. Beats are log shippers compatible with Logstash input protocols that can collect
+not only raw log data from files (Filebeat) but also various system metrics (Metricbeat) and
+even audit user activities on hosts (Auditbeat).
+The other solution that seems to fill some of Logstash gaps is Fluentd. It is an alternative log
+collection daemon that can be used interchangeably with Logstash in the mentioned log
+monitoring stack. It also has an option to listen and parse log events directly in log files, so
+integration requires only a little effort. In contrast to Logstash, it handles reloads very well
+and even does not need to be signaled if log files were rotated. Anyway, the most
+advantage comes from using one of its alternative log collection options that will require
+some substantial changes to logging configuration in your application.
+[ 273 ]Deploying the Code
+Chapter 8
+Fluentd really treats logs as event streams (as recommended by the Twelve-Factor App).
+The file-based integration is still possible but it is only kind of backward compatible for
+legacy applications that treat logs mainly as files. Every log entry is an event and it should
+be structured. Fluentd can parse textual logs and has multiple plugin options to handle,
+including the following:
+Common formats (Apache, NGINX, and syslog)
+Arbitrary formats specified using regular expressions or handled with custom
+parsing plugins
+Generic formats for structured messages such as JSON
+The best event format for Fluentd is JSON because it adds the least amount of overhead.
+Messages in JSON can also be passed almost without any change to the backing service
+such as Elasticsearch or the database.
+The other very useful feature of Fluentd is the ability to pass event streams using transports
+other than a log file written to the disk. The following are the most notable built-in input
+plugins:
+in_udp : With this plugin, every log event is sent as UDP packets.
+in_tcp : With this plugin, events are sent through TCP connection.
+in_unix : With this plugin, events are sent through a Unix domain socket
+(named socket).
+in_http : With this plugin, events are sent as HTTP POST requests.
+in_exec : With this plugin, Fluentd process executes an external command
+periodically to pull events in the JSON or MessagePack format.
+in_tail : With this plugin, Fluentd process listens for an event in a textual file.
+Alternative transports for log events may be especially useful in situations where you need
+to deal with poor I/O performance of machine storage. It is very often on cloud computing
+services that the default disk storage has a very low number of Input Output Operations
+Per Second (IOPS) and you need to pay a lot of money for better disk performance.
+If your application outputs a large amount of log messages, you can easily saturate your
+I/O capabilities, even if the data size is not very high. With alternate transports, you can use
+your hardware more efficiently because you leave the responsibility of data buffering only
+to a single process-log collector. When configured to buffer messages in memory instead of
+disk, you can even completely get rid of disk writes for logs, although this may greatly
+reduce the consistency guarantees of collected logs.
+[ 274 ]Deploying the Code
+Chapter 8
+Using different transports seems to be slightly against the 11 th rule of the Twelve-Factor
+App methodology. Treating logs as event streams when explained in detail suggests that
+the application should always log only through a single standard output stream ( stdout ).
+It is still possible to use alternate transports without breaking this rule. Writing
+to stdout does not necessarily mean that this stream must be written to file.
+You can leave your application logging that way and wrap it with an external process that
+will capture this stream and pass it directly to Logstash or Fluentd without engaging the
+filesystem. This is an advanced pattern that may not be suitable for every project. It has the
+obvious disadvantage of higher complexity, so you need to consider for yourself whether it
+is really worth doing.</p>
 </div>
 </div>
 
@@ -223,6 +1499,8 @@ or Heroku.</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../references/index.html" class="btn btn-neutral float-right" title="References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../packaging/index.html" class="btn btn-neutral float-left" title="Packaging" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

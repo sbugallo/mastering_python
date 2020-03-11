@@ -20,3 +20,4 @@ Index
     parts/technical_architecture/index
     parts/low_level/index
     parts/distribution/index
+    parts/references/index

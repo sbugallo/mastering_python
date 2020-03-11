@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>3. Package index or index mirror &mdash; Mastering Python</title>
+  <title>3. Index mirroring &mdash; Mastering Python</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                05/03/2020
+                09/03/2020
               </div>
             
           
@@ -96,6 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
 </ul>
 
             
@@ -141,7 +142,7 @@
     
       <li><a href="../../../../index.html">Docs</a> &raquo;</li>
         
-      <li>3. Package index or index mirror</li>
+      <li>3. Index mirroring</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,8 +161,417 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="package-index-or-index-mirror">
-<h1>3. Package index or index mirror<a class="headerlink" href="#package-index-or-index-mirror" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="index-mirroring">
+<h1>3. Index mirroring<a class="headerlink" href="#index-mirroring" title="Permalink to this headline">¶</a></h1>
+<p>These are three main reasons why you might want to run your own index of Python
+packages:</p>
+<ul class="simple">
+<li><p>The official Python Package Index does not have any availability guarantees. It is run by Python Software Foundation thanks to numerous donations. Because of that, it means that this site can be down at the most inconvenient time. You don’t want to stop your deployment or packaging process in the middle due to PyPI outage.</p></li>
+<li><p>It is useful to have reusable components written in Python properly packaged, even for the closed source that will never be published publicly. It simplifies code base because packages that are used across the company for different projects do not need to be vendored. You can simply install them from the repository. This simplifies maintenance for such shared code and might reduce development costs for the whole company if it has many teams working on different projects.</p></li>
+<li><p>It is a very good practice to have your entire project packaged using <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>. Then, deployment of the new application version is often as simple as running <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--update</span> <span class="pre">my-application</span></code>.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>Code vendoring</strong> is a practice of including sources of the external package
+in the source code (repository) of other projects. It is usually done when
+the project’s code depends on a specific version of some external package
+that may also be required by other packages (and in a completely different
+version).</p>
+<p>For instance, the popular <code class="docutils literal notranslate"><span class="pre">requests</span></code> package uses some version
+of <code class="docutils literal notranslate"><span class="pre">urllib3</span></code> in its source tree because it is very tightly coupled to it and is
+very unlikely to work with any other version of urllib3 . An example of
+a module that is particularly often used by others is <code class="docutils literal notranslate"><span class="pre">six</span></code>. It can be found
+in sources of numerous popular projects such as Django
+(<code class="docutils literal notranslate"><span class="pre">django.utils.six</span></code>), Boto (<code class="docutils literal notranslate"><span class="pre">boto.vendored.six</span></code>), or Matplotlib
+(<code class="docutils literal notranslate"><span class="pre">matplotlib.externals.six</span></code>).</p>
+<p>Although vendoring is practiced even by some large and successful open
+source projects, it should be avoided if possible. This has justifiable usage
+only in certain circumstances and should not be treated as a substitute of
+package dependency management.</p>
+</div>
+<div class="section" id="pypi-mirroring">
+<h2>3.1. PyPI mirroring<a class="headerlink" href="#pypi-mirroring" title="Permalink to this headline">¶</a></h2>
+<p>The problem of PyPI outages can be somehow mitigated by allowing the installation tools
+to download packages from one of its mirrors. In fact, the official Python Package Index is
+already served through <strong>Content Delivery Network (CDN)</strong>, so it is intrinsically mirrored.
+This does not change the fact that it seems to have some bad days from time to time. Using
+unofficial mirrors is not a solution here because it might raise some security concerns.</p>
+<p>The best solution is to have your own PyPI mirror that will have all of the packages you
+need. The only party that will use it is you, so it will be much easier to ensure proper
+availability. The other advantage is that whenever this service goes down, you don’t need
+to rely on someone else to bring it up. The mirroring tool maintained and recommended by
+PyPA is <strong>bandersnatch</strong>
+(<a class="reference external" href="https://pypi.python.org/pypi/bandersnatch">https://pypi.python.org/pypi/bandersnatch</a>). It allows you to
+mirror the whole content of Python Package Index and it can be provided as the <code class="docutils literal notranslate"><span class="pre">index-url</span></code>
+option for the repository section in the <code class="docutils literal notranslate"><span class="pre">.pypirc</span></code> file (as explained in the previous
+chapter). This mirror does not accept uploads and does not have the web part of PyPI.
+Anyway, beware! A full mirror might require hundreds of gigabytes of storage and its size
+will continue to grow over time.</p>
+<p>But why stop at a simple mirror while we have a much better alternative? There is a very
+low chance that you will require a mirror of the whole package index. Even with a project
+that has hundreds of dependencies, it will be only a minor fraction of all of the available
+packages. Also, not being able to upload your own private package is a huge limitation of
+such a simple mirror. It seems that the added value of using bandersnatch is very low for
+such a high price. And this is true in most situations. If the package mirror is to be
+maintained only for single or a few projects, a much better approach is to
+use <strong>devpi</strong> (<a class="reference external" href="http://doc.devpi.net/">http://doc.devpi.net/</a>). It is a PyPI-compatible package index
+implementation that provides both of the following:</p>
+<ul class="simple">
+<li><p>A private index to upload nonpublic packages</p></li>
+<li><p>Index mirroring</p></li>
+</ul>
+<p>The main advantage of devpi over bandersnatch is how it handles mirroring. It can, of
+course, do a full general mirror of other indexes like bandersnatch does, but it is not its
+default behavior. Instead of doing a rather expensive backup of the whole repository, it
+maintains mirrors for packages that were already requested by clients. So, whenever a
+package is requested by the installation tool (<code class="docutils literal notranslate"><span class="pre">pip</span></code>, <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, and <code class="docutils literal notranslate"><span class="pre">easy_install</span></code>), if it
+does not exist in the local mirror, the devpi server will attempt to download it from the
+mirrored index (usually PyPI) and serve. Once the package is downloaded, the devpi will
+periodically check for its updates to maintain a fresh state of its mirror.</p>
+<p>The mirroring approach leaves a slight risk of failure when you request a new package that
+was not yet mirrored when the upstream package index has an outage. Anyway, this risk is
+reduced, thanks to the fact that in most deployments you will depend only on packages
+that were already mirrored in the index. The mirror state for packages that were already
+requested has eventual consistency guarantee and new versions will be downloaded
+automatically. This seems to be a very reasonable trade off.</p>
+<p>Now let’s see how to properly bundle and build additional non-Python resources in your
+Python application.</p>
+</div>
+<div class="section" id="bundling-additional-resources-with-your-python-package">
+<h2>3.2. Bundling additional resources with your Python package<a class="headerlink" href="#bundling-additional-resources-with-your-python-package" title="Permalink to this headline">¶</a></h2>
+<p>Modern web applications have a lot of dependencies and often require a lot of steps to
+properly install on the remote host. For instance, the typical bootstrapping process for a
+new version of the application on a remote host consists of the following steps:</p>
+<ol class="arabic simple">
+<li><p>Create a new virtual environment for isolation.</p></li>
+<li><p>Move the project code to the execution environment.</p></li>
+<li><p>Install the latest project requirements (usually from the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file).</p></li>
+<li><p>Synchronize or migrate the database schema.</p></li>
+<li><p>Collect static files from project sources and external packages to the desired location.</p></li>
+<li><p>Compile localization files for applications available in different languages.</p></li>
+</ol>
+<p>For more complex sites, there might be lot of additional tasks mostly related to frontend
+code that is independent from previously defined tasks, as in the following example:</p>
+<ol class="arabic simple">
+<li><p>Generate CSS files using preprocessors such as SASS or LESS.</p></li>
+<li><p>Perform minification, obfuscation, and/or concatenation of static files (JavaScript and CSS files).</p></li>
+<li><p>Compile code written in JavaScript superset languages (CoffeeScript, TypeScript, and so on) to native JS.</p></li>
+<li><p>Preprocess response template files (minification, style inlining, and so on).</p></li>
+</ol>
+<p>Nowadays, for these kind of applications that require a lot of additional assets to be
+prepared, most developers would probably use Docker images. Dockerfiles allow you to
+easily define all of the steps that are necessary to bundle all assets with your application
+image. But if you don’t use Docker, it means that all of these steps must be automated using
+other tools such as Make, Bash, Fabric, or Ansible. Still, it is not a good idea to do all of
+these steps directly on the remote hosts where the application is being installed. Here are
+the reasons:</p>
+<ul class="simple">
+<li><p>Some of the popular tools for processing static assets can be either CPU or memory intensive. Running them in production environments can destabilize your application execution.</p></li>
+<li><p>These tools very often will require additional system dependencies that may not be required for the normal operation of your projects. These are mostly additional runtime environments such as JVM, Node, or Ruby. This adds complexity to configuration management and increases the overall maintenance costs.</p></li>
+<li><p>If you are deploying your application to multiple servers (tens, hundreds, or thousands), you are simply repeating a lot of work that could be done once. If you have your own infrastructure, then you may not experience the huge increase of costs, especially if you perform deployments in periods of low traffic. But if you run cloud computing services in the pricing model that charges you extra for spikes in load or generally for execution time, then this additional cost may be substantial on a proper scale.</p></li>
+<li><p>Most of these steps just take a lot of time. You are installing your code on remote servers, so the last thing you want is to have your connection interrupted by some network issue. By keeping the deployment process quick, you are lowering the chance of deployment interruption.</p></li>
+</ul>
+<p>Obviously, the results of these predeployment steps can’t be included in your application
+code repository either. Simply, there are things that must be done with every release and
+you can’t change that. It is obviously a place for proper automation but the clue is to do it in
+the right place and at the right time.</p>
+<p>Most of the things, such as static collection and code/asset preprocessing, can be done
+locally or in a dedicated environment, so the actual code that is deployed to the remote
+server requires only a minimal amount of on-site processing. The following are the most
+notable of such deployment steps, either in the process of building distribution or installing
+a package:</p>
+<ol class="arabic simple">
+<li><p>Installation of Python dependencies and transferring of static assets (CSS files and JavaScript) to the desired location can be handled as a part of the <code class="docutils literal notranslate"><span class="pre">install</span></code> command of the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script.</p></li>
+<li><p>Preprocessing of code (processing JavaScript supersets, minification/obfuscation/concatenation of assets, and running SASS or LESS) and things such as localized text compilation (for example, <code class="docutils literal notranslate"><span class="pre">compilemessages</span></code> in Django) can be a part of the <code class="docutils literal notranslate"><span class="pre">sdist</span></code>/<code class="docutils literal notranslate"><span class="pre">bdist</span></code> command of the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script.</p></li>
+</ol>
+<p>Inclusion of preprocessed code other than Python can be easily handled with the
+proper <code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code> file. Dependencies are, of course, best provided as
+an <code class="docutils literal notranslate"><span class="pre">install_requires</span></code> argument of the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> function call from
+the setuptools package.</p>
+<p>Packaging the whole application, of course, will require some additional work from you,
+such as providing your own custom <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> commands or overriding the existing
+ones, but it gives you a lot of advantages and makes project deployment a lot faster and
+reliable.</p>
+<p>Let’s use a Django-based project (in Django 1.9 version) as an example. I have chosen this
+framework because it seems to be the most popular Python project of this type, so there is a
+high chance that you already know it a bit. A typical structure of files in such a project
+might look like the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tree . -I __pycache__ --dirsfirst
+.
+├── webxample
+│    ├── conf
+│    │    ├── __init__.py
+│    │    ├── settings.py
+│    │    ├── urls.py
+│    │    └── wsgi.py
+│    ├── locale
+│    │    ├── de
+│    │    │    └── LC_MESSAGES
+│    │    │         └── django.po
+│    │    ├── en
+│    │    │    └── LC_MESSAGES
+│    │    │         └── django.po
+│    │    └── pl
+│    │         └── LC_MESSAGES
+│    │              └── django.po
+│    ├── myapp
+│    │    ├── migrations
+│    │    │    └── __init__.py
+│    │    ├── static
+│    │    │    ├── js
+│    │    │    │    └── myapp.js
+│    │    │    └── sass
+│    │    │         └── myapp.scss
+│    │    ├── templates
+│    │    │    ├── index.html
+│    │    │    └── some_view.html
+│    │    ├── __init__.py
+│    │    ├── admin.py
+│    │    ├── apps.py
+│    │    ├── models.py
+│    │    ├── tests.py
+│    │    └── views.py
+│    ├── __init__.py
+│    └── manage.py
+├── MANIFEST.in
+├── README.md
+└── setup.py
+<span class="m">15</span> directories, <span class="m">23</span> files
+</pre></div>
+</div>
+<p>Note that this slightly differs from the usual Django project template. By default, the name
+of the package that contains the WSGI application, the settings module, and the URL
+configuration has the same name as the project. Because we decided to take the packaging
+approach, this would be named as <code class="docutils literal notranslate"><span class="pre">webxample</span></code>. This can cause some confusion, so it is
+better to rename it to <code class="docutils literal notranslate"><span class="pre">conf</span></code>. Without digging into the possible implementation details, let’s
+just make the following few simple assumptions:</p>
+<ul class="simple">
+<li><p>Our example application has some external dependencies. Here, it will be two popular Django packages: <code class="docutils literal notranslate"><span class="pre">djangorestframework</span></code> and <code class="docutils literal notranslate"><span class="pre">django-allauth</span></code>, plus one non-Django package: <code class="docutils literal notranslate"><span class="pre">gunicorn</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">djangorestframework</span></code> and <code class="docutils literal notranslate"><span class="pre">django-allauth</span></code> are provided as <code class="docutils literal notranslate"><span class="pre">INSTALLED_APPS</span></code> in the <code class="docutils literal notranslate"><span class="pre">webexample.webexample.settings</span></code> module.</p></li>
+<li><p>The application is localized in three languages (German, English, and Polish) but we don’t want to store the compiled <code class="docutils literal notranslate"><span class="pre">gettext</span></code> messages in the repository.</p></li>
+<li><p>We are tired of vanilla CSS syntax, so we decided to use a more powerful SCSS language that we translate into CSS using SASS.</p></li>
+</ul>
+<p>Knowing the structure of the project, we can write our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script in a way that
+makes <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> handle the following:</p>
+<ul class="simple">
+<li><p>Compilation of SCSS files under <code class="docutils literal notranslate"><span class="pre">webxample/myapp/static/scss</span></code></p></li>
+<li><p>Compilation of <code class="docutils literal notranslate"><span class="pre">gettext</span></code> messages under <code class="docutils literal notranslate"><span class="pre">webexample/locale</span></code> from <code class="docutils literal notranslate"><span class="pre">.po</span></code> to <code class="docutils literal notranslate"><span class="pre">.mo</span></code> format</p></li>
+<li><p>Installation of the requirements</p></li>
+<li><p>A new script that provides an entry point to the package, so we will have the custom command instead of the <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> script</p></li>
+</ul>
+<p>We have a bit of luck here: Python binding for <code class="docutils literal notranslate"><span class="pre">libsass</span></code>, a C/C++ port of the SASS engine,
+provides some integration with <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> and <code class="docutils literal notranslate"><span class="pre">distutils</span></code>. With only a little
+configuration, it provides a custom setup.py command for running the SASS compilation.
+This is shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;webxample&#39;</span><span class="p">,</span>
+    <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;libsass == 0.6.0&#39;</span><span class="p">],</span>
+    <span class="n">sass_manifests</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;webxample.myapp&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;static/sass&#39;</span><span class="p">,</span> <span class="s1">&#39;static/css&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>So, instead of running the <code class="docutils literal notranslate"><span class="pre">sass</span></code> command manually or executing a subprocess in
+the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script, we can type python <code class="docutils literal notranslate"><span class="pre">setup.py</span> <span class="pre">build_scss</span></code> and have our SCSS files
+compiled to CSS. This is still not enough. It makes our life a bit easier but we want the
+whole distribution fully automated so there is only one step for creating new releases. To
+achieve this goal, we are forced to override some of the existing <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> distribution
+commands.</p>
+<p>The example <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file that handles some of the project preparation steps through
+packaging might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span>
+<span class="kn">from</span> <span class="nn">distutils.cmd</span> <span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span> <span class="nn">distutils.command.build</span> <span class="kn">import</span> <span class="n">build</span> <span class="k">as</span> <span class="n">_build</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">django.core.management.commands.compilemessages</span> \
+    <span class="kn">import</span> <span class="nn">Command</span> <span class="k">as</span> <span class="nn">CompileCommand</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># note: during installation django may not be available</span>
+    <span class="n">CompileCommand</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># this environment is requires</span>
+
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+    <span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s2">&quot;webxample.conf.settings&quot;</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">build_messages</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Custom command for building gettext messages in Django &quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;compile gettext messages&quot;&quot;&quot;</span>
+    <span class="n">user_options</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">initialize_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">finalize_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">CompileCommand</span><span class="p">:</span>
+            <span class="n">CompileCommand</span><span class="p">()</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span>
+                <span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">locales</span><span class="o">=</span><span class="p">[],</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;could not build translations&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">build</span><span class="p">(</span><span class="n">_build</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Overridden build command that adds additional build steps &quot;&quot;&quot;</span>
+    <span class="n">sub_commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;build_messages&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;build_sass&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">]</span> <span class="o">+</span> <span class="n">_build</span><span class="o">.</span><span class="n">sub_commands</span>
+
+    <span class="n">setup</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;webxample&#39;</span><span class="p">,</span>
+        <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span>
+            <span class="s1">&#39;libsass == 0.6.0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;django == 1.9.2&#39;</span>
+        <span class="p">],</span>
+        <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span>
+            <span class="s1">&#39;django == 1.9.2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;gunicorn == 19.4.5&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;djangorestframework == 3.3.2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;django-allauth == 0.24.1&#39;</span>
+        <span class="p">],</span>
+        <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
+        <span class="n">sass_manifests</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;   webxample.myapp&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;static/sass&#39;</span><span class="p">,</span> <span class="s1">&#39;static/css&#39;</span><span class="p">)</span>
+        <span class="p">},</span>
+        <span class="n">cmdclass</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;build_messages&#39;</span><span class="p">:</span> <span class="n">build_messages</span><span class="p">,</span>
+            <span class="s1">&#39;build&#39;</span><span class="p">:</span> <span class="n">build</span>
+        <span class="p">},</span>
+        <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;webxample = webxample.manage:main&#39;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>With such an implementation, we can build all assets and create the source distribution of a
+package for the <code class="docutils literal notranslate"><span class="pre">webxample</span></code> project using the following single Terminal command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py build sdist
+</pre></div>
+</div>
+<p>If you already have your own package index (created with devpi), you can add
+the <code class="docutils literal notranslate"><span class="pre">install</span></code> subcommand or use <code class="docutils literal notranslate"><span class="pre">twine</span></code> so this package will be available for installation
+with <code class="docutils literal notranslate"><span class="pre">pip</span></code> in your organization. If we look into a structure of source distribution created
+with our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> script, we can see that it contains the following
+compiled <code class="docutils literal notranslate"><span class="pre">gettext</span></code> messages and CSS style sheets generated from SCSS files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tar -xvzf dist/webxample-0.0.0.tar.gz <span class="m">2</span>&gt; /dev/null
+$ tree webxample-0.0.0/ -I __pycache__ --dirsfirst
+webxample-0.0.0/
+├── webxample
+│    ├── conf
+│    │    ├── __init__.py
+│    │    ├── settings.py
+│    │    ├── urls.py
+│    │    └── wsgi.py
+│    ├── locale
+│    │    ├── de
+│    │    │    └── LC_MESSAGES
+│    │    │         ├── django.mo
+│    │    │         └── django.po
+│    │    ├── en
+│    │    │    └── LC_MESSAGES
+│    │    │         ├── django.mo
+│    │    │         └── django.po
+│    │    └── pl
+│    │         └── LC_MESSAGES
+│    │              ├── django.mo
+│    │              └── django.po
+│    ├── myapp
+│    │    ├── migrations
+│    │    │    └── __init__.py
+│    │    ├── static
+│    │    │    ├── js
+│    │    │    │    └── myapp.js
+│    │    │    └── sass
+│    │    │         └── myapp.scss.css
+│    │    ├── templates
+│    │    │    ├── index.html
+│    │    │    └── some_view.html
+│    │    ├── __init__.py
+│    │    ├── admin.py
+│    │    ├── apps.py
+│    │    ├── models.py
+│    │    ├── tests.py
+│    │    └── views.py
+│    ├── __init__.py
+│    └── manage.py
+├── webxample.egg-info
+│    ├── PKG-INFO
+│    ├── SOURCES.txt
+│    ├── dependency_links.txt
+│    ├── requires.txt
+│    └── top_level.txt
+├── MANIFEST.in
+├── README.md
+└── setup.py
+<span class="m">16</span> directories, <span class="m">33</span> files
+</pre></div>
+</div>
+<p>The additional benefit of using this approach is that we were able to provide our own entry
+point for the project in place of Django’s default <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> script. Now, we can run any
+Django management command using this entry point, for instance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ webxample migrate
+$ webxample collectstatic
+$ webxample runserver
+</pre></div>
+</div>
+<p>This required a little change in the <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> script for compatibility with
+the <code class="docutils literal notranslate"><span class="pre">entry_points</span></code> argument in <code class="docutils literal notranslate"><span class="pre">setup()</span></code>, so the main part of its code is wrapped with
+the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function call. This is shown in the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+        <span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s2">&quot;webxample.conf.settings&quot;</span>
+    <span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">django.core.management</span> <span class="kn">import</span> <span class="n">execute_from_command_line</span>
+    <span class="n">execute_from_command_line</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Unfortunately, a lot of frameworks (including Django) are not designed with the idea of
+packaging your projects that way in mind. It means that, depending on the advancement of
+your application, converting it to a package may require a lot of changes. In Django, this
+often means rewriting many of the implicit imports and updating a lot of configuration
+variables in your settings file.</p>
+<p>The other problem here is consistency of releases created using Python packaging. If
+different team members are authorized to create application distribution, it is crucial that
+this process takes place in the same replicable environment. Especially when you do a lot of
+asset preprocessing, it is possible that the package created in two different environments
+will not look the same, even if it is created from the same code base. This may be due to
+different versions of tools used during the build process. The best practice is to move the
+distribution responsibility to some continuous integration/delivery system such as Jenkins,
+Buildbot, Travis CI, or similar. The additional advantage is that you can assert that the
+package passes all of the required tests before going to distribution. You can even make the
+automated deployment as a part of such a continuous delivery system.</p>
+<p>Mind that although distributing your code as Python packages using <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> might
+seem elegant, it is actually not simple and effortless. It has potential to greatly simplify your
+deployments and so it is definitely worth trying but it comes with the cost of increased
+complexity. If your preprocessing pipeline for your application grows too complex, you
+should definitely consider building Docker images and deploying your application as
+containers.</p>
+<p>Deployment with Docker requires some additional setup and orchestration but in the long
+term saves a lot of time and resources that are otherwise required to maintain repeatable
+build environments and complex preprocessing pipelines.</p>
+</div>
 </div>
 
 

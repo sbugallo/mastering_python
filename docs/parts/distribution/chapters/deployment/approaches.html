@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                05/03/2020
+                09/03/2020
               </div>
             
           
@@ -96,6 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
 </ul>
 
             
@@ -162,6 +163,182 @@
             
   <div class="section" id="approaches-to-deployment-automation">
 <h1>2. Approaches to deployment automation<a class="headerlink" href="#approaches-to-deployment-automation" title="Permalink to this headline">¶</a></h1>
+<p>With the advent of application containerization (Docker and similar technologies), modern
+software provisioning tools (for example, Puppet, Chef, Ansible, and Salt),
+and infrastructure management systems (for example, Terraform and SaltStack)
+development and operations teams have a variety of ways in which they can organize and
+manage their code deployments and configuration of remote systems. Each solution has
+pros and cons, so advanced automation tools should be chosen very wisely with respect to
+the favored development processes and methodologies.</p>
+<p>Fast paced teams that use microservice architecture and deploy code often (maybe even
+simultaneously in parallel versions) will definitely favor container orchestration systems
+such as Kubernetes or use dedicated services provided by their cloud vendor (for example,
+AWS). Teams that build old-style big monolithic applications and run them on their own
+bare-metal servers might want to use more low-level automation and software provisioning
+systems. Actually, there is no rule and you can find teams of every size using every possible
+approach to software provisioning, code deployments, and application orchestration. The
+limiting factors here are resources and knowledge.</p>
+<p>That’s why it’s really hard to briefly provide a set of common tools and solutions that
+would fit the needs and capabilities of every developer and every team. Because of that, in
+this chapter, we will focus only on a pretty simple approach to automation using Fabric.
+We could say that this is outdated. And that’s probably true. What seem to be the most
+modern are container orchestrations systems in the style of Kubernetes that allow you to
+leverage Docker containers for fast, maintainable, scalable, and reproducible environments.
+But these systems have quite a steep learning curve and it’s impossible to introduce them in
+just a few sections of a single chapter. Fabric, on the other hand, is very simple and easy to
+grasp so it is a really great tool to introduce someone to the concept of automation.</p>
+<div class="section" id="using-fabric-for-deployment-automation">
+<h2>2.1. Using Fabric for deployment automation<a class="headerlink" href="#using-fabric-for-deployment-automation" title="Permalink to this headline">¶</a></h2>
+<p>For very small projects, it may be possible to deploy your code by hand, that is, by manually
+typing the sequence of commands through the remote shells that are necessary to install a
+new version of code and execute it on a remote shell. Anyway, even for an average-sized
+project, this is error-prone and tedious and should be considered a waste of most of the
+precious resource you have, your own time.</p>
+<p>The solution for that is automation. The simple thumb rule could be the following:</p>
+<p><em>“If you needed to perform the same task manually at least twice, you should automate it so you won’t need to do it for the third time.”</em></p>
+<p>There are various tools that allow you to automate different things, including the following:</p>
+<ul class="simple">
+<li><p>Remote execution tools such as Fabric are used for on-demand automated execution of code on multiple remote hosts.</p></li>
+<li><p>Configuration management tools such as Chef, Puppet, CFEngine, Salt, and Ansible are designed for automatized configuration of remote hosts (execution environments). They can be used to set up backing services (databases, caches, and so on), system permissions, users, and so on. Most of them can be used also as a tool for remote execution (such as Fabric) but, depending on their architecture, this may be more or less convenient.</p></li>
+</ul>
+<p>Configuration management solutions is a complex topic. The
+truth is that the simplest remote execution frameworks have the lowest entry barrier and
+are the most popular choice, at least for small projects. In fact, every configuration
+management tool that provides a way to declaratively specify configuration of your
+machines has a remote execution layer implemented somewhere deep inside.</p>
+<p>Also, some configuration management tools may not be best suited for actual automated
+code deployment. One such example is Puppet, which really discourages the explicit
+running of any shell commands. This is why many people choose to use both types of
+solution to complement each other: configuration management for setting up a system-level
+environment and on-demand remote execution for application deployment.</p>
+<p>Fabric (<a class="reference external" href="http://www.fabfile.org/">http://www.fabfile.org/</a> ) is so far the most popular solution used by
+Python developers to automate remote execution. It is a Python library and command-line tool for
+streamlining the use of SSH for application deployment or systems administration tasks.
+We will focus on it because it is relatively easy to start with. Keep in mind that, depending
+on your needs, it may not be the best solution to your problems. Anyway, it is a great
+example of a utility that can add some automation to your operations, if you don’t have any
+yet.</p>
+<p>You could, of course, automate all of the work using only Bash scripts but this is very
+tedious and error-prone. Python has more convenient ways for string processing and
+encourages code modularization. Fabric is in fact only a tool for gluing the execution of
+commands via SSH. It means that you still need to know how to use the command-line
+interface and its utilities in your remote environment.</p>
+<p>So, if you want to strictly follow the Twelve-Factor App methodology, you should not
+maintain its code in the source tree of the deployed application.</p>
+<p>Complex projects are, in fact, very often built from various components maintained as
+separate code bases, so this is another reason why it is a good approach to have one
+separate repository for all of the project component configurations and Fabric scripts. This
+makes deployment of different services more consistent and encourages good code reuse.</p>
+<p>To start working with Fabric, you need to install the <code class="docutils literal notranslate"><span class="pre">fabric</span></code> package (using <code class="docutils literal notranslate"><span class="pre">pip</span></code>) and
+create a script named <code class="docutils literal notranslate"><span class="pre">fabfile.py</span></code>. That script is usually located in the root of your project.
+Note that <code class="docutils literal notranslate"><span class="pre">fabfile.py</span></code> can be considered a part of your project configuration.</p>
+<p>But before we create our <code class="docutils literal notranslate"><span class="pre">fabfile</span></code> let’s define some initial utilities that will help us to set up
+the project remotely. Here’s a module that we will call <code class="docutils literal notranslate"><span class="pre">fabutils</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># Let&#39;s assume we have private package repository created</span>
+<span class="c1"># using &#39;devpi&#39; project</span>
+<span class="n">PYPI_URL</span> <span class="o">=</span> <span class="s1">&#39;http://devpi.webxample.example.com&#39;</span>
+
+<span class="c1"># This is arbitrary location for storing installed releases.</span>
+<span class="c1"># Each release is a separate virtual environment directory</span>
+<span class="c1"># which is named after project version. There is also a</span>
+<span class="c1"># symbolic link &#39;current&#39; that points to recently deployed</span>
+<span class="c1"># version. This symlink is an actual path that will be used</span>
+<span class="c1"># for configuring the process supervision tool for example:</span>
+<span class="c1"># .</span>
+<span class="c1"># ├── 0.0.1</span>
+<span class="c1"># ├── 0.0.2</span>
+<span class="c1"># ├── 0.0.3</span>
+<span class="c1"># ├── 0.1.0</span>
+<span class="c1"># └── current -&gt; 0.1.0/</span>
+
+<span class="n">REMOTE_PROJECT_LOCATION</span> <span class="o">=</span> <span class="s2">&quot;/var/projects/webxample&quot;</span>
+<span class="k">def</span> <span class="nf">prepare_release</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Prepare a new release by creating source distribution and</span>
+<span class="sd">    uploading to out private package repository</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;python setup.py build sdist&#39;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;twine upload --repository-url </span><span class="si">{PYPI_URL}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get current project version from setuptools &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">local</span><span class="p">(</span><span class="s1">&#39;python setup.py --version&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">switch_versions</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Switch versions by replacing symlinks atomically &quot;&quot;&quot;</span>
+    <span class="n">new_version_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+    <span class="n">temporary</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="s1">&#39;next&#39;</span><span class="p">)</span>
+    <span class="n">desired</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="s1">&#39;current&#39;</span><span class="p">)</span>
+
+    <span class="c1"># force symlink (-f) since probably there is a one already</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ln -fsT </span><span class="si">{new_version_path}</span><span class="s2"> </span><span class="si">{temporary}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># mv -T ensures atomicity of this operation</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mv -Tf </span><span class="si">{temporary}</span><span class="s2"> </span><span class="si">{desired}</span><span class="s2">&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>An example of a final fabfile that defines a simple deployment procedure will look like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fabric</span> <span class="kn">import</span> <span class="n">task</span>
+<span class="kn">from</span> <span class="nn">.fabutils</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">uptime</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run uptime command on remote host - for testing connection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;uptime&quot;</span><span class="p">)</span>
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Deploy application with packaging in mind &quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">get_version</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="n">pip_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;pip&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test -d </span><span class="si">{REMOTE_PROJECT_LOCATION}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># it may not exist for initial deployment on fresh host</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mkdir -p </span><span class="si">{REMOTE_PROJECT_LOCATION}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">c</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">REMOTE_PROJECT_LOCATION</span><span class="p">):</span>
+        <span class="c1"># create new virtual environment using venv</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;python3 -m venv </span><span class="si">{version}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{pip_path}</span><span class="s2"> install webxample==</span><span class="si">{version}</span><span class="s2"> --index-url </span><span class="si">{PYPI_URL}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">switch_versions</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+    <span class="c1"># let&#39;s assume that Circus is our process supervision tool</span>
+    <span class="c1"># of choice.</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;circusctl restart webxample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Every function decorated with <code class="docutils literal notranslate"><span class="pre">&#64;task</span></code> is now treated as an available subcommand to
+the fab utility provided with the fabric package. You can list all of the available
+subcommands using the <code class="docutils literal notranslate"><span class="pre">-l</span></code> or <code class="docutils literal notranslate"><span class="pre">--list</span></code> switch. The code is shown in the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ fab --list
+Available commands:
+    deploy Deploy application with packaging in mind
+    uptime Run uptime <span class="nb">command</span> on remote host - <span class="k">for</span> testing connection.
+</pre></div>
+</div>
+<p>Now, you can deploy the application to the given environment type with only the
+following single shell command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ fab -H myhost.example.com deploy
+</pre></div>
+</div>
+<p>Note that the preceding <code class="docutils literal notranslate"><span class="pre">fabfile</span></code> serves only illustrative purposes. In your own code, you
+might want to provide extensive failure handling and try to reload the application without
+the need to restart the web worker process. Also, some of the techniques presented here
+may not be obvious right now but will be explained later in this chapter. These include the
+following:</p>
+<ul class="simple">
+<li><p>Deploying an application using the private package repository</p></li>
+<li><p>Using Circus for process supervision on the remote host</p></li>
+</ul>
+</div>
 </div>
 
 
