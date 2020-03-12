@@ -11,5 +11,7 @@ Craftmanship
     chapters/decorators/index
     chapters/descriptors/index
     chapters/generators/index
+    chapters/above_class_level/index
     chapters/metaprogramming/index
     chapters/naming/index
+
