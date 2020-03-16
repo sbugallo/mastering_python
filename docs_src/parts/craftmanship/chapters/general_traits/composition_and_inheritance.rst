@@ -4,7 +4,7 @@
 In object-oriented software design, there are often discussions as to how to address some problems by using
 the main ideas of the paradigm (polymorphism, inheritance, and encapsulation).
 
-Probably the most commonly used of these ideas is inheritance—developers often start by creating a class
+Probably the most commonly used of these ideas is inheritance: developers often start by creating a class
 hierarchy with the classes they are going to need and decide the methods each one should implement.
 
 While inheritance is a powerful concept, it does come with its perils. The main one is that every time we

@@ -23,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                12/03/2020
+                16/03/2020
               </div>
             
           
@@ -163,6 +163,133 @@
             
   <div class="section" id="subclassing-built-in-types">
 <h1>3. Subclassing built-in types<a class="headerlink" href="#subclassing-built-in-types" title="Permalink to this headline">¶</a></h1>
+<p>Subclassing built-in types in Python is pretty straightforward. A built-in type,
+called <code class="docutils literal notranslate"><span class="pre">object</span></code> is a common ancestor for all built-in types, as well as for all user-defined
+classes that have no explicit parent class specified. Thanks to this, every time you need to
+implement a class that behaves almost like one of the built-in types, the best practice is to
+subtype it.</p>
+<p>Now, we will look at the code for a class called <code class="docutils literal notranslate"><span class="pre">distinctdict</span></code>, which uses this technique.
+It will be a subclass of the usual Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> type. This new class will behave, in most
+ways, like an ordinary Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> type. But, instead of allowing multiple keys with the
+same value, when someone tries to add a new entry with an identical value, it raises
+a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> subclass with a help message.</p>
+<p>As already stated, the built-in dict type is an object subclass:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="nb">dict</span><span class="p">(),</span> <span class="nb">object</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">issubclass</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>It means that we could easily define our own dictionary-based class as a direct subclass of
+that type, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">distinctdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>The previous approach would be totally valid, as a subclassing of <code class="docutils literal notranslate"><span class="pre">dict</span></code>, <code class="docutils literal notranslate"><span class="pre">list</span></code>, and <code class="docutils literal notranslate"><span class="pre">str</span></code>
+types has been allowed since Python 2.2. But, usually the better approach is to subclass one
+of the corresponding types from the <code class="docutils literal notranslate"><span class="pre">collections</span></code> module:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.UserDict</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.UserList</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.UserString</span></code></p></li>
+</ul>
+<p>These classes are usually easier to work with, as the underlying regular <code class="docutils literal notranslate"><span class="pre">dict</span></code>, <code class="docutils literal notranslate"><span class="pre">list</span></code> , and
+<code class="docutils literal notranslate"><span class="pre">str</span></code> objects are stored as data attributes of these classes.</p>
+<p>The following is an example implementation of the <code class="docutils literal notranslate"><span class="pre">distinctdict</span></code> type that overrides part
+of the ordinary dictionary protocol to ensure that it contains only unique values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">UserDict</span>
+
+
+<span class="k">class</span> <span class="nc">DistinctError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised when duplicate value is added to a distinctdict.&quot;&quot;&quot;</span>
+
+<span class="k">class</span> <span class="nc">distinctdict</span><span class="p">(</span><span class="n">UserDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dictionary that does not accept duplicate values.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="n">DistinctError</span><span class="p">(</span><span class="s2">&quot;This value already exists for different key&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following is an example of using distinctdict in an interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my</span> <span class="o">=</span> <span class="n">distinctdict</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my</span><span class="p">[</span><span class="s1">&#39;other_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="n">File</span> <span class="s2">&quot;&lt;input&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="n">File</span> <span class="s2">&quot;&lt;input&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">10</span><span class="p">,</span> <span class="ow">in</span> <span class="fm">__setitem__</span>
+<span class="gr">DistinctError</span>: <span class="n">This value already exists for different key</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my</span><span class="p">[</span><span class="s1">&#39;other_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value2&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my</span>
+<span class="go">{&#39;key&#39;: &#39;value&#39;, &#39;other_key&#39;: &#39;value2&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my</span><span class="o">.</span><span class="n">data</span>
+<span class="go">{&#39;key&#39;: &#39;value&#39;, &#39;other_key&#39;: &#39;value2&#39;}</span>
+</pre></div>
+</div>
+<p>If you take a look at your existing code, you may find a lot of classes that partially
+implement the protocols or functionalities of the built-in types. These classes could be faster
+and cleaner if implemented as subtypes of these types. The <code class="docutils literal notranslate"><span class="pre">list</span></code> type, for instance,
+manages the sequences of any type and you can use it every time your class works
+internally with a sequence or collection.</p>
+<p>The following is a simple example of the <code class="docutils literal notranslate"><span class="pre">Folder</span></code> class that subclasses the Python <code class="docutils literal notranslate"><span class="pre">list</span></code>
+type to represent and manipulate the contents of directories in a tree-like structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">UserList</span>
+
+
+<span class="k">class</span> <span class="nc">Folder</span><span class="p">(</span><span class="n">UserList</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nesting</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">nesting</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{offset}{self.name}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s1">&#39;dir&#39;</span><span class="p">):</span>
+                <span class="n">element</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="n">nesting</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{offset}</span><span class="s2"> </span><span class="si">{element}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that we have actually subclassed the <code class="docutils literal notranslate"><span class="pre">UserList</span></code> class from the collections module
+and not the bare <code class="docutils literal notranslate"><span class="pre">list</span></code> type. It is possible to subclass bare built-in types, such as <code class="docutils literal notranslate"><span class="pre">string</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dict</span></code> or <code class="docutils literal notranslate"><span class="pre">set</span></code> , but it is advisable to use their user counterparts from the <code class="docutils literal notranslate"><span class="pre">collections</span></code>
+module instead because they make subclassing a bit easier.</p>
+<p>The following is an example use of our <code class="docutils literal notranslate"><span class="pre">Folder</span></code> class in an interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;README.md&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">dir</span><span class="p">()</span>
+<span class="go">project/</span>
+<span class="go">README.md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">src</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">src</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;script.py&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">dir</span><span class="p">()</span>
+<span class="go">project/</span>
+<span class="go">README.md</span>
+<span class="go">src/</span>
+<span class="go">script.py</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">dir</span><span class="p">()</span>
+<span class="go">project/</span>
+<span class="go">README.md</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When you are about to create a new class that acts like a sequence or a
+mapping, think about its features and look over the existing built-in types.
+The <code class="docutils literal notranslate"><span class="pre">collections</span></code> module extends basic lists of built-in types with many
+useful containers. You will often end up using one of them without
+needing to create your custom subclasses.</p>
+</div>
 </div>
 
 

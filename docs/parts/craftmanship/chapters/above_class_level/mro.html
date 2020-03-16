@@ -23,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                12/03/2020
+                16/03/2020
               </div>
             
           
@@ -163,6 +163,417 @@
             
   <div class="section" id="mro-and-accessing-methods-from-superclasses">
 <h1>4. MRO and accessing methods from superclasses<a class="headerlink" href="#mro-and-accessing-methods-from-superclasses" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">super</span></code> is a built-in class that can be used to access an attribute belonging to an object’s
+superclass.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The Python official documentation lists super as a built-in function, but,
+it’s a built-in class, even if it is used like a function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">super</span>
+<span class="go">&lt;class &#39;super&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="nb">super</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Its usage is a bit confusing if you are used to accessing a class attribute or method by calling
+the parent class directly and passing self as the first argument. This is a really old pattern,
+but still can be found in some code bases (especially in legacy projects). See the following
+code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Mama</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">says</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;do your homework&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Sister</span><span class="p">(</span><span class="n">Mama</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">says</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Mama</span><span class="o">.</span><span class="n">says</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;and clean your bedroom&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Look particularly at the <code class="docutils literal notranslate"><span class="pre">Mama.says(self)</span></code> line. You can see here an explicit use of parent
+class. This means that the <code class="docutils literal notranslate"><span class="pre">says()</span></code> method belonging to <code class="docutils literal notranslate"><span class="pre">Mama</span></code> will be called. But, the
+instance on which it will be called is provided as the self argument, which is an instance
+of <code class="docutils literal notranslate"><span class="pre">Sister</span></code> in this case.</p>
+<p>Instead, the super usage would be as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Sister</span><span class="p">(</span><span class="n">Mama</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">says</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Sister</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">says</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;and clean your bedroom&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, you can also use the shorter form of the <code class="docutils literal notranslate"><span class="pre">super()</span></code> call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Sister</span><span class="p">(</span><span class="n">Mama</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">says</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">says</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;and clean your bedroom&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The shorter form of <code class="docutils literal notranslate"><span class="pre">super</span></code> (without passing any arguments) is allowed inside the methods,
+but the usage of <code class="docutils literal notranslate"><span class="pre">super</span></code> is not limited to the body of methods. It can be used in any code
+area where the explicit call to the method of superclass implementation is required. Still,
+if super is not used inside the body of the method, then, all of its arguments are
+mandatory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">anita</span> <span class="o">=</span> <span class="n">Sister</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">super</span><span class="p">(</span><span class="n">anita</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">anita</span><span class="p">)</span><span class="o">.</span><span class="n">says</span><span class="p">()</span>
+<span class="go">do your homework</span>
+</pre></div>
+</div>
+<p>The final and most important thing that should be noted about <code class="docutils literal notranslate"><span class="pre">super</span></code> is that its second
+argument is optional. When only the first argument is provided, then super returns an
+unbounded type. This is especially useful when working with <code class="docutils literal notranslate"><span class="pre">classmethod</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toppings</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span> <span class="o">=</span> <span class="n">toppings</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Pizza with &quot;</span> <span class="o">+</span> <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">recommend</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Recommend some pizza with arbitrary toppings,&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">([</span><span class="s1">&#39;spam&#39;</span><span class="p">,</span> <span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;eggs&#39;</span><span class="p">])</span>
+
+<span class="k">class</span> <span class="nc">VikingPizza</span><span class="p">(</span><span class="n">Pizza</span><span class="p">):</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">recommend</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Use same recommendation as super but add extra spam&quot;&quot;&quot;</span>
+        <span class="n">recommended</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">VikingPizza</span><span class="p">)</span><span class="o">.</span><span class="n">recommend</span><span class="p">()</span>
+        <span class="n">recommended</span><span class="o">.</span><span class="n">toppings</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;spam&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span>
+        <span class="k">return</span> <span class="n">recommended</span>
+</pre></div>
+</div>
+<p>Note that the zero-argument <code class="docutils literal notranslate"><span class="pre">super()</span></code> form is also allowed for methods decorated with
+the classmethod decorator. <code class="docutils literal notranslate"><span class="pre">super()</span></code>, if called without arguments in such methods, is
+treated as having only the first argument defined.</p>
+<p>The use cases presented earlier are very simple to follow and understand, but when you
+face a multiple inheritance schema, it becomes hard to use <code class="docutils literal notranslate"><span class="pre">super</span></code>. Before explaining these
+problems, you need to first understand when <code class="docutils literal notranslate"><span class="pre">super</span></code> should be avoided and how
+the <strong>Method Resolution Order (MRO)</strong> works in Python.</p>
+<div class="section" id="old-style-classes-and-super-in-python-2">
+<h2>4.1. Old-style classes and super in Python 2<a class="headerlink" href="#old-style-classes-and-super-in-python-2" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">super()</span></code> in Python 2 works almost exactly the same as in Python 3. The only difference in
+its call signature is that the shorter, zero-argument form is not available, so at least one of
+the expected arguments must always be provided.</p>
+<p>Another important thing for programmers to note who want to write cross-version
+compatible code is that super in Python 2 works only for new-style classes. The earlier
+versions of Python did not have a common ancestor for all classes in the form of
+an object type. The old behavior was left in every Python 2.x branch release for backward
+compatibility, so, in those versions, if the class definition has no ancestor specified, it is
+interpreted as an old-style class, and it cannot use <code class="docutils literal notranslate"><span class="pre">super</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OldStyle1</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">OldStyle2</span><span class="p">(</span><span class="n">OldStyle1</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The new-style class in Python 2 must explicitly inherit from the object type or other new-
+style class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NewStyleClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">NewStyleClassToo</span><span class="p">(</span><span class="n">NewStyleClass</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Python 3 no longer maintains the concept of old-style classes, so any class that does not
+inherit from any other class implicitly inherits from <code class="docutils literal notranslate"><span class="pre">object</span></code>. This means that explicitly
+stating that a class inherits from object may seem redundant. Standard good practice is to
+not include redundant code, but removing such redundancy in this case is a good approach
+only for projects that no longer target any of the Python 2 versions. Code that aims for
+cross-version compatibility of Python must always include <code class="docutils literal notranslate"><span class="pre">object</span></code> as an ancestor of base
+classes, even if this is redundant in Python 3. Not doing so will result in such classes being
+interpreted as old-style, and this will eventually lead to issues that are very hard to
+diagnose.</p>
+</div>
+<div class="section" id="understanding-python-s-method-resolution-order">
+<h2>4.2. Understanding Python’s Method Resolution Order<a class="headerlink" href="#understanding-python-s-method-resolution-order" title="Permalink to this headline">¶</a></h2>
+<p>Python MRO is based on C3, the MRO built for the Dylan programming language
+(<a class="reference external" href="http://opendylan.org">http://opendylan.org</a>). The reference document, written by Michele Simionato, can be
+found at <a class="reference external" href="http://www.python.org/download/releases/2.3/mro">http://www.python.org/download/releases/2.3/mro</a> . It describes how C3 builds
+the <strong>linearization</strong> of a class, also called <strong>precedence</strong>, which is an ordered list of the ancestors.
+This list is used to seek an attribute. The C3 algorithm is described in more detail later in
+this section.</p>
+<p>The MRO change was made to resolve an issue introduced with the creation of a common
+base type (that is, <code class="docutils literal notranslate"><span class="pre">object</span></code> type). Before the change to the C3 linearization method, if a class
+had two ancestors, the order in which methods were resolved was quite
+simple to compute and track only for simple cases that didn’t use multiple inheritance
+model in a cascading way.</p>
+<p>Here is an example of code, which, under Python 2, would not use C3 as an MRO:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base1</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base2&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">MyClass</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+<span class="n">Base2</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">MyClass().method()</span></code> is called, the interpreter looks for the method in <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>,
+then <code class="docutils literal notranslate"><span class="pre">Base1</span></code>, and then eventually finds it in <code class="docutils literal notranslate"><span class="pre">Base2</span></code>:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../../../_images/mro_1.jpg"><img alt="../../../../_images/mro_1.jpg" src="../../../../_images/mro_1.jpg" style="width: 40%;" /></a>
+</div>
+<p>When we introduce some <code class="docutils literal notranslate"><span class="pre">CommonBase</span></code> class at the top of our class hierarchy
+(both <code class="docutils literal notranslate"><span class="pre">Base1</span></code> and <code class="docutils literal notranslate"><span class="pre">Base2</span></code> will inherit from it), things will get more
+complicated. As a result, the simple resolution order that behaves according to the <strong>left-to-
+right depth first</strong> rule is getting back to the top through the <code class="docutils literal notranslate"><span class="pre">Base1</span></code> class before looking into
+the <code class="docutils literal notranslate"><span class="pre">Base2</span></code> class. This algorithm results in a counterintuitive output. In some cases, the
+method that is executed may not be the one that is the closest in the inheritance tree.</p>
+<p>Such an algorithm is still available in Python 2 for old-style classes. Here is an example of
+the old method resolution in Python 2 using old-style classes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommonBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CommonBase&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Base1</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base2&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../../../_images/mro_2.jpg"><img alt="../../../../_images/mro_2.jpg" src="../../../../_images/mro_2.jpg" style="width: 40%;" /></a>
+</div>
+<p>The following transcript from the interactive session shows that <code class="docutils literal notranslate"><span class="pre">Base2.method()</span></code> will not
+be called despite the <code class="docutils literal notranslate"><span class="pre">Base2</span></code> class being closer in the class hierarchy to <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>
+than <code class="docutils literal notranslate"><span class="pre">CommonBase</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MyClass</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+<span class="go">CommonBase</span>
+</pre></div>
+</div>
+<p>Such an inheritance scenario is extremely uncommon, so this is more a problem of theory
+than practice. The standard library does not structure the inheritance hierarchies in this
+way, and many developers think that it is bad practice. But, with the introduction
+of object at the top of the types hierarchy, the multiple inheritance problem pops up on
+the C side of the language, resulting in conflicts when doing subtyping. You should also
+note that every class in Python 3 has now got the same common ancestor. Since making it
+work properly with the existing MRO involved too much work, a new MRO was a simpler
+and quicker solution.</p>
+<p>So, the same example run under Python 3 gives a different result:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommonBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CommonBase&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Base1</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base2&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>And here is the usage example showing that C3 serialization will pick the method of the
+closest ancestor:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MyClass</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+<span class="go">Base2</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Note that the preceding behavior cannot be replicated in Python 2 without
+the <code class="docutils literal notranslate"><span class="pre">CommonBase</span></code> class explicitly inheriting from <code class="docutils literal notranslate"><span class="pre">object</span></code>. Reasons as to
+why it may be useful to specify <code class="docutils literal notranslate"><span class="pre">object</span></code> as a class ancestor in Python 3,
+even if this is redundant, were already mentioned.</p>
+</div>
+<p>The Python MRO is based on a recursive call over the base classes. To summarize the
+Michele Simionato paper referenced at the beginning of this section, the C3 symbolic
+notation applied to our example is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">[</span><span class="n">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">MyClass</span> <span class="o">+</span> <span class="n">merge</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">Base1</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="n">Base2</span><span class="p">],</span> <span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">L[MyClass]</span></code> is the linearization of <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>, and <code class="docutils literal notranslate"><span class="pre">merge</span></code> is a specific algorithm that
+merges several linearization results.</p>
+<p>So, a synthetic description would be, as Simionato says:</p>
+<blockquote>
+<div><p><em>“The linearization of C is the sum of C plus the merge of the linearizations of the parents and the list of the parents.”</em></p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">merge</span></code> algorithm is responsible for removing the duplicates and preserving the correct
+ordering. It is described in the paper like this (adapted to our example):</p>
+<blockquote>
+<div><p><em>Take the head of the first list, that is, L[Base1][0]; if this head is not in the tail of any of the other lists, then add it to the linearization of MyClass and remove it from the lists in the merge, otherwise look at the head of the next list and take it, if it is a good head.</em></p>
+<p><em>Then, repeat the operation until all the classes are removed or it is impossible to find good heads. In this case, it is impossible to construct the merge, Python 2.3 will refuse to create the MyClass class and will raise an exception.</em></p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">head</span></code> is the first element of a list and the <code class="docutils literal notranslate"><span class="pre">tail</span></code> contains the rest of the elements. For
+example, in (<code class="docutils literal notranslate"><span class="pre">Base1</span></code>, <code class="docutils literal notranslate"><span class="pre">Base2</span></code>, …, <code class="docutils literal notranslate"><span class="pre">BaseN</span></code>), <code class="docutils literal notranslate"><span class="pre">Base1</span></code> is the <code class="docutils literal notranslate"><span class="pre">head</span></code> , and (<code class="docutils literal notranslate"><span class="pre">Base2</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BaseN</span></code>) is the <code class="docutils literal notranslate"><span class="pre">tail</span></code>.</p>
+<p>In other words, C3 does a recursive depth lookup on each parent to get a sequence of lists.
+Then, it computes a left-to-right rule to merge all lists with a hierarchy disambiguation,
+when a class is involved in several lists.</p>
+<p>So the result is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">(</span><span class="n">MyClass</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;MyClass&#39;</span><span class="p">,</span> <span class="s1">&#39;Base1&#39;</span><span class="p">,</span> <span class="s1">&#39;Base2&#39;</span><span class="p">,</span> <span class="s1">&#39;CommonBase&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">__mro__</span></code> attribute of a class (which is read-only) stores the result of
+the linearization computation. Computation is done when the class
+definition is loaded.</p>
+<p>You can also call <code class="docutils literal notranslate"><span class="pre">MyClass.mro()</span></code> to compute and get the result. This is
+another reason why classes in Python 2 should be taken with an extra
+case. While old-style classes in Python 2 have some defined order in
+which methods are resolved, they do not provide the <code class="docutils literal notranslate"><span class="pre">__mro__</span></code> attribute
+and the <code class="docutils literal notranslate"><span class="pre">mro()</span></code> method. So, despite the order of resolution, it is wrong to
+say that they have MRO. In most cases, whenever someone refers to MRO
+in Python, it means that they are referring to the C3 algorithm described
+in this section.</p>
+</div>
+</div>
+<div class="section" id="super-pitfalls">
+<h2>4.3. Super pitfalls<a class="headerlink" href="#super-pitfalls" title="Permalink to this headline">¶</a></h2>
+<p>Now, back to the <code class="docutils literal notranslate"><span class="pre">super()</span></code> call. If you deal with multiple inheritance hierarchy, it can
+become problematic. This is mainly due to the initialization of classes. In Python, the
+initialization methods (that is, the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> methods) of base classes are not implicitly
+called in ancestor classes if ancestor classes override <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>. In such cases, you need
+to call superclass methods explicitly, and this can sometimes lead to initialization problems.</p>
+<div class="section" id="mixing-super-and-explicit-class-calls">
+<h3>4.3.1. Mixing super and explicit class calls<a class="headerlink" href="#mixing-super-and-explicit-class-calls" title="Permalink to this headline">¶</a></h3>
+<p>In the following example, taken from James Knight’s website
+(<a class="reference external" href="http://fuhm.net/super-harmful">http://fuhm.net/super-harmful</a>), a <code class="docutils literal notranslate"><span class="pre">C</span></code> class that calls initialization methods of its parent
+classes using the <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> method will make the call to
+the <code class="docutils literal notranslate"><span class="pre">B.__init__()</span></code> class to be called twice:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">A</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">B</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is the output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MRO:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">C</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">])</span>
+<span class="go">MRO: [&#39;C&#39;, &#39;A&#39;, &#39;B&#39;, &#39;object&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="p">()</span>
+<span class="go">C A B B &lt;__main__.C object at 0x0000000001217C50&gt;</span>
+</pre></div>
+</div>
+<p>In the preceding transcript we see that initialization of class <code class="docutils literal notranslate"><span class="pre">C</span></code> invokes the <code class="docutils literal notranslate"><span class="pre">B.__init__()</span></code>
+method twice. To avoid such issues, super should be used in the whole class hierarchy.
+The problem is that sometimes, a part of such complex hierarchy may be located in a third-
+party code. Many other related pitfalls on the hierarchy calls introduced by multiple
+inheritances can be found on James’s page.</p>
+<p>Unfortunately, you cannot be sure that external packages use <code class="docutils literal notranslate"><span class="pre">super()</span></code> in their code.
+Whenever you need to subclass some third-party class, it is always a good approach to take
+a look inside its code and the code of other classes in the MRO. This may be tedious, but, as
+a bonus, you get some information about the quality of code provided by such a package
+and more understanding of its code. You may learn something new that way.</p>
+</div>
+<div class="section" id="heterogeneous-arguments">
+<h3>4.3.2. Heterogeneous arguments<a class="headerlink" href="#heterogeneous-arguments" title="Permalink to this headline">¶</a></h3>
+<p>Another issue with <code class="docutils literal notranslate"><span class="pre">super</span></code> usage occurs if methods of classes within the class hierarchy use
+inconsistent argument sets. How can a class call its base class an <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> code if it
+doesn’t have the same signature? This leads to the following problem:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommonBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CommonBase&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Base1</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base1&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;base2&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span> <span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my base&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An attempt to create a <code class="docutils literal notranslate"><span class="pre">MyClass</span></code> instance will raise <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> due to a mismatch of the
+parent classes’ <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> signatures:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MyClass</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">my base</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">,</span> <span class="ow">in</span> <span class="fm">__init__</span>
+<span class="gr">TypeError</span>: <span class="n">__init__() takes 1 positional argument but 2 were given</span>
+</pre></div>
+</div>
+<p>One solution would be to use arguments and keyword arguments packing
+with <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> magic so that all constructors pass along all the parameters,
+even if they do not use them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommonBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CommonBase&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">Base1</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base1&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;base2&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span> <span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my base&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With this approach, the parent class signatures will always match:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">my base</span>
+<span class="go">Base1</span>
+<span class="go">base2</span>
+<span class="go">CommonBase</span>
+</pre></div>
+</div>
+<p>This is an awful fix though, because it makes all constructors accept any kind of
+parameters. It leads to weak code, since anything can be passed and gone through. Another
+solution is to use the explicit <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> calls of specific classes in <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>, but this
+would lead to the first pitfall.</p>
+</div>
+</div>
+<div class="section" id="best-practices">
+<h2>4.4. Best practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+<p>To avoid all the aforementioned problems, and until Python evolves in this field, we need
+to take into consideration the following points:</p>
+<ul class="simple">
+<li><p><strong>Multiple inheritance should be avoided</strong>: It can be replaced with some design patterns.</p></li>
+<li><p><strong>Super usage has to be consistent</strong>: In a class
+hierarchy, super should be used everywhere or nowhere.
+Mixing super and classic calls is a confusing practice. People tend
+to avoid super to render their code more explicit.</p></li>
+<li><p><strong>Explicitly inherit from an object in Python 3 if you target Python 2 too</strong>: Classes
+without any ancestor specified are recognized as old-style classes in Python 2.
+Mixing old-style classes with new-style classes should be avoided in Python 2.</p></li>
+<li><p><strong>Class hierarchy has to be looked over when a parent class method is called</strong>: To
+avoid any problems, every time a parent class method is called, a quick glance at
+the MRO involved (with __mro__ ) is necessary.</p></li>
+</ul>
+</div>
 </div>
 
 
