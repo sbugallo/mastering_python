@@ -26,10 +26,37 @@ A descriptor is, therefore, just an object that is an instance of a class that i
 descriptor protocol. This means that this class must have its interface containing at least one
 of the following magic methods (part of the descriptor protocol as of Python 3.6+):
 
-- ``__get__``
-- ``__set__``
-- ``__delete__``
-- ``__set_name__``
+- ``__get__(self, obj, owner=None)``: This is called whenever the attribute is
+  read (referred to as a ``getter``)
+- ``__set__(self, obj, value)``: .This is called whenever the attribute is set. In
+  the following examples, I will refer to this as a ``setter``.
+- ``__delete__(self, obj)``: This is called when ``del`` is invoked on the attribute.
+- ``__set_name__(self, owner, name)``
+
+A descriptor that implements ``__get__()`` and ``__set__()`` is called a data descriptor. If it
+just implements ``__get__()``, then it is called a non-data descriptor.
+
+Methods of this protocol are, in fact, called by the object's
+special ``__getattribute__()`` method (do not confuse it with ``__getattr__()``, which has
+a different purpose) on every attribute lookup. Whenever such a lookup is performed,
+either by using a dotted notation in the form of ``instance.attribute``, or by using
+the ``getattr(instance, 'attribute')`` function call, the ``__getattribute__()`` method
+is implicitly invoked and it looks for an attribute in the following order:
+
+1. It verifies whether the attribute is a data descriptor on the class object of the
+   instance.
+2. If not, it looks to see whether the attribute can be found in
+   the ``__dict__`` lookup of the instance object.
+3. Finally, it looks to see whether the attribute is a non-data descriptor on the class
+   object of the instance.
+
+In other words, data descriptors take precedence over ``__dict__`` lookup,
+and ``__dict__`` lookup takes precedence over non-data descriptors. Without ``__dict__``
+taking precedence over non-data descriptors, we would not be able
+to dynamically override specific methods on already constructed instances at runtime.
+Fortunately, thanks to how descriptors work in Python, it is possible; so, developers may
+use a popular technique called monkey patching to change the way in which instances
+work without the need for subclassing.
 
 For the purposes of this initial high-level introduction, the following naming convention
 will be used:

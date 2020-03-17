@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Understanding Python’s Method Resolution Order &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Understanding Python’s Method Resolution Order</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/mro/understanding.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="understanding-python-s-method-resolution-order">
+<h1>2. Understanding Python’s Method Resolution Order<a class="headerlink" href="#understanding-python-s-method-resolution-order" title="Permalink to this headline">¶</a></h1>
+<p>Python MRO is based on C3, the MRO built for the Dylan programming language
+(<a class="reference external" href="http://opendylan.org">http://opendylan.org</a>). The reference document, written by Michele Simionato, can be
+found at <a class="reference external" href="http://www.python.org/download/releases/2.3/mro">http://www.python.org/download/releases/2.3/mro</a> . It describes how C3 builds
+the <strong>linearization</strong> of a class, also called <strong>precedence</strong>, which is an ordered list of the ancestors.
+This list is used to seek an attribute. The C3 algorithm is described in more detail later in
+this section.</p>
+<p>The MRO change was made to resolve an issue introduced with the creation of a common
+base type (that is, <code class="docutils literal notranslate"><span class="pre">object</span></code> type). Before the change to the C3 linearization method, if a class
+had two ancestors, the order in which methods were resolved was quite
+simple to compute and track only for simple cases that didn’t use multiple inheritance
+model in a cascading way.</p>
+<p>Here is an example of code, which, under Python 2, would not use C3 as an MRO:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base1</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base2&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">MyClass</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+<span class="n">Base2</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">MyClass().method()</span></code> is called, the interpreter looks for the method in <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>,
+then <code class="docutils literal notranslate"><span class="pre">Base1</span></code>, and then eventually finds it in <code class="docutils literal notranslate"><span class="pre">Base2</span></code>:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../../../_images/mro_1.jpg"><img alt="../../../../_images/mro_1.jpg" src="../../../../_images/mro_1.jpg" style="width: 40%;" /></a>
+</div>
+<p>When we introduce some <code class="docutils literal notranslate"><span class="pre">CommonBase</span></code> class at the top of our class hierarchy
+(both <code class="docutils literal notranslate"><span class="pre">Base1</span></code> and <code class="docutils literal notranslate"><span class="pre">Base2</span></code> will inherit from it), things will get more
+complicated. As a result, the simple resolution order that behaves according to the <strong>left-to-
+right depth first</strong> rule is getting back to the top through the <code class="docutils literal notranslate"><span class="pre">Base1</span></code> class before looking into
+the <code class="docutils literal notranslate"><span class="pre">Base2</span></code> class. This algorithm results in a counterintuitive output. In some cases, the
+method that is executed may not be the one that is the closest in the inheritance tree.</p>
+<p>Such an algorithm is still available in Python 2 for old-style classes. Here is an example of
+the old method resolution in Python 2 using old-style classes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommonBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CommonBase&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Base1</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base2&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../../../_images/mro_2.jpg"><img alt="../../../../_images/mro_2.jpg" src="../../../../_images/mro_2.jpg" style="width: 40%;" /></a>
+</div>
+<p>The following transcript from the interactive session shows that <code class="docutils literal notranslate"><span class="pre">Base2.method()</span></code> will not
+be called despite the <code class="docutils literal notranslate"><span class="pre">Base2</span></code> class being closer in the class hierarchy to <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>
+than <code class="docutils literal notranslate"><span class="pre">CommonBase</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MyClass</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+<span class="go">CommonBase</span>
+</pre></div>
+</div>
+<p>Such an inheritance scenario is extremely uncommon, so this is more a problem of theory
+than practice. The standard library does not structure the inheritance hierarchies in this
+way, and many developers think that it is bad practice. But, with the introduction
+of object at the top of the types hierarchy, the multiple inheritance problem pops up on
+the C side of the language, resulting in conflicts when doing subtyping. You should also
+note that every class in Python 3 has now got the same common ancestor. Since making it
+work properly with the existing MRO involved too much work, a new MRO was a simpler
+and quicker solution.</p>
+<p>So, the same example run under Python 3 gives a different result:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommonBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CommonBase&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Base1</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Base2</span><span class="p">(</span><span class="n">CommonBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Base2&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>And here is the usage example showing that C3 serialization will pick the method of the
+closest ancestor:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MyClass</span><span class="p">()</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+<span class="go">Base2</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Note that the preceding behavior cannot be replicated in Python 2 without
+the <code class="docutils literal notranslate"><span class="pre">CommonBase</span></code> class explicitly inheriting from <code class="docutils literal notranslate"><span class="pre">object</span></code>. Reasons as to
+why it may be useful to specify <code class="docutils literal notranslate"><span class="pre">object</span></code> as a class ancestor in Python 3,
+even if this is redundant, were already mentioned.</p>
+</div>
+<p>The Python MRO is based on a recursive call over the base classes. To summarize the
+Michele Simionato paper referenced at the beginning of this section, the C3 symbolic
+notation applied to our example is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">[</span><span class="n">MyClass</span><span class="p">(</span><span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">MyClass</span> <span class="o">+</span> <span class="n">merge</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">Base1</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="n">Base2</span><span class="p">],</span> <span class="n">Base1</span><span class="p">,</span> <span class="n">Base2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">L[MyClass]</span></code> is the linearization of <code class="docutils literal notranslate"><span class="pre">MyClass</span></code>, and <code class="docutils literal notranslate"><span class="pre">merge</span></code> is a specific algorithm that
+merges several linearization results.</p>
+<p>So, a synthetic description would be, as Simionato says:</p>
+<blockquote>
+<div><p><em>“The linearization of C is the sum of C plus the merge of the linearizations of the parents and the list of the parents.”</em></p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">merge</span></code> algorithm is responsible for removing the duplicates and preserving the correct
+ordering. It is described in the paper like this (adapted to our example):</p>
+<blockquote>
+<div><p><em>Take the head of the first list, that is, L[Base1][0]; if this head is not in the tail of any of the other lists, then add it to the linearization of MyClass and remove it from the lists in the merge, otherwise look at the head of the next list and take it, if it is a good head.</em></p>
+<p><em>Then, repeat the operation until all the classes are removed or it is impossible to find good heads. In this case, it is impossible to construct the merge, Python 2.3 will refuse to create the MyClass class and will raise an exception.</em></p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">head</span></code> is the first element of a list and the <code class="docutils literal notranslate"><span class="pre">tail</span></code> contains the rest of the elements. For
+example, in (<code class="docutils literal notranslate"><span class="pre">Base1</span></code>, <code class="docutils literal notranslate"><span class="pre">Base2</span></code>, …, <code class="docutils literal notranslate"><span class="pre">BaseN</span></code>), <code class="docutils literal notranslate"><span class="pre">Base1</span></code> is the <code class="docutils literal notranslate"><span class="pre">head</span></code> , and (<code class="docutils literal notranslate"><span class="pre">Base2</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BaseN</span></code>) is the <code class="docutils literal notranslate"><span class="pre">tail</span></code>.</p>
+<p>In other words, C3 does a recursive depth lookup on each parent to get a sequence of lists.
+Then, it computes a left-to-right rule to merge all lists with a hierarchy disambiguation,
+when a class is involved in several lists.</p>
+<p>So the result is as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">(</span><span class="n">MyClass</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;MyClass&#39;</span><span class="p">,</span> <span class="s1">&#39;Base1&#39;</span><span class="p">,</span> <span class="s1">&#39;Base2&#39;</span><span class="p">,</span> <span class="s1">&#39;CommonBase&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">__mro__</span></code> attribute of a class (which is read-only) stores the result of
+the linearization computation. Computation is done when the class
+definition is loaded.</p>
+<p>You can also call <code class="docutils literal notranslate"><span class="pre">MyClass.mro()</span></code> to compute and get the result. This is
+another reason why classes in Python 2 should be taken with an extra
+case. While old-style classes in Python 2 have some defined order in
+which methods are resolved, they do not provide the <code class="docutils literal notranslate"><span class="pre">__mro__</span></code> attribute
+and the <code class="docutils literal notranslate"><span class="pre">mro()</span></code> method. So, despite the order of resolution, it is wrong to
+say that they have MRO. In most cases, whenever someone refers to MRO
+in Python, it means that they are referring to the C3 algorithm described
+in this section.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

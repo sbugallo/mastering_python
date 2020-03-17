@@ -226,39 +226,6 @@ code should be able to work:
     >>> TableEvent().topic
     'public.user'
 
-4.1.3. Slots
-------------
-
-When a class defines the ``__slots__`` attribute, it can contain all the attributes that the class
-expects and no more.
-
-Trying to add extra attributes dynamically to a class that defines ``__slots__`` will result in
-an ``AttributeError``. By defining this attribute, the class becomes static, so it will not have
-a ``__dict__`` attribute where you can add more objects dynamically.
-
-How, then, are its attributes retrieved if not from the dictionary of the object? By using
-descriptors. Each name defined in a slot will have its own descriptor that will store the
-value for retrieval later:
-
-.. code-block:: python
-
-    class Coordinate2D:
-        __slots__ = ("lat", "lon")
-        def __init__(self, lat, lon):
-            self.lat = lat
-            self.lon = lon
-
-        def __repr__(self):
-            return f"{self.__class__.__name__}({self.lat}, {self.lon})"
-
-While this is an interesting feature, it has to be used with caution because it is taking away
-the dynamic nature of Python. In general, this ought to be reserved only for objects that we
-know are static, and if we are absolutely sure we are not adding any attributes to them
-dynamically in other parts of the code.
-
-As an upside of this, objects defined with slots use less memory, since they only need a
-fixed set of fields to hold values and not an entire dictionary.
-
 4.2. Implementing descriptors in decorators
 +++++++++++++++++++++++++++++++++++++++++++
 

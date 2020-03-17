@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Slots &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Slots</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/properties_attributes_methods/slots.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="slots">
+<h1>3. Slots<a class="headerlink" href="#slots" title="Permalink to this headline">¶</a></h1>
+<p>An interesting feature that is very rarely used by developers is slots. They allow you to set a
+static attribute list for a given class with the <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> attribute, and skip the creation of
+the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> dictionary in each instance of the class. They were intended to save memory
+space for classes with very few attributes, since <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> is not created at every instance.</p>
+<p>When a class defines the <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> attribute, it can contain all the attributes that the class
+expects and no more.</p>
+<p>Trying to add extra attributes dynamically to a class that defines <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> will result in
+an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>. By defining this attribute, the class becomes static, so it will not have
+a <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute where you can add more objects dynamically.</p>
+<p>How, then, are its attributes retrieved if not from the dictionary of the object? By using
+descriptors. Each name defined in a slot will have its own descriptor that will store the
+value for retrieval later.</p>
+<p><code class="docutils literal notranslate"><span class="pre">__slots__</span></code> can help to design classes whose signature needs to be frozen. For
+instance, if you need to restrict the dynamic features of the language over a class, defining
+slots can help:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Coordinate2D</span><span class="p">:</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.lat}</span><span class="s2">, </span><span class="si">{self.lon}</span><span class="s2">)&quot;</span>
+</pre></div>
+</div>
+<p>While this is an interesting feature, it has to be used with caution because it is taking away
+the dynamic nature of Python. In general, this ought to be reserved only for objects that we
+know are static, and if we are absolutely sure we are not adding any attributes to them
+dynamically in other parts of the code. Some
+techniques, such as monkey patching, will not work with instances of classes that have slots
+defined. Fortunately, the new attributes can be added to the derived classes if they do not
+have their own slots defined:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Frozen</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ice&#39;</span><span class="p">,</span> <span class="s1">&#39;cream&#39;</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;__dict__&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Frozen</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;ice&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Frozen</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span> <span class="o">=</span> <span class="n">Frozen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span><span class="o">.</span><span class="n">ice</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span><span class="o">.</span><span class="n">cream</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span><span class="o">.</span><span class="n">icy</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="x">Traceback (most recent call last): File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="x">AttributeError: &#39;Frozen&#39; object has no attribute &#39;icy&#39;</span>
+
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Unfrozen</span><span class="p">(</span><span class="n">Frozen</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unfrozen</span> <span class="o">=</span> <span class="n">Unfrozen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unfrozen</span><span class="o">.</span><span class="n">icy</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unfrozen</span><span class="o">.</span><span class="n">icy</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>As an upside of this, objects defined with slots use less memory, since they only need a
+fixed set of fields to hold values and not an entire dictionary.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

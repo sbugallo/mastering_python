@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Supplemental data types and containers &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Supplemental data types and containers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/containers/supplemental.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="supplemental-data-types-and-containers">
+<h1>4. Supplemental data types and containers<a class="headerlink" href="#supplemental-data-types-and-containers" title="Permalink to this headline">¶</a></h1>
+<p>In the previous subsections, we concentrated mostly on those data types that have
+dedicated literals in the Python syntax. These were also the types that are implemented at
+the interpreter-level. However, Python’s standard library offers a great collection of
+supplemental data types that can be effectively used in places where the basic built-in types
+show their shortcomings, or places where the nature of the data requires specialized
+handling (for example, in the presentation of time and dates).</p>
+<p>The most common are data containers that are found in the collections, and we have
+already briefly mentioned two of them: <code class="docutils literal notranslate"><span class="pre">deque</span></code> and <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code>. However, the landscape
+of data structures available for Python programmers is enormous and almost every module
+of the Python standard library defines some specialized types for handling the data of
+different problem domains.</p>
+<div class="section" id="specialized-data-containers-from-the-collections-module">
+<h2>4.1. Specialized data containers from the collections module<a class="headerlink" href="#specialized-data-containers-from-the-collections-module" title="Permalink to this headline">¶</a></h2>
+<p>Every data structure has its shortcomings. There is no single collection that can suit every
+problem, and four basic types of them (tuple, list, set, and dictionary) is still not a wide
+range of choices. These are the most basic and important collections that have a dedicated
+literal syntax. Fortunately, Python provides far more options in its standard library through
+the <code class="docutils literal notranslate"><span class="pre">collections</span></code> built-in module. Here are the most important universal data containers
+provided by this module:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">namedtuple()</span></code>: This is a factory function for creating tuple subclasses whose indexes can be accessed as named attributes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deque</span></code>: This is a double-ended queue, a list-like generalization of stacks and queues with fast appends and pops on both ends</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ChainMap</span></code>: This is a dictionary-like class to create a single view of multiple mappings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Counter</span></code>: This is a dictionary subclass for counting hashable objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code>: This is a dictionary subclass that preserves the order that the entries were added in</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defaultdict</span></code>: This is a dictionary subclass that can supply missing values using a user-defined factory function</p></li>
+</ul>
+</div>
+<div class="section" id="symbolic-enumeration-with-the-enum-module">
+<h2>4.2. Symbolic enumeration with the enum module<a class="headerlink" href="#symbolic-enumeration-with-the-enum-module" title="Permalink to this headline">¶</a></h2>
+<p>One of the special handy types found in the Python standard is the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> class from the
+<code class="docutils literal notranslate"><span class="pre">enum</span></code> module. This is a base class that allows you to define symbolic enumerations, similar
+in concept to the enumerated types found in many other programming languages (C, C++,
+C#, Java, and many more) that are often denoted with the <code class="docutils literal notranslate"><span class="pre">enum</span></code> keyword.</p>
+<p>In order to define your own enumeration in Python, you will need to subclass the <code class="docutils literal notranslate"><span class="pre">Enum</span></code>
+class and define all enumeration members as class attributes. The following is an example
+of a simple Python <code class="docutils literal notranslate"><span class="pre">enum</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="k">class</span> <span class="nc">Weekday</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">MONDAY</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">TUESDAY</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">WEDNESDAY</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">THURSDAY</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">FRIDAY</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">SATURDAY</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">SUNDAY</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+</div>
+<p>The Python documentation defines the following nomenclature for <code class="docutils literal notranslate"><span class="pre">enum</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enumeration</span></code> or <code class="docutils literal notranslate"><span class="pre">enum</span></code>: This is the subclass of <code class="docutils literal notranslate"><span class="pre">Enum</span></code> base class. Here, it would be <code class="docutils literal notranslate"><span class="pre">Weekday</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">member</span></code>: This is the attribute you define in the Enum subclass. Here, it would be <code class="docutils literal notranslate"><span class="pre">Weekday.MONDAY</span></code>, <code class="docutils literal notranslate"><span class="pre">Weekday.TUESDAY</span></code>, and so on.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: This is the name of the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> subclass attribute that defines the member. Here, it would be <code class="docutils literal notranslate"><span class="pre">MONDAY</span></code> for <code class="docutils literal notranslate"><span class="pre">Weekday.MONDAY</span></code>, <code class="docutils literal notranslate"><span class="pre">TUESDAY</span></code> for <code class="docutils literal notranslate"><span class="pre">Weekday.TUESDAY</span></code>, and so on.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: This is the value assigned to the Enum subclass attribute that defines the <code class="docutils literal notranslate"><span class="pre">member</span></code>. Here, for <code class="docutils literal notranslate"><span class="pre">Weekday.MONDAY</span></code> it would be one, for <code class="docutils literal notranslate"><span class="pre">Weekday.TUESDAY</span></code> it would be two, and so on.</p></li>
+</ul>
+<p>You can use any type as the <code class="docutils literal notranslate"><span class="pre">enum</span></code> member value. If the member value is not important in
+your code, you can even use the <code class="docutils literal notranslate"><span class="pre">auto()</span></code> type, which will be replaced with automatically
+generated values. Here is the previous example rewritten with the use of <code class="docutils literal notranslate"><span class="pre">auto</span></code> in it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+
+
+<span class="k">class</span> <span class="nc">Weekday</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+     <span class="n">MONDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">TUESDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">WEDNESDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">THURSDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">FRIDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">SATURDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">SUNDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Enumerations in Python are really useful in every place where some variable can take a
+finite number of values/choices. For instance, they can be used to define statues of objects,
+as shown in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+
+
+<span class="k">class</span> <span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+     <span class="n">PENDING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">PROCESSING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">PROCESSED</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Order</span><span class="p">:</span>
+     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+
+     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSED</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t process order that has been already processed&quot;</span><span class="p">)</span>
+
+         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSING</span>
+         <span class="o">...</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSED</span>
+</pre></div>
+</div>
+<p>Another use case for enumerations is storing selections of non-exclusive choices. This is
+something that is often implemented using bit flags and bit masks in languages where bit
+manipulation of numbers is very common, like C. In Python, this can be done in a more
+expressive and convenient way using <code class="docutils literal notranslate"><span class="pre">FlagEnum</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">auto</span>
+
+
+<span class="k">class</span> <span class="nc">Side</span><span class="p">(</span><span class="n">Flag</span><span class="p">):</span>
+     <span class="n">GUACAMOLE</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">TORTILLA</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">FRIES</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">BEER</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+     <span class="n">POTATO_SALAD</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can combine such flags using bitwise operations (the <code class="docutils literal notranslate"><span class="pre">|</span></code> and <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> operators) and test for
+flag membership with the <code class="docutils literal notranslate"><span class="pre">in</span></code> keyword. Here are some examples for a <code class="docutils literal notranslate"><span class="pre">Side</span></code> enumeration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mexican_sides</span> <span class="o">=</span> <span class="n">Side</span><span class="o">.</span><span class="n">GUACAMOLE</span> <span class="o">|</span> <span class="n">Side</span><span class="o">.</span><span class="n">BEER</span> <span class="o">|</span> <span class="n">Side</span><span class="o">.</span><span class="n">TORTILLA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bavarian_sides</span> <span class="o">=</span> <span class="n">Side</span><span class="o">.</span><span class="n">BEER</span> <span class="o">|</span> <span class="n">Side</span><span class="o">.</span><span class="n">POTATO_SALAD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">common_sides</span> <span class="o">=</span> <span class="n">mexican_sides</span> <span class="o">&amp;</span> <span class="n">bavarian_sides</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Side</span><span class="o">.</span><span class="n">GUACAMOLE</span> <span class="ow">in</span> <span class="n">mexican_sides</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Side</span><span class="o">.</span><span class="n">TORTILLA</span> <span class="ow">in</span> <span class="n">bavarian_sides</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">common_sides</span>
+<span class="go">&lt;Side.BEER: 8&gt;</span>
+</pre></div>
+</div>
+<p>Symbolic enumerations share some similarity with dictionaries and named tuples because
+they all map names/keys to values. The main difference is that the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> definition is
+immutable and global. It should be used whenever there is a closed set of possible values
+that can’t change dynamically during program runtime, and especially if that set should be
+defined only once and globally. Dictionaries and named tuples are data containers. You can
+create as many instances of them as you like.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

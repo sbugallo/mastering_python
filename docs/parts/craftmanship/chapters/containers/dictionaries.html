@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Dictionaries &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Dictionaries</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/containers/dictionaries.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dictionaries">
+<h1>2. Dictionaries<a class="headerlink" href="#dictionaries" title="Permalink to this headline">¶</a></h1>
+<p>Dictionaries are one of most versatile data structures in Python. The <code class="docutils literal notranslate"><span class="pre">dict</span></code> type allows you
+to map a set of unique keys to values, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39; one&#39;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39; two&#39;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39; three&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Dictionary literals are a very basic thing, and you should already know about them. Python
+allows programmers to also create a new dictionary using comprehensions, similar to the
+list comprehensions mentioned earlier. Here is a very simple example that maps numbers
+in a range from 0 to 99 to their squares:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">squares</span> <span class="o">=</span> <span class="p">{</span><span class="n">number</span><span class="p">:</span> <span class="n">number</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>What is important is that the same benefits of using list comprehensions apply to dictionary
+comprehensions. So, in many cases, they are more efficient, shorter, and cleaner. For more
+complex code, when many <code class="docutils literal notranslate"><span class="pre">if</span></code> statements or function calls are required to create a
+dictionary, the simple <code class="docutils literal notranslate"><span class="pre">for</span></code> loop may be a better choice, especially if it improves readability.</p>
+<p>For Python programmers new to Python 3, there is one important note about iterating over
+dictionary elements. The <code class="docutils literal notranslate"><span class="pre">keys()</span></code>, <code class="docutils literal notranslate"><span class="pre">values()</span></code>, and <code class="docutils literal notranslate"><span class="pre">items()</span></code> dictionary methods are no
+longer return lists. Also, their counterparts, <code class="docutils literal notranslate"><span class="pre">iterkeys()</span></code>, <code class="docutils literal notranslate"><span class="pre">itervalues()</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">iteritems()</span></code>, which returned iterators instead, are missing in Python 3. Now,
+the <code class="docutils literal notranslate"><span class="pre">keys()</span></code>, <code class="docutils literal notranslate"><span class="pre">values()</span></code>, and <code class="docutils literal notranslate"><span class="pre">items()</span></code> methods return special view objects:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">keys()</span></code>: This returns the dict_keys object which provides a view on all keys of the dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">values()</span></code>: This returns the dict_values object which provides a view on all values of the dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">items()</span></code>: This returns the dict_items object, providing views on all (key, value) two-tuples of the dictionary</p></li>
+</ul>
+<p>View objects provide a view on the dictionary content in a dynamic way so that every time
+the dictionary changes, the views will reflect these changes, as shown in this example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Doe&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">items</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">items</span>
+<span class="go">dict_items([(&#39;name&#39;, &#39;John&#39;), (&#39;last_name&#39;, &#39;Doe&#39;), (&#39;age&#39;, 42)])</span>
+</pre></div>
+</div>
+<p>View objects join the behavior of lists returned by the implementation of old methods with
+iterators that have been returned by their ´´iter´´ counterparts. Views do not need to
+redundantly store all values in memory (like lists do), but are still allowed to access their
+length (using the ´´len()´´ function) and testing for membership (using the ´´in´´ keyword).
+Views are, of course, iterable.</p>
+<p>The last important thing about views is that both view objects returned by
+the <code class="docutils literal notranslate"><span class="pre">keys()</span></code> and <code class="docutils literal notranslate"><span class="pre">values()</span></code> methods ensure the same order of keys and values. In Python 2,
+you could not modify the dictionary content between these two calls if you wanted to
+ensure the same order of retrieved keys and values. <code class="docutils literal notranslate"><span class="pre">dict_keys</span></code> and <code class="docutils literal notranslate"><span class="pre">dict_values</span></code> are now
+dynamic, so even if the content of the dictionary changes between
+the <code class="docutils literal notranslate"><span class="pre">keys()</span></code> and <code class="docutils literal notranslate"><span class="pre">values()</span></code> calls, the order of iteration is consistent between these two
+views.</p>
+<div class="section" id="implementation-details">
+<h2>2.1. Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<p>CPython uses hash tables with pseudo-random probing as an underlying data structure for
+dictionaries. It seems like a very deep implementation detail, but it is very unlikely to
+change in the near future, so it is also a very interesting fact for the Python programmer.</p>
+<p>Due to this implementation detail, only objects that are hashable can be used as a
+dictionary key. An object is hashable if it has a hash value that never changes during its
+lifetime, and can be compared to different objects. Every Python built-in type that is
+immutable is also hashable. Mutable types, such as list, dictionaries, and sets, are not
+hashable, and so they cannot be used as dictionary keys. Protocol that defines if a type is
+hashable consists of two methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__hash__</span></code>: This provides the hash value (as an integer) that is needed by the internal <code class="docutils literal notranslate"><span class="pre">dict</span></code> implementation. For objects that are instances of user-defined classes, it is derived from their <code class="docutils literal notranslate"><span class="pre">id()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__eq__</span></code>: This compares if two objects have the same value. All objects that are instances of user-defined classes compare as unequal by default, except for themselves.</p></li>
+</ul>
+<p>Two objects that are compared as equal must have the same hash value. The reverse does
+not need to be true. This means that collisions of hashes are possible: two objects with the
+same hash may not be equal. It is allowed, and every Python implementation must be able
+to resolve hash collisions. CPython uses open addressing to resolve them. The
+probability of collisions greatly affects dictionary performance, and, if it is high, the
+dictionary will not benefit from its internal optimizations.</p>
+<p>While three basic operations, adding, getting, and deleting an item, have an average time
+complexity equal to O(1), their amortized worst case complexities are a lot higher. It is O(n),
+where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the current dictionary size. Additionally, if user-defined class objects are used as
+dictionary keys and they are hashed improperly (with a high risk of collisions), this will
+have a huge negative impact on the dictionary’s performance. The full table of CPython’s
+time complexities for dictionaries is as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 30%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operation</p></th>
+<th class="head"><p>Average complexity</p></th>
+<th class="head"><p>Amortized worst case complexity</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Get item</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Set item</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-even"><td><p>Delete item</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Copy</p></td>
+<td><p>O(n)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+<tr class="row-even"><td><p>Iteration</p></td>
+<td><p>O(n)</p></td>
+<td><p>O(n)</p></td>
+</tr>
+</tbody>
+</table>
+<p>It is also important to know that the <code class="docutils literal notranslate"><span class="pre">n</span></code> number in worst case complexities for copying and
+iterating the dictionary is the maximum size that the dictionary ever achieved, rather than
+the size at the time of operation. In other words, iterating over the dictionary that once was
+huge but greatly shrunk in time may take a surprisingly long time. In some cases, it may be
+better to create a new dictionary object from a dictionary that needs to be shrunk if it has to
+be iterated often instead of just removing elements from it.</p>
+</div>
+<div class="section" id="weaknesses-and-alternatives">
+<h2>2.2. Weaknesses and alternatives<a class="headerlink" href="#weaknesses-and-alternatives" title="Permalink to this headline">¶</a></h2>
+<p>For a very long time, one of the most common pitfalls regarding dictionaries was expecting
+that they preserve the order of elements in which new keys were added. The situation has
+changed a bit in Python 3.6, and the problem was finally solved in Python 3.7 on the level
+of language specification.</p>
+<p>But, before we dig deeper into the situation of Python 3.6 and later releases, we need to
+make a small detour and examine the problem as if we were still stuck in the past, when the
+only Python releases available were older than 3.6. In the past, you could have a situation
+where the consecutive dictionary keys also had hashes that were consecutive values too.
+And, for a very long time, this was the only situation when you could expect that you
+would iterate over dictionary elements in the same order as they were added to the
+dictionary. The easiest way to present this is by using integer numbers, as hashes of integer
+numbers are the same as their value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">number</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([0, 1, 2, 3, 4])</span>
+</pre></div>
+</div>
+<p>Using other datatypes that hash differently could show that the order is not preserved.
+Here is an example that was executed in CPython 3.5:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">):</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;1&#39;, &#39;2&#39;, &#39;4&#39;, &#39;0&#39;, &#39;3&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">):</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))}</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;2&#39;, &#39;3&#39;, &#39;1&#39;, &#39;4&#39;, &#39;0&#39;])</span>
+</pre></div>
+</div>
+<p>As shown in the preceding code, for CPython 3.5 (and also earlier versions), the resulting
+order is both dependent on the hashing of the object and also on the order in which the
+elements were added. This is definitely not what can be relied on, because it can vary with
+different Python implementations.</p>
+<p>So, what about Python 3.6 and later releases? Starting from Python 3.6, the CPython
+interpreter uses a new compact dictionary representation that has a noticeably smaller
+memory footprint and also preserves order as a side effect of that new implementation. In
+Python 3.6, the order preserving nature of dictionaries was only an implementation detail,
+but in Python 3.7, it has been officially declared in the Python language specification. So,
+starting from Python 3.7, you can finally rely on the item insertion order of dictionaries.</p>
+<p>In parallel to the CPython implementation of dictionaries, Python 3.6 introduced another
+change in the syntax that is related to the order of items in dictionaries. As defined in the
+PEP 486 “Preserving the order of <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> in a function” document, the order of keyword
+arguments collected using the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> syntax must be the same as presented in function
+call. This behavior can be clearly presented with the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fun</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fun</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">{&#39;c&#39;: 1, &#39;b&#39;: 2, &#39;a&#39;: 3}</span>
+</pre></div>
+</div>
+<p>However the preceding changes can be used effectively only in the newest releases of
+Python. So, what should you do if you have a library that must work on older versions of
+Python too, and some parts of its code requires order-preserving dictionaries? The best
+option is to be clear about your expectations regarding dictionary ordering and use a type
+that explicitly preserves the order of elements.</p>
+<p>Fortunately, the Python standard library provides an ordered dictionary type
+called <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> in the <code class="docutils literal notranslate"><span class="pre">collections</span></code> module. The constructor of this type accepts
+<code class="docutils literal notranslate"><span class="pre">iterable</span></code> as the initialization argument. Each element of that argument should be a pair of a
+dictionary key and value, as in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OrderedDict</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">odict_keys([&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;])</span>
+</pre></div>
+</div>
+<p>It also has some additional features, such as popping items from both ends using
+the <code class="docutils literal notranslate"><span class="pre">popitem()</span></code> method, or moving the specified element to one of the ends using
+the`` move_to_end()`` method. A full reference on that collection is available in the Python
+documentation (refer to
+<a class="reference external" href="https://docs.python.org/3/library/collections.html">https://docs.python.org/3/library/collections.html</a>). Even if
+you target only Python in version 3.7 or newer, which guarantees the preservation of the
+item insertion order, the <code class="docutils literal notranslate"><span class="pre">OrderedDict</span> <span class="pre">type</span></code> is still useful. It allows you to make your
+intention clear. If you define your variable with <code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> instead of a plain dict, it
+becomes obvious that, in this particular case, the order of inserted items is important.</p>
+<p>The last interesting note is that, in very old code bases, you can find <code class="docutils literal notranslate"><span class="pre">dict</span></code> as a primitive set
+implementation that ensures uniqueness of elements. While this will give proper results,
+you should avoid such use of that type unless you target Python versions lower than 2.3.
+Using dictionaries in this way is wasteful in terms of resources. Python has a builtin <code class="docutils literal notranslate"><span class="pre">set</span></code>
+type that serves this purpose. In fact, it has very similar internal implementation to
+dictionaries in CPython, but offers some additional features, as well as specific set-related
+optimizations.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

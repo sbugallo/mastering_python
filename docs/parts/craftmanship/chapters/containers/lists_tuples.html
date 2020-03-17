@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Lists and tuples &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Lists and tuples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/containers/lists_tuples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lists-and-tuples">
+<h1>1. Lists and tuples<a class="headerlink" href="#lists-and-tuples" title="Permalink to this headline">¶</a></h1>
+<p>Two of the most basic collection types in Python are lists and tuples, and they both
+represent sequences of objects. The basic difference between them should be obvious for
+anyone who has spent more than a few hours with Python; lists are dynamic, so they can
+change their size, while tuples are immutable (cannot be modified after they are created).</p>
+<p>Lists and tuples in Python have various optimizations that make allocations/deallocations
+of small objects fast. They are also the recommended datatypes for structures where the
+position of the element is information by itself. For example, a tuple may be a good choice
+for storing a pair of (x, y) coordinates. Implementation details regarding tuples are not
+interesting. The only important thing about them in the scope of this chapter is
+that tuple is immutable and thus hashable. A detailed explanation of this section will be
+covered later in the Dictionaries section. More interesting than tuples is its dynamic
+counterpart: lists. In the next section, we will discuss how it really works, and how to deal
+with it efficiently.</p>
+<div class="section" id="implementation-details">
+<h2>1.1. Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<p>Many programmers easily confuse Python’s <code class="docutils literal notranslate"><span class="pre">list</span></code> type with the concept of linked lists
+which are found often in standard libraries of other languages, such as C, C++, or Java. In
+fact, CPython lists are not lists at all. In CPython, lists are implemented as variable length
+arrays. This should be also true for other implementations, such as Jython and IronPython,
+although such implementation details are often not documented in these projects. The
+reasons for such confusion is clear. This datatype is named <code class="docutils literal notranslate"><span class="pre">list</span></code> and also has an interface
+that could be expected from any linked list implementation.</p>
+<p>Why it is important and what does it mean? Lists are one of the most popular data
+structures, and the way in which they are used greatly affects every application’s
+performance. CPython is the most popular and used implementation, so knowing its
+internal implementation details is crucial.</p>
+<p>Lists in Python are contiguous arrays of references to other objects. The pointer to this array
+and the length is stored in the list’s head structure. This means that every time an item is
+added or removed, the array of references needs to be resized (reallocated). Fortunately, in
+Python, these arrays are created with exponential over allocation, so not every operation
+requires an actual resize of the underlying array. This is how the amortized cost of
+appending and popping elements can be low in terms of complexity. Unfortunately, some
+other operations that are considered cheap in ordinary linked lists have relatively high
+computational complexity in Python:</p>
+<ul class="simple">
+<li><p>Inserting an item at an arbitrary place using the <code class="docutils literal notranslate"><span class="pre">list.insert</span></code> method has complexity O(n).</p></li>
+<li><p>Deleting an item using <code class="docutils literal notranslate"><span class="pre">list.delete</span></code> or using the del operator har has complexity O(n)</p></li>
+</ul>
+<p>At least retrieving or setting an element using an index is an operation where cost is
+independent of the list’s size, and the complexity of these operations is always O(1).</p>
+<p>Let’s define <code class="docutils literal notranslate"><span class="pre">n</span></code> as the length of a list. Here is a full table of average time complexities for
+most of the list operations:
+====================================  ==========
+Operation                             Complexity
+====================================  ==========
+Copy                                  O(n)
+Append                                O(1)
+Insert                                O(n)
+Get item                              O(1)
+Set item                              O(1)
+Delete item                           O(n)
+Iteration                             O(n)
+Get slice of length <code class="docutils literal notranslate"><span class="pre">k</span></code>             O(k)
+Del slice                             O(n)
+Set slice of length <code class="docutils literal notranslate"><span class="pre">k</span></code>             O(k+n)
+Extend                                O(k)
+Multiply by <code class="docutils literal notranslate"><span class="pre">k</span></code>                     O(nk)
+Test existence (<code class="docutils literal notranslate"><span class="pre">element</span> <span class="pre">in</span> <span class="pre">list</span></code>)  O(n)
+<code class="docutils literal notranslate"><span class="pre">min()/max()</span></code>                       O(n)
+Get length                            O(1)
+====================================  ==========</p>
+<p>For situations where a real linked list or doubly linked list is required, Python provides
+a <code class="docutils literal notranslate"><span class="pre">deque</span></code> type in the <code class="docutils literal notranslate"><span class="pre">collections</span></code> built-in module. This is a data structure that allows us to
+append and pop elements at each side with O(1) complexity. This is a generalization of
+stacks and queues, and should work fine anywhere where a doubly linked list is required.</p>
+</div>
+<div class="section" id="list-comprehensions">
+<h2>1.2. List comprehensions<a class="headerlink" href="#list-comprehensions" title="Permalink to this headline">¶</a></h2>
+<p>As you probably know, writing a piece of code such as this can be tedious:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">evens</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">evens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">evens</span>
+<span class="go">[0, 2, 4, 6, 8]</span>
+</pre></div>
+</div>
+<p>This may work for C, but it actually makes things slower for Python for the following
+reasons:</p>
+<ul class="simple">
+<li><p>It makes the interpreter work on each loop to determine what part of the sequence has to be changed</p></li>
+<li><p>It makes you keep a counter to track what element has to be processed</p></li>
+<li><p>It requires additional function lookups to be performed at every iteration because <code class="docutils literal notranslate"><span class="pre">append()</span></code> is a list’s method</p></li>
+</ul>
+<p>A list comprehension is a better pattern for these kind of situations. It allows us to define a
+list by using a single line of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="go">[0, 2, 4, 6, 8]</span>
+</pre></div>
+</div>
+<p>This form of writing is much shorter and involves fewer elements. In a bigger program, this
+means less bugs and code that is easier to understand. This is the reason why many
+experienced Python programmers will consider such forms as being more readable.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>There is a myth among some Python programmers that list
+comprehensions can be a workaround for the fact that the internal array
+representing the list object must be resized with every few additions.
+Some say that the array will be allocated once in just the right size.
+Unfortunately, this isn’t true.</p>
+<p>The interpreter, during evaluation of the comprehension, can’t know how
+big the resulting container will be, and it can’t preallocate the final size of
+the array for it. Due to this, the internal array is reallocated in the same
+pattern as it would be in the for loop. Still, in many cases, list creation
+using comprehensions is both cleaner and faster than using ordinary
+loops.</p>
+</div>
+</div>
+<div class="section" id="other-idioms">
+<h2>1.3. Other idioms<a class="headerlink" href="#other-idioms" title="Permalink to this headline">¶</a></h2>
+<p>Another typical example of a Python idiom is the use of <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code>. This built-in
+function provides a convenient way to get an index when a sequence is iterated inside of a
+loop. Consider the following piece of code as an example of tracking the element index
+without the <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">...</span>
+<span class="go">0 one</span>
+<span class="go">1 two</span>
+<span class="go">2 three</span>
+</pre></div>
+</div>
+<p>This can be replaced with the following code, which is shorter and definitely cleaner:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">0 one</span>
+<span class="go">1 two</span>
+<span class="go">2 three</span>
+</pre></div>
+</div>
+<p>If you need to aggregate elements of multiple lists (or any other iterables) in the one-by-one
+fashion, you can use the built-in <code class="docutils literal notranslate"><span class="pre">zip()</span></code>. This is a very common pattern for uniform iteration
+over two same-sized iterables:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">(1, 4)</span>
+<span class="go">(2, 5)</span>
+<span class="go">(3, 6)</span>
+</pre></div>
+</div>
+<p>Note that the results of <code class="docutils literal notranslate"><span class="pre">zip()</span></code> can be reversed by another <code class="docutils literal notranslate"><span class="pre">zip()</span></code> call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">(1, 2, 3)</span>
+<span class="go">(4, 5, 6)</span>
+</pre></div>
+</div>
+<p>One important thing you need to remember about the <code class="docutils literal notranslate"><span class="pre">zip()</span></code> function is that it expects
+input iterables to be the same size. If you provide arguments of different lengths, then it
+will trim the output to the shortest argument, as shown in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">(1, 1)</span>
+<span class="go">(2, 2)</span>
+</pre></div>
+</div>
+<p>Another popular syntax element is sequence unpacking. It is not limited to lists and tuples,
+and will work with any sequence type (even strings and byte sequences). It allows us to
+unpack a sequence of elements into another set of variables as long as there are as many
+variables on the left-hand side of the assignment operator as the number of elements in the
+sequence. If you paid attention to the code snippets, then you might have already noticed
+this idiom when we were discussing the <code class="docutils literal notranslate"><span class="pre">enumerate()</span></code> function.</p>
+<p>The following is a dedicated example of that syntax element:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">third</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">&#39;foo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second</span>
+<span class="go">&#39;bar&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">third</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+<p>Unpacking also allows us to capture multiple elements in a single variable using starred
+expressions as long as it can be interpreted unambiguously. Unpacking can also be
+performed on nested sequences. This can come in handy, especially when iterating on some
+complex data structures built out of multiple sequences. Here are some examples of more
+complex sequence unpacking:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rest</span>
+<span class="go">[2, 3]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">inner</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inner</span>
+<span class="go">[1, 2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">last</span>
+<span class="go">3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span>
+<span class="go">(1, 2, 3, 4)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

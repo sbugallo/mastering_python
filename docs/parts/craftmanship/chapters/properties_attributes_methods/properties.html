@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Properties &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Properties</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/properties_attributes_methods/properties.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="properties">
+<h1>2. Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h1>
+<p>When the object needs to just hold values, we can use regular attributes. Sometimes, we might want to do some
+computations based on the state of the object and the values of other attributes. Most of the time, properties are a
+good choice for this.</p>
+<p>Properties are to be used when we need to define access control to some attributes in an object, which is another point
+where Python has its own way of doing things. In other programming languages (like Java), you would create access
+methods (getters and setters), but idiomatic Python would use properties instead.</p>
+<p>The properties provide a built-in descriptor type that knows how to link an attribute to a
+set of methods. <code class="docutils literal notranslate"><span class="pre">property</span></code> takes four optional arguments: <code class="docutils literal notranslate"><span class="pre">fget</span></code>, <code class="docutils literal notranslate"><span class="pre">fset</span></code>, <code class="docutils literal notranslate"><span class="pre">fdel</span></code>, and <code class="docutils literal notranslate"><span class="pre">doc</span></code>. The
+last one can be provided to define a <code class="docutils literal notranslate"><span class="pre">docstring</span></code> function that is linked to the attribute as if
+it were a method. Here is an example of a <code class="docutils literal notranslate"><span class="pre">Rectangle</span></code> class that can be controlled either by
+direct access to attributes that store two corner points or by using
+the <code class="docutils literal notranslate"><span class="pre">width</span></code> and <code class="docutils literal notranslate"><span class="pre">height</span></code> properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span>
+
+    <span class="k">def</span> <span class="nf">_width_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span>
+
+    <span class="k">def</span> <span class="nf">_width_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span> <span class="o">+</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_height_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span>
+
+    <span class="k">def</span> <span class="nf">_height_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">+</span> <span class="n">value</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">_width_get</span><span class="p">,</span> <span class="n">_width_set</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;rectangle width measured from left&quot;</span>
+    <span class="p">)</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">_height_get</span><span class="p">,</span> <span class="n">_height_set</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;rectangle height measured from top&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>The following is an example of such defined properties in an interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rectangle</span><span class="o">.</span><span class="n">height</span>
+<span class="go">(15, 24)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span>
+<span class="go">Rectangle(10, 10, 110, 34)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span>
+<span class="go">Rectangle(10, 10, 110, 110)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">)</span>
+<span class="go">Help on class Rectangle in module sample_module:</span>
+<span class="go">class Rectangle(builtins.object)</span>
+<span class="go">|   Methods defined here:</span>
+<span class="go">|</span>
+<span class="go">|   __init__(self, x1, y1, x2, y2)</span>
+<span class="go">|       Initialize self. See help(type(self)) for accurate signature.</span>
+<span class="go">|   __repr__(self)</span>
+<span class="go">|       Return repr(self).</span>
+<span class="go">|</span>
+<span class="go">| --------------------------------------------------------</span>
+<span class="go">|   Data descriptors defined here:</span>
+<span class="go">|   (...)</span>
+<span class="go">|</span>
+<span class="go">|   height</span>
+<span class="go">|       rectangle height measured from top</span>
+<span class="go">|</span>
+<span class="go">|   width</span>
+<span class="go">|       rectangle width measured from left</span>
+</pre></div>
+</div>
+<p>The properties make it easier to write descriptors, but must be handled carefully when
+using inheritance over classes. The attribute created is made on the fly using the methods of
+the current class and will not use methods that are overridden in the derived classes.</p>
+<p>For instance, the following example will fail to override the implementation of
+the <code class="docutils literal notranslate"><span class="pre">fget</span></code> method of the parent’s class (<code class="docutils literal notranslate"><span class="pre">Rectangle</span></code>) <code class="docutils literal notranslate"><span class="pre">width</span></code> property:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MetricRectangle</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_width_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> meters&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">width</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+<p>In order to resolve this, the whole property simply needs to be overwritten in the derived
+class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MetricRectangle</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_width_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> meters&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">width</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_width_get</span><span class="p">,</span> <span class="n">Rectangle</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="n">fset</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MetricRectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">width</span>
+<span class="go">&#39;100 meters&#39;</span>
+</pre></div>
+</div>
+<p>Unfortunately, the preceding code has some maintainability issues. It can be a source of
+confusion if the developer decides to change the parent class, but forgets to update the
+property call. This is why overriding only parts of the property behavior is not advised.
+Instead of relying on the parent class’s implementation, it is recommended that you rewrite
+all the property methods in the derived classes if you need to change how they work. In
+most cases, this is the only option, because usually the change to the
+property <code class="docutils literal notranslate"><span class="pre">setter</span></code> behavior implies a change to the behavior of <code class="docutils literal notranslate"><span class="pre">getter</span></code> as well.</p>
+<p>Because of this, the best syntax for creating properties is to use property as a decorator.
+This will reduce the number of method signatures inside the class and make the code more
+readable and maintainable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;rectangle width measured from left&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span>
+
+    <span class="nd">@width</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span> <span class="o">+</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;rectangle height measured from top&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span>
+
+    <span class="nd">@height</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">+</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>This approach is much more compact than having custom methods prefixed with <code class="docutils literal notranslate"><span class="pre">get_</span></code> or <code class="docutils literal notranslate"><span class="pre">set_</span></code>. It’s clear what is
+expected because it’s just email.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t write custom <code class="docutils literal notranslate"><span class="pre">get_*</span></code> and <code class="docutils literal notranslate"><span class="pre">set_*</span></code> methods for all attributes on your objects. Most of the time, leaving
+them as regular attributes is just enough. If you need to modify the logic for when an attribute is retrieved or
+modified, then use properties.</p>
+</div>
+<p>You might find that properties are a good way to achieve command and query separation. Command and query
+separation state that a method of an object should either answer to something or do something, but not both. If a method
+of an object is doing something and at the same time it returns a status answering a question of how that operation
+went, then it’s doing more than one thing, clearly violating the principle that functions should do one thing, and one
+thing only.</p>
+<p>Depending on the name of the method, this can create even more confusion, making it harder for readers to understand
+what the actual intention of the code is. For example, if a method is called <code class="docutils literal notranslate"><span class="pre">set_email</span></code>, and we use it as
+<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">self.set_email(&quot;a&#64;j.com&quot;):</span> <span class="pre">...</span></code>, what is that code doing? Is it setting the email to <a class="reference external" href="mailto:a&#37;&#52;&#48;j&#46;com">a<span>&#64;</span>j<span>&#46;</span>com</a>? Is it checking if the
+email is already set to that value? Both (setting and then checking if the status is correct)?</p>
+<p>With properties, we can avoid this kind of confusion. The <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> decorator is the query that will answer to
+something, and the <code class="docutils literal notranslate"><span class="pre">&#64;&lt;property_name&gt;.setter</span></code> is the command that will do something.</p>
+<p>Another piece of good advice derived from this example is as follows: don’t do more than one thing on a method. If you
+want to assign something and then check the value, break that down into two or more sentences.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Methods should do one thing only. If you have to run an action and then check for the status, so that in separate
+methods that are called by different statements.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

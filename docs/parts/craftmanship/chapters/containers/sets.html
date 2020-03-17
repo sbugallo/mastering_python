@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Sets &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Sets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/containers/sets.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sets">
+<h1>3. Sets<a class="headerlink" href="#sets" title="Permalink to this headline">¶</a></h1>
+<p>Sets are a very robust data structure that are mostly useful in situations where the order of
+elements is not as important as their uniqueness. They are also useful if you need to
+efficiently check efficiency if the element is contained in a collection. Sets in Python are
+generalizations of mathematic sets, and are provided as built-in types in two flavors:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set()</span></code>: This is a mutable, non-ordered, finite collection of unique, immutable (hashable) objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frozenset()</span></code>: This is an immutable, hashable, non-ordered collection of unique, immutable (hashable) objects</p></li>
+</ul>
+<p>The immutability of <code class="docutils literal notranslate"><span class="pre">frozenset()</span></code> objects makes it possible for them to be included as
+dictionary keys and also other <code class="docutils literal notranslate"><span class="pre">set()</span></code> and <code class="docutils literal notranslate"><span class="pre">frozenset()</span></code> elements. A plain
+mutable <code class="docutils literal notranslate"><span class="pre">set()</span></code> object cannot be used within another <code class="docutils literal notranslate"><span class="pre">set()</span></code> or <code class="docutils literal notranslate"><span class="pre">frozenset()</span></code>. Attempting
+to do so will raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> exception, as in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">([</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])])</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr"> File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">unhashable type: &#39;set&#39;</span>
+</pre></div>
+</div>
+<p>On the other hand, the following <code class="docutils literal notranslate"><span class="pre">set</span></code> initializations are completely correct, and do not raise
+exceptions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">([</span><span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])])</span>
+<span class="go">{frozenset({1, 2, 3}), frozenset({2, 3, 4})}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">frozenset</span><span class="p">([</span><span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])])</span>
+<span class="go">frozenset({frozenset({1, 2, 3}), frozenset({2, 3, 4})})</span>
+</pre></div>
+</div>
+<p>Mutable sets can be created in three ways:</p>
+<ul class="simple">
+<li><p>Using a <code class="docutils literal notranslate"><span class="pre">set()</span></code> call that accepts optional iterables as the initialization argument, such as <code class="docutils literal notranslate"><span class="pre">set([0,</span> <span class="pre">1,</span> <span class="pre">2])</span></code></p></li>
+<li><p>Using a set comprehension such as <code class="docutils literal notranslate"><span class="pre">{element</span> <span class="pre">for</span> <span class="pre">element</span> <span class="pre">in</span> <span class="pre">range(3)}</span></code></p></li>
+<li><p>Using set literals such as <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">2,</span> <span class="pre">3}</span></code></p></li>
+</ul>
+<p>Note that using literals and comprehensions for sets requires extra caution, because they
+are very similar in form to dictionary literals and comprehensions. Also, there is no literal
+for empty set objects: empty curly brackets <code class="docutils literal notranslate"><span class="pre">{}</span></code> are reserved for empty dictionary literals.</p>
+<div class="section" id="implementation-details">
+<h2>3.1. Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<p>Sets in CPython are very similar to dictionaries. As a matter of fact, they are implemented
+like dictionaries with dummy values, where only keys are actual collection elements. Sets
+also exploit this lack of values in mapping for additional optimizations.</p>
+<p>Thanks to this, sets allow very fast additions, deletions, and checks for element existence
+with the average time complexity equal to O(1). Still, since the implementation of sets in
+CPython relies on a similar hash table structure, the worst case complexity for these
+operations is still O(n), where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the current size of a set.</p>
+<p>Other implementation details also apply. The item to be included in a set must be hashable,
+and, if instances of user-defined classes in the set are hashed poorly, this will have a
+negative impact on their performance.</p>
+<p>Despite their conceptual similarity to dictionaries, sets in Python 3.7 do not preserve the
+order of elements in specification, or as a detail of CPython implementation.
+Let’s take a look at the supplemental data types and containers.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                16/03/2020
+                17/03/2020
               </div>
             
           
@@ -345,33 +345,6 @@ code should be able to work:</p>
 <span class="s1">&#39;public.user&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="slots">
-<h3>4.1.3. Slots<a class="headerlink" href="#slots" title="Permalink to this headline">¶</a></h3>
-<p>When a class defines the <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> attribute, it can contain all the attributes that the class
-expects and no more.</p>
-<p>Trying to add extra attributes dynamically to a class that defines <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> will result in
-an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>. By defining this attribute, the class becomes static, so it will not have
-a <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute where you can add more objects dynamically.</p>
-<p>How, then, are its attributes retrieved if not from the dictionary of the object? By using
-descriptors. Each name defined in a slot will have its own descriptor that will store the
-value for retrieval later:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Coordinate2D</span><span class="p">:</span>
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.lat}</span><span class="s2">, </span><span class="si">{self.lon}</span><span class="s2">)&quot;</span>
-</pre></div>
-</div>
-<p>While this is an interesting feature, it has to be used with caution because it is taking away
-the dynamic nature of Python. In general, this ought to be reserved only for objects that we
-know are static, and if we are absolutely sure we are not adding any attributes to them
-dynamically in other parts of the code.</p>
-<p>As an upside of this, objects defined with slots use less memory, since they only need a
-fixed set of fields to hold values and not an entire dictionary.</p>
 </div>
 </div>
 <div class="section" id="implementing-descriptors-in-decorators">

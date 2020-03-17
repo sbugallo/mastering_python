@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Underscores in Python &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Underscores in Python</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/properties_attributes_methods/underscores.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="underscores-in-python">
+<h1>1. Underscores in Python<a class="headerlink" href="#underscores-in-python" title="Permalink to this headline">¶</a></h1>
+<p>Consider the following example to illustrate this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Connector</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">source</span>
+<span class="go">&#39;postgresql://localhost&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">_timeout</span>
+<span class="go">60</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">__password</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr"> File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="gr">AttributeError</span>: <span class="n">&#39;Connector&#39; object has no attribute &#39;__password&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+<span class="go">{&#39;source&#39;: &#39;postgresql://localhost&#39;, &#39;_timeout&#39;: 60, &#39;user&#39;: &#39;root&#39;, &#39;_Connector__password&#39;: &#39;1234&#39;}</span>
+</pre></div>
+</div>
+<p>Here, a Connector object is created with source, and it starts with 4 attributes—the
+aforementioned <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span></code>, <code class="docutils literal notranslate"><span class="pre">user</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code>. <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code> are public, <code class="docutils literal notranslate"><span class="pre">timeout</span></code> is
+private and <code class="docutils literal notranslate"><span class="pre">password</span></code> is.</p>
+<p>However, as we can see from the following lines when we create an object like this, we can actually access <code class="docutils literal notranslate"><span class="pre">timeout</span></code>.
+The interpretation of this code is that <code class="docutils literal notranslate"><span class="pre">_timeout</span></code> should be accessed only within connector itself and never from a
+caller. This means that you should organize the code in a way so that you can safely refactor the timeout at all of the
+times it’s needed, relying on the fact that it’s not being called from outside the object (only internally), hence
+preserving the same interface as before. Complying with these rules makes the code easier to maintain and more
+robust because we don’t have to worry about ripple effects when refactoring. The same principle applies to methods as
+well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Objects should only expose those attributes and methods that are relevant to an external caller object,
+namely, entailing its interface. Everything that is not strictly part of an object’s interface should be kept prefixed
+with a single underscore.</p>
+</div>
+<p>This is the Pythonic way of clearly delimiting the interface of an object. There is, however, a common misconception
+that some attributes and methods can be actually made private. This is, again, a misconception.</p>
+<p><code class="docutils literal notranslate"><span class="pre">password</span></code> is defined with a double underscore instead. Some developers use this method to hide some attributes,
+thinking, like in this example, that <code class="docutils literal notranslate"><span class="pre">password</span></code> is now private and that no other object can modify it. Now, take a
+look at the exception that is raised when trying to access it. It’s <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>, saying that it doesn’t exist.
+It doesn’t say something like “this is private” or “this can’t be accessed” and so on. It says it does not exist. This
+should give us a clue that, in fact, something different is happening and that this behavior is instead just a side
+effect, but not the real effect we want.</p>
+<p>What’s actually happening is that with the double underscores, Python creates a different name for the attribute (this
+is called <strong>name mangling</strong>). What it does is create the attribute with the following name instead:
+“_&lt;class-name&gt;__&lt;attribute-name&gt;”. In this case, an attribute named ‘_Connector__password’ will be created.</p>
+<p>Notice the side effect that we mentioned earlier—the attribute only exists with a different name, and for that reason
+the AttributeError was raised on our first attempt to access it.</p>
+<p>The idea of the double underscore in Python is completely different. It was created as a means to override different
+methods of a class that is going to be extended several times, without the risk of having collisions with the method
+names. Even that is a too far-fetched use case as to justify the use of this mechanism.</p>
+<p>Double underscores are a non-Pythonic approach. If you need to define attributes as private, use a single underscore,
+and respect the Pythonic convention that it is a private attribute.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not use double underscores.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

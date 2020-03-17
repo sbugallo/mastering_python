@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../../_static/styles.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Pythonic code" href="chapters/pythonic_code/index.html" />
+    <link rel="next" title="Strings and bytes" href="chapters/strings_bytes/index.html" />
     <link rel="prev" title="Index" href="../../index.html" /> 
 </head>
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                16/03/2020
+                17/03/2020
               </div>
             
           
@@ -92,13 +92,24 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Craftmanship</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html">Pythonic code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/strings_bytes/index.html">Strings and bytes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/protocols/index.html">Python’s protocols: dunder methods and attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/sequences/index.html">Sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/context_managers/index.html">Context managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/iterables/index.html">Iterable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/containers/index.html">Container objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/dynamic_attributes/index.html">Dynamic attributes for objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/callables/index.html">Callable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/docstrings_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/caveats/index.html">Caveats in Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/general_traits/index.html">General traits of good code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/solid_principles/index.html">SOLID</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html">Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/properties_attributes_methods/index.html">Properties, attributes and methods for objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/data_classes/index.html">Data classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html">Descriptors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html">Generators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/above_class_level/index.html">Above the class level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/mro/index.html">MRO and accessing methods from superclasses</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/metaprogramming/index.html">Metaprogramming</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/naming/index.html">Naming</a></li>
 </ul>
@@ -171,7 +182,7 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="chapters/pythonic_code/index.html" class="btn btn-neutral float-right" title="Pythonic code" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="chapters/strings_bytes/index.html" class="btn btn-neutral float-right" title="Strings and bytes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../../index.html" class="btn btn-neutral float-left" title="Index" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -187,18 +198,44 @@
 <h1>Craftmanship<a class="headerlink" href="#craftmanship" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="chapters/pythonic_code/index.html">Pythonic code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#strings-and-bytes">1. Strings and bytes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#indexes-and-slices">2. Indexes and slices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#context-managers">3. Context managers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#properties-attributes-and-different-types-of-methods-for-objects">4. Properties, attributes and different types of methods for objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#iterable-objects">5. Iterable objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#container-objects">6. Container objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#dynamic-attributes-for-objects">7. Dynamic attributes for objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#callable-objects">8. Callable objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#docstrings">9. Docstrings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#annotations">10. Annotations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/pythonic_code/index.html#caveats-in-python">11. Caveats in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/strings_bytes/index.html">Strings and bytes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/strings_bytes/index.html#implementation-details">1. Implementation details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/strings_bytes/index.html#string-concatenation">2. String concatenation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/strings_bytes/index.html#string-formatting-with-f-strings">3. String formatting with f-strings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/protocols/index.html">Python’s protocols: dunder methods and attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/sequences/index.html">Sequences</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/sequences/index.html#creating-your-own-sequences">1. Creating your own sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/context_managers/index.html">Context managers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/context_managers/index.html#implementing-context-managers">1. Implementing context managers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/iterables/index.html">Iterable objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/iterables/index.html#creating-iterable-objects">1. Creating iterable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/iterables/index.html#creating-sequences">2. Creating sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/containers/index.html">Container objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/containers/index.html#lists-and-tuples">1. Lists and tuples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/containers/index.html#dictionaries">2. Dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/containers/index.html#sets">3. Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/containers/index.html#supplemental-data-types-and-containers">4. Supplemental data types and containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/containers/index.html#custom-containers">5. Custom containers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/dynamic_attributes/index.html">Dynamic attributes for objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/callables/index.html">Callable objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/docstrings_annotations/index.html">Docstrings and annotations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/docstrings_annotations/index.html#docstrings">1. Docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/docstrings_annotations/index.html#annotations">2. Annotations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/caveats/index.html">Caveats in Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/caveats/index.html#mutable-default-arguments">1. Mutable default arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/caveats/index.html#extending-built-in-types">2. Extending built-in types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/general_traits/index.html">General traits of good code</a><ul>
@@ -227,6 +264,13 @@
 <li class="toctree-l2"><a class="reference internal" href="chapters/decorators/index.html#analyzing-good-decorators">5. Analyzing good decorators</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/properties_attributes_methods/index.html">Properties, attributes and methods for objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/properties_attributes_methods/index.html#underscores-in-python">1. Underscores in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/properties_attributes_methods/index.html#properties">2. Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/properties_attributes_methods/index.html#slots">3. Slots</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/data_classes/index.html">Data classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/descriptors/index.html">Descriptors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html#a-first-look-at-descriptors">1. A first look at descriptors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chapters/descriptors/index.html#types-of-descriptors">2. Types of descriptors</a></li>
@@ -241,12 +285,11 @@
 <li class="toctree-l2"><a class="reference internal" href="chapters/generators/index.html#asynchronous-programming">4. Asynchronous programming</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="chapters/above_class_level/index.html">Above the class level</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chapters/above_class_level/index.html#python-s-protocols-dunder-methods-and-attributes">1. Python’s protocols: dunder methods and attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/above_class_level/index.html#data-classes">2. Data classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/above_class_level/index.html#subclassing-built-in-types">3. Subclassing built-in types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/above_class_level/index.html#mro-and-accessing-methods-from-superclasses">4. MRO and accessing methods from superclasses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chapters/above_class_level/index.html#advanced-attribute-access-patterns">5. Advanced attribute access patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/mro/index.html">MRO and accessing methods from superclasses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapters/mro/index.html#old-style-classes-and-super-in-python-2">1. Old-style classes and super in Python 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/mro/index.html#understanding-python-s-method-resolution-order">2. Understanding Python’s Method Resolution Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/mro/index.html#super-pitfalls">3. Super pitfalls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapters/mro/index.html#best-practices">4. Best practices</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/metaprogramming/index.html">Metaprogramming</a><ul>
@@ -279,7 +322,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="chapters/pythonic_code/index.html" class="btn btn-neutral float-right" title="Pythonic code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="chapters/strings_bytes/index.html" class="btn btn-neutral float-right" title="Strings and bytes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../../index.html" class="btn btn-neutral float-left" title="Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

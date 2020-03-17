@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                16/03/2020
+                17/03/2020
               </div>
             
           
@@ -183,11 +183,36 @@ descriptor.</p>
 descriptor protocol. This means that this class must have its interface containing at least one
 of the following magic methods (part of the descriptor protocol as of Python 3.6+):</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">__get__</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">__set__</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">__delete__</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">__set_name__</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__get__(self,</span> <span class="pre">obj,</span> <span class="pre">owner=None)</span></code>: This is called whenever the attribute is
+read (referred to as a <code class="docutils literal notranslate"><span class="pre">getter</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__set__(self,</span> <span class="pre">obj,</span> <span class="pre">value)</span></code>: .This is called whenever the attribute is set. In
+the following examples, I will refer to this as a <code class="docutils literal notranslate"><span class="pre">setter</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__delete__(self,</span> <span class="pre">obj)</span></code>: This is called when <code class="docutils literal notranslate"><span class="pre">del</span></code> is invoked on the attribute.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__set_name__(self,</span> <span class="pre">owner,</span> <span class="pre">name)</span></code></p></li>
 </ul>
+<p>A descriptor that implements <code class="docutils literal notranslate"><span class="pre">__get__()</span></code> and <code class="docutils literal notranslate"><span class="pre">__set__()</span></code> is called a data descriptor. If it
+just implements <code class="docutils literal notranslate"><span class="pre">__get__()</span></code>, then it is called a non-data descriptor.</p>
+<p>Methods of this protocol are, in fact, called by the object’s
+special <code class="docutils literal notranslate"><span class="pre">__getattribute__()</span></code> method (do not confuse it with <code class="docutils literal notranslate"><span class="pre">__getattr__()</span></code>, which has
+a different purpose) on every attribute lookup. Whenever such a lookup is performed,
+either by using a dotted notation in the form of <code class="docutils literal notranslate"><span class="pre">instance.attribute</span></code>, or by using
+the <code class="docutils literal notranslate"><span class="pre">getattr(instance,</span> <span class="pre">'attribute')</span></code> function call, the <code class="docutils literal notranslate"><span class="pre">__getattribute__()</span></code> method
+is implicitly invoked and it looks for an attribute in the following order:</p>
+<ol class="arabic simple">
+<li><p>It verifies whether the attribute is a data descriptor on the class object of the
+instance.</p></li>
+<li><p>If not, it looks to see whether the attribute can be found in
+the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> lookup of the instance object.</p></li>
+<li><p>Finally, it looks to see whether the attribute is a non-data descriptor on the class
+object of the instance.</p></li>
+</ol>
+<p>In other words, data descriptors take precedence over <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> lookup,
+and <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> lookup takes precedence over non-data descriptors. Without <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>
+taking precedence over non-data descriptors, we would not be able
+to dynamically override specific methods on already constructed instances at runtime.
+Fortunately, thanks to how descriptors work in Python, it is possible; so, developers may
+use a popular technique called monkey patching to change the way in which instances
+work without the need for subclassing.</p>
 <p>For the purposes of this initial high-level introduction, the following naming convention
 will be used:</p>
 <ul class="simple">

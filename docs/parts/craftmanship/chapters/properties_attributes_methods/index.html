@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Properties, attributes and methods for objects &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Data classes" href="../data_classes/index.html" />
+    <link rel="prev" title="Decorators" href="../decorators/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                17/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Craftmanship</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../strings_bytes/index.html">Strings and bytes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../protocols/index.html">Python’s protocols: dunder methods and attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sequences/index.html">Sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../context_managers/index.html">Context managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterables/index.html">Iterable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../containers/index.html">Container objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic_attributes/index.html">Dynamic attributes for objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../callables/index.html">Callable objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docstrings_annotations/index.html">Docstrings and annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../caveats/index.html">Caveats in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general_traits/index.html">General traits of good code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solid_principles/index.html">SOLID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decorators/index.html">Decorators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Properties, attributes and methods for objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#underscores-in-python">1. Underscores in Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#properties">2. Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slots">3. Slots</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_classes/index.html">Data classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../descriptors/index.html">Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generators/index.html">Generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mro/index.html">MRO and accessing methods from superclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metaprogramming/index.html">Metaprogramming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../naming/index.html">Naming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Craftmanship</a> &raquo;</li>
+        
+      <li>Properties, attributes and methods for objects</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/craftmanship/chapters/properties_attributes_methods/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../data_classes/index.html" class="btn btn-neutral float-right" title="Data classes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../decorators/index.html" class="btn btn-neutral float-left" title="Decorators" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="properties-attributes-and-methods-for-objects">
+<h1>Properties, attributes and methods for objects<a class="headerlink" href="#properties-attributes-and-methods-for-objects" title="Permalink to this headline">¶</a></h1>
+<p>All of the properties and functions of an object are public in Python, which is different from other languages where
+properties can be public, private, or protected. That is, there is no point in preventing caller objects from invoking
+any attributes an object has. This is another difference with respect to other programming languages in which you can
+mark some attributes as private or protected.</p>
+<p>There is no strict enforcement, but there are some conventions. An attribute that starts with an underscore is meant to
+be private to that object, and we expect that no external agent calls it (but again, there is nothing preventing this).</p>
+<div class="section" id="underscores-in-python">
+<h2>1. Underscores in Python<a class="headerlink" href="#underscores-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Consider the following example to illustrate this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Connector</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">source</span>
+<span class="go">&#39;postgresql://localhost&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">_timeout</span>
+<span class="go">60</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">__password</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr"> File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="gr">AttributeError</span>: <span class="n">&#39;Connector&#39; object has no attribute &#39;__password&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span><span class="p">(</span><span class="n">Connector</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+<span class="go">{&#39;source&#39;: &#39;postgresql://localhost&#39;, &#39;_timeout&#39;: 60, &#39;user&#39;: &#39;root&#39;, &#39;_Connector__password&#39;: &#39;1234&#39;}</span>
+</pre></div>
+</div>
+<p>Here, a Connector object is created with source, and it starts with 4 attributes—the
+aforementioned <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span></code>, <code class="docutils literal notranslate"><span class="pre">user</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code>. <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code> are public, <code class="docutils literal notranslate"><span class="pre">timeout</span></code> is
+private and <code class="docutils literal notranslate"><span class="pre">password</span></code> is.</p>
+<p>However, as we can see from the following lines when we create an object like this, we can actually access <code class="docutils literal notranslate"><span class="pre">timeout</span></code>.
+The interpretation of this code is that <code class="docutils literal notranslate"><span class="pre">_timeout</span></code> should be accessed only within connector itself and never from a
+caller. This means that you should organize the code in a way so that you can safely refactor the timeout at all of the
+times it’s needed, relying on the fact that it’s not being called from outside the object (only internally), hence
+preserving the same interface as before. Complying with these rules makes the code easier to maintain and more
+robust because we don’t have to worry about ripple effects when refactoring. The same principle applies to methods as
+well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Objects should only expose those attributes and methods that are relevant to an external caller object,
+namely, entailing its interface. Everything that is not strictly part of an object’s interface should be kept prefixed
+with a single underscore.</p>
+</div>
+<p>This is the Pythonic way of clearly delimiting the interface of an object. There is, however, a common misconception
+that some attributes and methods can be actually made private. This is, again, a misconception.</p>
+<p><code class="docutils literal notranslate"><span class="pre">password</span></code> is defined with a double underscore instead. Some developers use this method to hide some attributes,
+thinking, like in this example, that <code class="docutils literal notranslate"><span class="pre">password</span></code> is now private and that no other object can modify it. Now, take a
+look at the exception that is raised when trying to access it. It’s <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>, saying that it doesn’t exist.
+It doesn’t say something like “this is private” or “this can’t be accessed” and so on. It says it does not exist. This
+should give us a clue that, in fact, something different is happening and that this behavior is instead just a side
+effect, but not the real effect we want.</p>
+<p>What’s actually happening is that with the double underscores, Python creates a different name for the attribute (this
+is called <strong>name mangling</strong>). What it does is create the attribute with the following name instead:
+“_&lt;class-name&gt;__&lt;attribute-name&gt;”. In this case, an attribute named ‘_Connector__password’ will be created.</p>
+<p>Notice the side effect that we mentioned earlier—the attribute only exists with a different name, and for that reason
+the AttributeError was raised on our first attempt to access it.</p>
+<p>The idea of the double underscore in Python is completely different. It was created as a means to override different
+methods of a class that is going to be extended several times, without the risk of having collisions with the method
+names. Even that is a too far-fetched use case as to justify the use of this mechanism.</p>
+<p>Double underscores are a non-Pythonic approach. If you need to define attributes as private, use a single underscore,
+and respect the Pythonic convention that it is a private attribute.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not use double underscores.</p>
+</div>
+</div>
+<div class="section" id="properties">
+<h2>2. Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<p>When the object needs to just hold values, we can use regular attributes. Sometimes, we might want to do some
+computations based on the state of the object and the values of other attributes. Most of the time, properties are a
+good choice for this.</p>
+<p>Properties are to be used when we need to define access control to some attributes in an object, which is another point
+where Python has its own way of doing things. In other programming languages (like Java), you would create access
+methods (getters and setters), but idiomatic Python would use properties instead.</p>
+<p>The properties provide a built-in descriptor type that knows how to link an attribute to a
+set of methods. <code class="docutils literal notranslate"><span class="pre">property</span></code> takes four optional arguments: <code class="docutils literal notranslate"><span class="pre">fget</span></code>, <code class="docutils literal notranslate"><span class="pre">fset</span></code>, <code class="docutils literal notranslate"><span class="pre">fdel</span></code>, and <code class="docutils literal notranslate"><span class="pre">doc</span></code>. The
+last one can be provided to define a <code class="docutils literal notranslate"><span class="pre">docstring</span></code> function that is linked to the attribute as if
+it were a method. Here is an example of a <code class="docutils literal notranslate"><span class="pre">Rectangle</span></code> class that can be controlled either by
+direct access to attributes that store two corner points or by using
+the <code class="docutils literal notranslate"><span class="pre">width</span></code> and <code class="docutils literal notranslate"><span class="pre">height</span></code> properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span>
+
+    <span class="k">def</span> <span class="nf">_width_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span>
+
+    <span class="k">def</span> <span class="nf">_width_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span> <span class="o">+</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_height_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span>
+
+    <span class="k">def</span> <span class="nf">_height_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">+</span> <span class="n">value</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">_width_get</span><span class="p">,</span> <span class="n">_width_set</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;rectangle width measured from left&quot;</span>
+    <span class="p">)</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">_height_get</span><span class="p">,</span> <span class="n">_height_set</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;rectangle height measured from top&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>The following is an example of such defined properties in an interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rectangle</span><span class="o">.</span><span class="n">height</span>
+<span class="go">(15, 24)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span>
+<span class="go">Rectangle(10, 10, 110, 34)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rectangle</span>
+<span class="go">Rectangle(10, 10, 110, 110)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">)</span>
+<span class="go">Help on class Rectangle in module sample_module:</span>
+<span class="go">class Rectangle(builtins.object)</span>
+<span class="go">|   Methods defined here:</span>
+<span class="go">|</span>
+<span class="go">|   __init__(self, x1, y1, x2, y2)</span>
+<span class="go">|       Initialize self. See help(type(self)) for accurate signature.</span>
+<span class="go">|   __repr__(self)</span>
+<span class="go">|       Return repr(self).</span>
+<span class="go">|</span>
+<span class="go">| --------------------------------------------------------</span>
+<span class="go">|   Data descriptors defined here:</span>
+<span class="go">|   (...)</span>
+<span class="go">|</span>
+<span class="go">|   height</span>
+<span class="go">|       rectangle height measured from top</span>
+<span class="go">|</span>
+<span class="go">|   width</span>
+<span class="go">|       rectangle width measured from left</span>
+</pre></div>
+</div>
+<p>The properties make it easier to write descriptors, but must be handled carefully when
+using inheritance over classes. The attribute created is made on the fly using the methods of
+the current class and will not use methods that are overridden in the derived classes.</p>
+<p>For instance, the following example will fail to override the implementation of
+the <code class="docutils literal notranslate"><span class="pre">fget</span></code> method of the parent’s class (<code class="docutils literal notranslate"><span class="pre">Rectangle</span></code>) <code class="docutils literal notranslate"><span class="pre">width</span></code> property:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MetricRectangle</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_width_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> meters&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">width</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+<p>In order to resolve this, the whole property simply needs to be overwritten in the derived
+class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MetricRectangle</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_width_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> meters&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">width</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_width_get</span><span class="p">,</span> <span class="n">Rectangle</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="n">fset</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MetricRectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">width</span>
+<span class="go">&#39;100 meters&#39;</span>
+</pre></div>
+</div>
+<p>Unfortunately, the preceding code has some maintainability issues. It can be a source of
+confusion if the developer decides to change the parent class, but forgets to update the
+property call. This is why overriding only parts of the property behavior is not advised.
+Instead of relying on the parent class’s implementation, it is recommended that you rewrite
+all the property methods in the derived classes if you need to change how they work. In
+most cases, this is the only option, because usually the change to the
+property <code class="docutils literal notranslate"><span class="pre">setter</span></code> behavior implies a change to the behavior of <code class="docutils literal notranslate"><span class="pre">getter</span></code> as well.</p>
+<p>Because of this, the best syntax for creating properties is to use property as a decorator.
+This will reduce the number of method signatures inside the class and make the code more
+readable and maintainable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;rectangle width measured from left&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span>
+
+    <span class="nd">@width</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x1</span> <span class="o">+</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;rectangle height measured from top&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span>
+
+    <span class="nd">@height</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">+</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>This approach is much more compact than having custom methods prefixed with <code class="docutils literal notranslate"><span class="pre">get_</span></code> or <code class="docutils literal notranslate"><span class="pre">set_</span></code>. It’s clear what is
+expected because it’s just email.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t write custom <code class="docutils literal notranslate"><span class="pre">get_*</span></code> and <code class="docutils literal notranslate"><span class="pre">set_*</span></code> methods for all attributes on your objects. Most of the time, leaving
+them as regular attributes is just enough. If you need to modify the logic for when an attribute is retrieved or
+modified, then use properties.</p>
+</div>
+<p>You might find that properties are a good way to achieve command and query separation. Command and query
+separation state that a method of an object should either answer to something or do something, but not both. If a method
+of an object is doing something and at the same time it returns a status answering a question of how that operation
+went, then it’s doing more than one thing, clearly violating the principle that functions should do one thing, and one
+thing only.</p>
+<p>Depending on the name of the method, this can create even more confusion, making it harder for readers to understand
+what the actual intention of the code is. For example, if a method is called <code class="docutils literal notranslate"><span class="pre">set_email</span></code>, and we use it as
+<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">self.set_email(&quot;a&#64;j.com&quot;):</span> <span class="pre">...</span></code>, what is that code doing? Is it setting the email to <a class="reference external" href="mailto:a&#37;&#52;&#48;j&#46;com">a<span>&#64;</span>j<span>&#46;</span>com</a>? Is it checking if the
+email is already set to that value? Both (setting and then checking if the status is correct)?</p>
+<p>With properties, we can avoid this kind of confusion. The <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> decorator is the query that will answer to
+something, and the <code class="docutils literal notranslate"><span class="pre">&#64;&lt;property_name&gt;.setter</span></code> is the command that will do something.</p>
+<p>Another piece of good advice derived from this example is as follows: don’t do more than one thing on a method. If you
+want to assign something and then check the value, break that down into two or more sentences.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Methods should do one thing only. If you have to run an action and then check for the status, so that in separate
+methods that are called by different statements.</p>
+</div>
+</div>
+<div class="section" id="slots">
+<h2>3. Slots<a class="headerlink" href="#slots" title="Permalink to this headline">¶</a></h2>
+<p>An interesting feature that is very rarely used by developers is slots. They allow you to set a
+static attribute list for a given class with the <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> attribute, and skip the creation of
+the <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> dictionary in each instance of the class. They were intended to save memory
+space for classes with very few attributes, since <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> is not created at every instance.</p>
+<p>When a class defines the <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> attribute, it can contain all the attributes that the class
+expects and no more.</p>
+<p>Trying to add extra attributes dynamically to a class that defines <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> will result in
+an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>. By defining this attribute, the class becomes static, so it will not have
+a <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> attribute where you can add more objects dynamically.</p>
+<p>How, then, are its attributes retrieved if not from the dictionary of the object? By using
+descriptors. Each name defined in a slot will have its own descriptor that will store the
+value for retrieval later.</p>
+<p><code class="docutils literal notranslate"><span class="pre">__slots__</span></code> can help to design classes whose signature needs to be frozen. For
+instance, if you need to restrict the dynamic features of the language over a class, defining
+slots can help:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Coordinate2D</span><span class="p">:</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(</span><span class="si">{self.lat}</span><span class="s2">, </span><span class="si">{self.lon}</span><span class="s2">)&quot;</span>
+</pre></div>
+</div>
+<p>While this is an interesting feature, it has to be used with caution because it is taking away
+the dynamic nature of Python. In general, this ought to be reserved only for objects that we
+know are static, and if we are absolutely sure we are not adding any attributes to them
+dynamically in other parts of the code. Some
+techniques, such as monkey patching, will not work with instances of classes that have slots
+defined. Fortunately, the new attributes can be added to the derived classes if they do not
+have their own slots defined:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Frozen</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ice&#39;</span><span class="p">,</span> <span class="s1">&#39;cream&#39;</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;__dict__&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Frozen</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;ice&#39;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Frozen</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span> <span class="o">=</span> <span class="n">Frozen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span><span class="o">.</span><span class="n">ice</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span><span class="o">.</span><span class="n">cream</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frozen</span><span class="o">.</span><span class="n">icy</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="x">Traceback (most recent call last): File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="x">AttributeError: &#39;Frozen&#39; object has no attribute &#39;icy&#39;</span>
+
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Unfrozen</span><span class="p">(</span><span class="n">Frozen</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unfrozen</span> <span class="o">=</span> <span class="n">Unfrozen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unfrozen</span><span class="o">.</span><span class="n">icy</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unfrozen</span><span class="o">.</span><span class="n">icy</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>As an upside of this, objects defined with slots use less memory, since they only need a
+fixed set of fields to hold values and not an entire dictionary.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../data_classes/index.html" class="btn btn-neutral float-right" title="Data classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../decorators/index.html" class="btn btn-neutral float-left" title="Decorators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
