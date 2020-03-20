@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Popular documentation generators &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                20/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Popular documentation generators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/documenting_project/documentation_generators.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="popular-documentation-generators">
+<h1>3. Popular documentation generators<a class="headerlink" href="#popular-documentation-generators" title="Permalink to this headline">¶</a></h1>
+<p>As stated previously, software documentation may have varied readership. Accessing
+documentation directly from project source code is often natural to users that are
+programmers developing a given project. But this way of accessing project documentation
+may not be the most convenient for others. Also, some companies may have requirements
+to deliver documentation to their clients in a printable form.</p>
+<p>This is why documentation generation tools are so important. They allow you to benefit
+from documentation being treated as code while still maintaining the ability to have a
+deliverable document that can be browsed, searched, and read without access to the
+original source code. The Python ecosystem comes with a variety of amazing open source
+tools that allow you to generate project documentation directly from your source code. The
+two most popular tools in the Python community for generating user-friendly
+documentations are Sphinx and MkDocs. We will discuss them briefly in the following
+sections.</p>
+<div class="section" id="sphinx">
+<h2>3.1. Sphinx<a class="headerlink" href="#sphinx" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx (<a class="reference external" href="http://sphinx.pocoo.org">http://sphinx.pocoo.org</a>) is a set of scripts and <code class="docutils literal notranslate"><span class="pre">docutils</span></code> extensions that can be
+used to generate an HTML structure from the tree of plain text documents that are created
+using the reStructuredText syntax language. Sphinx also supports multiple other
+documentation output formats, like man pages, PDF, or even LaTex. This tool is used (for
+instance) to build official Python documentation and is very popular among many open
+source Python projects. It provides a really nice browsing system, together with a light but
+sufficient client-side JavaScript search engine. It also uses <code class="docutils literal notranslate"><span class="pre">pygments</span></code> for rendering code
+examples, which produces really nice syntax highlights.</p>
+<p>Sphinx can be easily configured to stick with the document landscape we defined in the
+previous section. It can be easily installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code> as a <code class="docutils literal notranslate"><span class="pre">Sphinx</span></code> package.</p>
+<p>The easiest way to start working with Sphinx is to use the <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> script. This
+utility will generate a script together with <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>, which can be used to generate the
+web documentation every time it is needed. It will interactively ask you some questions
+and then bootstrap the whole initial documentation source tree and configuration file. Once
+it is done, you can easily tweak it whenever you want. Let’s assume we have already
+bootstrapped the whole Sphinx environment and we want to see its HTML representation.
+This can be easily done using the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> command, as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>project/docs $ make html
+sphinx-build -b html -d _build/doctrees
+. _build/html
+Running Sphinx v1.3.6
+making output directory...
+loading pickled environment... not yet created
+building <span class="o">[</span>mo<span class="o">]</span>: targets <span class="k">for</span> <span class="m">0</span> po files that are out of date
+building <span class="o">[</span>html<span class="o">]</span>: targets <span class="k">for</span> <span class="m">1</span> <span class="nb">source</span> files that are out of date
+updating environment: <span class="m">1</span> added, <span class="m">0</span> changed, <span class="m">0</span> removed
+reading sources... <span class="o">[</span><span class="m">100</span>%<span class="o">]</span> index
+looking <span class="k">for</span> now-outdated files... none found
+pickling environment... <span class="k">done</span>
+checking consistency... <span class="k">done</span>
+preparing documents... <span class="k">done</span>
+writing output... <span class="o">[</span><span class="m">100</span>%<span class="o">]</span> index
+generating indices... genindex
+writing additional pages... search
+copying static files... <span class="k">done</span>
+copying extra files... <span class="k">done</span>
+dumping search index in English <span class="o">(</span>code: en<span class="o">)</span> ... <span class="k">done</span>
+dumping object inventory... <span class="k">done</span>
+build succeeded.
+Build finished. The HTML pages are in _build/html.
+</pre></div>
+</div>
+<p>Besides the HTML versions of the documents, the tool also builds automatic pages, such as
+a module list and an index. Sphinx provides a few <code class="docutils literal notranslate"><span class="pre">docutils</span></code> extensions to drive these
+features. These are the main ones:</p>
+<ul class="simple">
+<li><p>A directive that builds a table of contents</p></li>
+<li><p>A marker that can be used to register a document as a module helper</p></li>
+<li><p>A marker to add an element in the index</p></li>
+</ul>
+<div class="section" id="working-with-the-index-pages">
+<h3>3.1.1. Working with the index pages<a class="headerlink" href="#working-with-the-index-pages" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx provides a <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive that can be used to inject a table of contents in a
+document, with links to other documents. Each line must be a file with its relative path,
+starting from the current document. Glob-style names can also be provided to add several
+files that match the expression.</p>
+<p>For example, the index file in the <code class="docutils literal notranslate"><span class="pre">cookbook</span></code> folder, which we previously defined in the
+producer’s landscape, can look like this:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">========</span>
+<span class="gh">Cookbook</span>
+<span class="gh">========</span>
+
+Welcome to the Cookbook.
+
+Available recipes:
+
+<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+   <span class="nc">:glob:</span>
+   *
+</pre></div>
+</div>
+<p>With this syntax, the HTML page will display a list of all the reStructuredText documents
+available in the <code class="docutils literal notranslate"><span class="pre">cookbook</span></code> folder. This directive can be used in all the index files to build
+browsable documentation.</p>
+</div>
+<div class="section" id="registering-module-helpers">
+<h3>3.1.2. Registering module helpers<a class="headerlink" href="#registering-module-helpers" title="Permalink to this headline">¶</a></h3>
+<p>For module helpers, a marker can be added so that it is automatically listed and available in
+the module’s index page, as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">=======</span>
+<span class="gh">session</span>
+<span class="gh">=======</span>
+
+<span class="p">..</span> <span class="ow">module</span><span class="p">::</span> db.session
+
+The module session...
+</pre></div>
+</div>
+<p>Notice that the <code class="docutils literal notranslate"><span class="pre">db</span></code> prefix here can be used to avoid module collision. Sphinx will use it as a
+module category and will group all modules that start with <code class="docutils literal notranslate"><span class="pre">db.</span></code> in this category.</p>
+</div>
+<div class="section" id="adding-index-markers">
+<h3>3.1.3. Adding index markers<a class="headerlink" href="#adding-index-markers" title="Permalink to this headline">¶</a></h3>
+<p>Another option can be used to fill the index page by linking the document to an entry, as
+follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">=======</span>
+<span class="gh">session</span>
+<span class="gh">=======</span>
+
+<span class="p">..</span> <span class="ow">module</span><span class="p">::</span> db.session
+
+<span class="p">..</span> <span class="ow">index</span><span class="p">::</span>
+   Database Access
+   Session
+
+The module session...
+</pre></div>
+</div>
+<p>Two new entries, <code class="docutils literal notranslate"><span class="pre">Database</span> <span class="pre">Access</span></code> and <code class="docutils literal notranslate"><span class="pre">Session</span></code>, will be added in the index page.</p>
+</div>
+<div class="section" id="cross-references">
+<h3>3.1.4. Cross-references<a class="headerlink" href="#cross-references" title="Permalink to this headline">¶</a></h3>
+<p>Finally, Sphinx provides an inline markup to set cross-references. For instance, a link to a
+module can be done like this:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:mod:</span><span class="nv">`db.session`</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">:mod:</span></code> is the module marker’s prefix and <code class="docutils literal notranslate"><span class="pre">db.session</span></code> is the name of the module
+to be linked to (as registered previously). Keep in mind that <code class="docutils literal notranslate"><span class="pre">:mod:</span></code>, as well as the previous
+elements, are the specific directives that were introduced in reStructuredText by Sphinx.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Sphinx provides a lot more features that you can discover on its website.
+For instance, the <code class="docutils literal notranslate"><span class="pre">autodoc</span></code> feature is a great option to automatically extract
+your doctests to build the documentation. For more information, refer
+to <a class="reference external" href="http://sphinx.pocoo.org">http://sphinx.pocoo.org</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="mkdocs">
+<h2>3.2. MkDocs<a class="headerlink" href="#mkdocs" title="Permalink to this headline">¶</a></h2>
+<p>MkDocs (<a class="reference external" href="https://www.mkdocs.org/">https://www.mkdocs.org/</a>) is a very minimalistic static page generator that can
+be used to document your projects. It lacks built-in <code class="docutils literal notranslate"><span class="pre">autodoc</span></code> features, similar to those in
+Sphinx, but uses the lot simpler and readable Markdown markup language. It is also really
+extensible. It is definitely easier to write a MkDocs plugin than a docutils extension that
+could be used by Sphinx. So, if you have very specific documentation needs that cannot be
+satisfied by existing tools and their extensions are available at the moment, then MkDocs
+provides a very good foundation for building something custom-tailored.</p>
+</div>
+<div class="section" id="documentation-building-and-continuous-integration">
+<h2>3.3. Documentation building and continuous integration<a class="headerlink" href="#documentation-building-and-continuous-integration" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx and similar documentation generation tools really improve the readability and
+experience of reading the documentation from the consumer’s point of view. As we stated
+previously, it is especially helpful when some of the documentation parts are tightly
+coupled to the code, as in the form of docstrings. While this approach really makes it easier
+to ensure that the source version of the documentation matches with the code it documents,
+it does not guarantee that the documentation readership will have access to the latest and
+most up-to-date compiled version.</p>
+<p>Having only bare source representation is also not enough if the target readers of the
+documentation are not proficient enough with command-line tools and will not know how
+to build it into a browsable and readable form. This is why it is important to build your
+documentation into a consumer-friendly form automatically whenever any change to the
+code repository is committed/pushed.</p>
+<p>The best way to host the documentation built with Sphinx is to generate an HTML build
+and serve it as a static resource with your web server of choice. Sphinx provides a proper
+<code class="docutils literal notranslate"><span class="pre">Makefile</span></code> to build HTML files with the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> command. Because make is a
+very common utility, it should be very easy to integrate this process with any
+continuous integration system.</p>
+<p>If you are documenting an open source project with Sphinx, then you will make your life a
+lot easier by using <strong>Read the Docs</strong> (<a class="reference external" href="https://readthedocs.org/">https://readthedocs.org/</a> ). It is a free service for
+hosting the documentation of open source Python projects with Sphinx. The configuration
+is completely hassle-free, and it integrates very easily with two popular code hosting
+services: GitHub and Bitbucket. In practice, if you have your accounts properly connected
+and code repository properly set up, enabling documentation hosting on Read the Docs is a
+matter of just a few clicks.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

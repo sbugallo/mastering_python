@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Documenting web APIs &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                20/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Documenting web APIs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/documenting_project/web_apis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="documenting-web-apis">
+<h1>4. Documenting web APIs<a class="headerlink" href="#documenting-web-apis" title="Permalink to this headline">¶</a></h1>
+<p>The principles for documenting web APIs are almost the same as for other kinds of
+software. You want to properly target your readership, provide documentation in a way
+and form that is native for the usage environment (here, as a web page), and, most of all,
+make sure that readers have access to the up to date and relevant version of your
+documentation.</p>
+<p>Because of this, it is extremely important to have your documentation of web APIs
+generated from the sources of the code that provides these APIs. Unfortunately, due to the
+complex architecture of most web frameworks, classical documentation tools like Sphinx
+are rarely useful for documenting typical HTTP endpoints of web APIs. In this context, it is
+very common that auto-documentation capabilities are built into your web framework of
+choice. These kind of frameworks either serve user-readable documentation by themselves
+or serve a standardized API description in a machine-readable format that can be later
+processed with a specialized documentation browser.</p>
+<p>There is also another completely different philosophy for documenting web APIs, and it is
+based on the idea of API prototyping. Tools for API prototyping allow you to use
+documentation as a software contract that can be used as an API stub, even before service
+development starts. Often, this kind of tool allows you to automatically verify if the API
+structure matches the one actually implemented in the service. In this approach,
+documentation may serve the additional function of an API testing tool.</p>
+<div class="section" id="documentation-as-api-prototype-with-api-blueprint">
+<h2>4.1. Documentation as API prototype with API Blueprint<a class="headerlink" href="#documentation-as-api-prototype-with-api-blueprint" title="Permalink to this headline">¶</a></h2>
+<p>API Blueprint is a web API description language that is both human-readable and well-
+defined. You can think of it like a Markdown for web service description language. It
+allows documenting anything from the structure of URL paths, through body structures of
+HTTP request/responses and headers, to complex request-response exchanges. The
+following is an example of an imaginary Cat API described using API Blueprint:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FORMAT: 1A
+HOST: https://cats-api.example.com
+
+# Cat API
+This API Blueprint demonstrates example documentation of some imaginary Cat API.
+
+# Group Posts
+This section groups Cat resources.
+
+## Cat [/cats/{cat_id}]
+
+A Cat is central and only resource utilized by Cat API.
+
++ Parameters
+    + cat_id: `1` (string) - The id of the Cat.
+
++ Model (application/json)
+    ```js
+    {
+    &quot;data&quot;: {
+    &quot;id&quot;: &quot;1&quot;, // note this is a string
+    &quot;breed&quot;: &quot;Maine Coon&quot;,
+    &quot;name&quot;: &quot;Smokey&quot;
+    ```
+
+### Retrieve a Cat [GET]
+
+Returns a specific Cat.
+
++ Response 200
+
+    [Cat][]
+
+### Create a Cat [POST]
+
+Create a new Post object. Mentions and hashtags will be parsed out of the post text, as will bare URLs...
+
++ Request
+
+    [Cat][]
+
++ Response 201
+    [Cat][]
+</pre></div>
+</div>
+<p>API Blueprint alone is nothing more than a language. Its strength really comes from the fact
+that it can be easily written by hand and from the huge selection of tools supporting that
+language. At the time of writing this, the official API Blueprint page lists over 70 tools
+that support this language. Some of these tools can even generate functional API mock
+servers that are meant to shorten development cycles, as mock servers can be used, for
+instance, by frontend code, even before programmers start the development of backend
+API services.</p>
+</div>
+<div class="section" id="self-documenting-apis-with-swagger-openapi">
+<h2>4.2. Self-documenting APIs with Swagger/OpenAPI<a class="headerlink" href="#self-documenting-apis-with-swagger-openapi" title="Permalink to this headline">¶</a></h2>
+<p>While self-documenting APIs is a more traditional approach for documenting web APIs
+(compared to documenting through API prototypes), we can clearly see some interesting
+trends that appeared during the past few years. In the past, when API frameworks had to
+support auto-documentation capabilities, it almost always meant that the framework had a
+built-in API metadata structure with a custom documentation rendering engine. If someone
+wanted to have multiple services auto-documented, they had to use the same framework
+for every service, or decide to have very a inconsistent documentation landscape.</p>
+<p>With the advent of microservice architectures, this approach becomes extremely
+inconvenient and inefficient. Nowadays, it’s very common that services within the same
+projects are written using different frameworks, libraries, and even using completely
+different programming languages. Having different documentation libraries for every
+framework and language would produce very inconsistent documentation, as every tool
+would have different strengths and weaknesses.</p>
+<p>One approach that solves this problem requires splitting the documentation display
+(rendering and browsing) from the actual documentation definition. This
+approach is analogous to API prototyping because it requires a standardized API definition
+language. But here, the developer rarely uses this language explicitly. It is the framework’s
+responsibility to create a machine-readable API definition from the structure of the code
+written with this framework.</p>
+<p>One such machine-readable web API description languages is OpenAPI. The specification
+of OpenAPI is the result of the development of the popular Swagger documentation tool.
+At first, it was an internal metadata format of the Swagger tool, but once it became
+standardized, many tools around that specification appeared. With OpenAPI, many web
+frameworks can describe their API structure using the same metadata format, so their
+documentation can be rendered in the same consistent form by a single documentation
+browser.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,569 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Building a well-organized documentation system &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                20/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>5. Building a well-organized documentation system</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/documenting_project/organization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="building-a-well-organized-documentation-system">
+<h1>5. Building a well-organized documentation system<a class="headerlink" href="#building-a-well-organized-documentation-system" title="Permalink to this headline">¶</a></h1>
+<p>An easier way to guide your documentation readers and your writers is to provide each
+one of them with helpers and guidelines, as we have learned in the previous section of this
+chapter.</p>
+<p>From a writer’s point of view, this is done by having a set of reusable templates, together
+with a guide that describes how and when to use them in a project. This is called a
+<strong>documentation portfolio</strong>.</p>
+<p>From a reader’s point of view, it is important to be able to browse the documentation with
+no pain, and get used to finding the information efficiently. This is done by building a
+<strong>document landscape</strong>.</p>
+<p>Obviously, we need to start from guiding documentation writers, because without them,
+the readers would not have anything to read. Let’s see how such a portfolio looks and how
+to build a one.</p>
+<div class="section" id="building-documentation-portfolio">
+<h2>5.1. Building documentation portfolio<a class="headerlink" href="#building-documentation-portfolio" title="Permalink to this headline">¶</a></h2>
+<p>There are many kinds of documents a software project can have, from low-level documents
+that refer directly to the code, to design papers that provide a high-level overview of the
+application.</p>
+<p>For instance, Scott Ambler defines an extensive list of document types in his book “Agile
+Modeling: Effective Practices for eXtreme Programming and the Unified Process, John Wiley &amp;
+Sons”. He builds a portfolio from early specifications to operations documents. Even the
+project management documents are covered, so the whole documenting needs are built
+with a standardized set of templates.
+Since a complete portfolio is tightly related to the methodologies used to build the software,
+this chapter will only focus on a common subset that you can complete with your specific
+needs. Building an efficient portfolio takes a long time, as it captures your working habits.
+A common set of documents in software projects can be classified into the following three
+categories:</p>
+<ul class="simple">
+<li><p><strong>Design</strong>: This includes all the documents that provide architectural information
+and low-level design information, such as class diagrams or database diagrams</p></li>
+<li><p><strong>Usage</strong>: This includes all the documents on how to use the software; this can be in
+the shape of a cookbook and tutorials, or a module-level help</p></li>
+<li><p><strong>Operations</strong>: This provides guidelines on how to deploy, upgrade, or operate the
+software</p></li>
+</ul>
+<div class="section" id="design">
+<h3>5.1.1. Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h3>
+<p>The important point when creating such documents is to make sure the target readership is
+perfectly known, and that the content scope is limited. So, a generic template for design
+documents can provide a light structure with a little advice for the writer.
+Such a structure might include the following:</p>
+<ul class="simple">
+<li><p>Title</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (keywords)</p></li>
+<li><p>Description (abstract)</p></li>
+<li><p>Target (who should read this?)</p></li>
+<li><p>Content (with diagrams)</p></li>
+<li><p>References to other documents</p></li>
+</ul>
+<p>The content should be three or four pages at most when printed, so be sure to limit the
+scope. If it gets bigger, it should be split into several documents or summarized.
+The template also provides the author’s name and a list of tags to manage its evolutions and
+ease its classification. This will be covered later in this chapter.
+The example design document template written using reStructuredText markup could be
+as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">=========================================</span>
+<span class="gh">Design document title</span>
+<span class="gh">=========================================</span>
+
+<span class="nc">:Author:</span> Document Author
+<span class="nc">:Tags:</span> document tags separated with spaces
+
+<span class="nc">:abstract:</span>
+
+    Write here a small abstract about your design document.
+
+<span class="cp">.. contents ::</span>
+
+<span class="gh">Audience</span>
+<span class="gh">========</span>
+
+Explain here who is the target readership.
+
+<span class="gh">Content</span>
+<span class="gh">=======</span>
+
+Write your document here. Do not hesitate to split it in several
+sections.
+
+<span class="gh">References</span>
+<span class="gh">==========</span>
+
+Put here references, and links to other documents.
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h3>5.1.2. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<p>The usage documentation describes how a particular part of the software works. This
+documentation can describe low-level parts, such as how a function works, but also high-
+level parts, such as command-line arguments for calling the program. This is the most
+important part of documentation in framework applications, since the target readership is
+mainly the developers that are going to reuse the code.</p>
+<p>The three main kinds of documents are as follows:</p>
+<ul class="simple">
+<li><p><strong>Recipe</strong>: This is a short document that explains how to do something. This kind of
+document targets one readership and focuses on one specific topic.</p></li>
+<li><p><strong>Tutorial</strong>: This is a step-by-step document that explains how to use a feature of
+the software. This document can refer to recipes, and each instance is intended
+for one readership.</p></li>
+<li><p><strong>Module helper</strong>: This is a low-level document that explains what a module
+contains. This document can be shown (for instance) by calling the help built
+into over a module.</p></li>
+</ul>
+<div class="section" id="recipe">
+<h4>5.1.2.1. Recipe<a class="headerlink" href="#recipe" title="Permalink to this headline">¶</a></h4>
+<p>A recipe answers a very specific problem and provides a solution to resolve it. For example,
+ActiveState provides a huge repository of Python recipes online, where developers can
+describe how to do something in Python (refer to
+<a class="reference external" href="http://code.activestate.com/recipes/langs/python/">http://code.activestate.com/recipes/langs/python/</a>). Such a set of recipes related to a
+single area/project is often called a <em>cookbook</em>.</p>
+<p>These recipes must be short and are structured, like this:</p>
+<ul class="simple">
+<li><p>Title</p></li>
+<li><p>Submitter</p></li>
+<li><p>Last updated</p></li>
+<li><p>Version</p></li>
+<li><p>Category</p></li>
+<li><p>Description</p></li>
+<li><p>Source (the source code)</p></li>
+<li><p>Discussion (the text explaining the code)</p></li>
+<li><p>Comments (from the web)</p></li>
+</ul>
+<p>Often, they are one screen long and do not go into great detail. This structure perfectly fits a
+software’s needs and can be adapted in a generic structure, where the target readership is
+added and the category is replaced by tags:</p>
+<ul class="simple">
+<li><p>Title (short sentence)</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (keywords)</p></li>
+<li><p>Who should read this?</p></li>
+<li><p>Prerequisites (other documents to read, for example)</p></li>
+<li><p>Problem (a short description)</p></li>
+<li><p>Solution (the main text, one or two screens)</p></li>
+<li><p>References (links to other documents)</p></li>
+</ul>
+<p>The date and version are not useful here, since project documentation should be managed
+like source code in the project. This means that the best way to handle the documentation is
+to manage it through the version control system. In most cases, this is exactly the same code
+repository as the one that’s used for the project’s code.</p>
+<p>A simple reusable template for the recipes could be as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">===========</span>
+<span class="gh">Recipe name</span>
+<span class="gh">===========</span>
+
+<span class="nc">:Author:</span> Recipe Author
+<span class="nc">:Tags:</span> document tags separated with spaces
+
+<span class="nc">:abstract:</span>
+
+    Write here a small abstract about your design document.
+
+<span class="cp">.. contents ::</span>
+
+<span class="gh">Audience</span>
+<span class="gh">========</span>
+
+Explain here who is the target readership.
+
+<span class="gh">Prerequisites</span>
+<span class="gh">=============</span>
+
+Write the list of prerequisites for implementing this recipe. This can be
+additional documents, software, specific libraries, environment settings or
+just anything that is required beyond the obvious language interpreter.
+
+<span class="gh">Problem</span>
+<span class="gh">=======</span>
+
+Explain the problem that this recipe is trying to solve.
+
+<span class="gh">Solution</span>
+<span class="gh">========</span>
+
+Give solution to problem explained earlier. This is the core of a recipe.
+
+<span class="gh">References</span>
+<span class="gh">==========</span>
+
+Put here references, and links to other documents.
+</pre></div>
+</div>
+</div>
+<div class="section" id="tutorial">
+<h4>5.1.2.2. Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h4>
+<p>A tutorial differs from a recipe in its purpose. It is not intended to resolve an isolated
+problem, but rather describes how to use a feature of the application, step by step. This can
+be longer than a recipe and can concern many parts of the application. For example, Django
+provides a list of tutorials on its website. Writing your first Django App, part 1 (refer to
+<a class="reference external" href="https://docs.djangoproject.com/en/1.9/intro/tutorial01/">https://docs.djangoproject.com/en/1.9/intro/tutorial01/</a>) explains in a few screens
+how to build an application with Django.</p>
+<p>A structure for such a document will be as follows:</p>
+<ul class="simple">
+<li><p>Title (short sentence)</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (words)</p></li>
+<li><p>Description (abstract)</p></li>
+<li><p>Who should read this?</p></li>
+<li><p>Prerequisites (other documents to read, for example)</p></li>
+<li><p>Tutorial (the main text)</p></li>
+<li><p>References (links to other documents)</p></li>
+</ul>
+</div>
+<div class="section" id="module-helper">
+<h4>5.1.2.3. Module helper<a class="headerlink" href="#module-helper" title="Permalink to this headline">¶</a></h4>
+<p>The last template that can be added in our collection is the module helper template. A
+module helper refers to a single module and provides a description of its contents, together
+with usage examples.</p>
+<p>Some tools can automatically build such documents by extracting the docstrings and
+computing module help using <code class="docutils literal notranslate"><span class="pre">pydoc</span></code>, such as Epydoc (refer to
+<a class="reference external" href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>). So, it is possible to generate extensive documentation
+based on API introspection. This kind of documentation is often provided in Python
+frameworks. For instance, Plone provides a server that keeps an up-to-date collection of
+module helpers. You can read more about it at <a class="reference external" href="http://api.plone.org">http://api.plone.org</a>.</p>
+<p>The following are the main problems with this approach:</p>
+<ul class="simple">
+<li><p>There is no smart selection performed over the modules that are really
+interesting to the document</p></li>
+<li><p>The code can be obfuscated by the documentation</p></li>
+</ul>
+<p>Furthermore, a module documentation provides examples that sometimes refer to several
+parts of the module, and are hard to split between the functions’ and classes’ docstrings.
+The module docstring could be used for that purpose by writing text at the top of the
+module. But this ends in having a hybrid file composed of a block of text, then a block of
+code. This is rather obfuscating when the code represents less than 50% of the total length.
+If you are the author, this is perfectly fine. But when people try to read the code (not the
+documentation), they will have to skip the docstrings part.</p>
+<p>Another approach is to separate the text in its own file. A manual selection can then be
+operated to decide which Python module will have its module helper file. The documents
+can then be separated from the code base and allowed to live their own life, as we will see
+in the next section. This is how Python is documented.</p>
+<p>Many developers will disagree on the fact that doc and code separation is better than
+docstrings. This approach means that the documentation process is fully integrated in the
+development cycle; otherwise, it will quickly become obsolete. The docstrings approach
+solves this problem by providing proximity between the code and its usage example, but
+doesn’t bring it to a higher level: a document that can be used as part of plain
+documentation.</p>
+<p>The following template for Module Helper is really simple as it contains just a little
+metadata before the content is written. The target is not defined since it is the developers
+who wish to use the module:</p>
+<ul class="simple">
+<li><p>Title (module name)</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (words)</p></li>
+<li><p>Content</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="operations">
+<h3>5.1.3. Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h3>
+<p>Operation documents are used to describe how the software can be operated. Consider the
+following points:</p>
+<ul class="simple">
+<li><p>Installation and deployment documents</p></li>
+<li><p>Administration documents</p></li>
+<li><p>Frequently Asked Questions (FAQ) documents</p></li>
+<li><p>Documents that explain how people can contribute, ask for help, or provide
+feedback</p></li>
+</ul>
+<p>These documents are very specific, but they can probably use the tutorial template we
+defined in the earlier section.</p>
+</div>
+</div>
+<div class="section" id="your-very-own-documentation-portfolio">
+<h2>5.2. Your very own documentation portfolio<a class="headerlink" href="#your-very-own-documentation-portfolio" title="Permalink to this headline">¶</a></h2>
+<p>The templates that we discussed earlier are just a basis that you can use to document your
+software. With time, you will eventually develop your own templates and style for making
+documentation. But always keep in mind the light but sufficient approach for project
+documentation: each document that’s added should have a clearly defined target
+readership and should fill a real need. Documents that don’t add a real value should not be
+written.</p>
+<p>Each project is unique and has different documentation needs. For example, small terminal
+tools with simple usage can definitely live with only a single <code class="docutils literal notranslate"><span class="pre">README</span></code> file as its document
+landscape. Having such a minimal single-document approach is completely fine if the
+target readers are precisely defined and consistently grouped (system administrators, for
+instance).</p>
+<p>Also, do not take the provided templates too rigorously. Some additional metadata
+provided as an example is really useful in either big projects or in strictly formalized teams.
+Tags, for instance, are intended to improve textual searches in big documentations, but will
+not provide any value in a documentation landscape consisting only of a few documents.
+Also, including a document author is not always a good idea. Such an approach may be
+especially questionable in open source projects. In such projects, you will want the
+community to also contribute to the documentation. In most cases, such documents are
+continuously updated whenever there is such a need by whoever makes the contribution.
+People tend to treat the document author as the document owner. This may discourage
+people to update the documentation if every document has its author always specified.
+Usually, the version control software provides clearer and more transparent information
+about real document authors than explicitly provided metadata annotations. The situations
+where explicit authors are really recommended are various design documents, especially in
+projects where the design process is strictly formalized. The best example of this is the
+series of PEP documents provided with the Python language enhancement proposals.</p>
+</div>
+<div class="section" id="building-a-documentation-landscape">
+<h2>5.3. Building a documentation landscape<a class="headerlink" href="#building-a-documentation-landscape" title="Permalink to this headline">¶</a></h2>
+<p>The document portfolio we built in the previous section provides a structure at the
+document level, but does not provide a way to group and organize it to build the
+documentation the readers will have. This is what Andreas Rüping calls a document
+landscape, referring to the mental map the readers use when they browse the
+documentation. He came up with the conclusion that the best way to organize documents is
+to build a logical tree.</p>
+<p>In other words, the different kinds of documents composing the portfolio need to find a
+place to live within a tree of directories. This place must be obvious to the writers when
+they create the document and to the readers when they are looking for it.</p>
+<p>A great helper in browsing documentation is the index pages at each level that can drive
+writers and readers.</p>
+<p>Building a document landscape is done in the following two steps:</p>
+<ul class="simple">
+<li><p>Building a tree for the producers (the writers)</p></li>
+<li><p>Building a tree for the consumers (the readers), on top of the producers’ tree</p></li>
+</ul>
+<p>This distinction between producers and consumers is important since they access the
+documents in different places and different formats.</p>
+<div class="section" id="producer-s-layout">
+<h3>5.3.1. Producer’s layout<a class="headerlink" href="#producer-s-layout" title="Permalink to this headline">¶</a></h3>
+<p>From a producer’s point of view, each document is processed exactly like a Python module.
+It should be stored in the version control system and work like code. Writers do not care
+about the final appearance of their prose and where it is available; they just want to make
+sure that they are writing a document that is the single source of truth on the topic covered.
+reStructuredText files stored in a folder tree are available in the version control system,
+together with the software code, and are a convenient solution to build the documentation
+landscape for producers.</p>
+<p>By convention, the docs folder is used as a root of documentation tree, as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> my-project
+$ find docs
+docs
+docs/source
+docs/source/design
+docs/source/operations
+docs/source/usage
+docs/source/usage/cookbook
+docs/source/usage/modules
+docs/source/usage/tutorial
+</pre></div>
+</div>
+<p>Notice that the tree is located in a source folder because the docs folder will be used as a
+root folder to set up a special tool in the next section.</p>
+<p>From there, an <code class="docutils literal notranslate"><span class="pre">index.txt</span></code> file can be added at each level (besides the root), explaining
+what kind of documents the folder contains, or summarizing what each subfolder contains.
+These index files can define a listing of the documents they contain. For instance, the
+operations folder can contain a list of operations documents that are available, as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">==========</span>
+<span class="gh">Operations</span>
+<span class="gh">==========</span>
+
+This section contains operations documents:
+
+<span class="m">-</span> How to install and run the project
+<span class="m">-</span> How to install and manage a database for the project
+</pre></div>
+</div>
+<p>It is important to know that people tend to forget to update such lists of documents and
+tables of contents. So, it is better to have them updated automatically.</p>
+</div>
+<div class="section" id="consumer-s-layout">
+<h3>5.3.2. Consumer’s layout<a class="headerlink" href="#consumer-s-layout" title="Permalink to this headline">¶</a></h3>
+<p>From a consumer’s point of view, it is important to work out the index files and to present
+the whole documentation in a format that is easy to read and looks good. Web pages are the
+best pick and are easy to generate from reStructuredText files.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

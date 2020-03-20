@@ -1,0 +1,1275 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Documenting your project &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Unit testing and refactoring" href="../unit_testing/index.html" />
+    <link rel="prev" title="Code quality" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                20/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Code quality</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Documenting your project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-seven-rules-of-technical-writing">1. The seven rules of technical writing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#write-in-two-steps">1.1. Write in two steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#target-the-readership">1.2. Target the readership</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-a-simple-style">1.3. Use a simple style</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limit-the-scope-of-information">1.4. Limit the scope of information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-realistic-code-examples">1.5. Use realistic code examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-a-light-but-sufficient-approach">1.6. Use a light but sufficient approach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-templates">1.7. Use templates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-as-code">2. Documentation as code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-python-docstrings">2.1. Using Python docstrings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#popular-markup-languages-and-styles-for-documentation">2.2. Popular markup languages and styles for documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#popular-documentation-generators">3. Popular documentation generators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx">3.1. Sphinx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mkdocs">3.2. MkDocs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation-building-and-continuous-integration">3.3. Documentation building and continuous integration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#documenting-web-apis">4. Documenting web APIs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#documentation-as-api-prototype-with-api-blueprint">4.1. Documentation as API prototype with API Blueprint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#self-documenting-apis-with-swagger-openapi">4.2. Self-documenting APIs with Swagger/OpenAPI</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#building-a-well-organized-documentation-system">5. Building a well-organized documentation system</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#building-documentation-portfolio">5.1. Building documentation portfolio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#your-very-own-documentation-portfolio">5.2. Your very own documentation portfolio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building-a-documentation-landscape">5.3. Building a documentation landscape</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_testing/index.html">Unit testing and refactoring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Code quality</a> &raquo;</li>
+        
+      <li>Documenting your project</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/documenting_project/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../unit_testing/index.html" class="btn btn-neutral float-right" title="Unit testing and refactoring" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../index.html" class="btn btn-neutral float-left" title="Code quality" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="documenting-your-project">
+<h1>Documenting your project<a class="headerlink" href="#documenting-your-project" title="Permalink to this headline">¶</a></h1>
+<p>Documentation is the work that is often neglected by developers and their managers. This
+is often due to lack of time toward the end of development cycles, and the fact that people
+think they are bad at writing. Even though some developers may not be very good
+at writing, the majority of them should be able to produce fine documentation.</p>
+<p>The common result of neglecting the documentation efforts is a disorganized
+documentation landscape that is made up of documents written in a rush. Developers often
+hate doing this kind of work. Things get even worse when the existing documents need to
+be updated. Many projects out there are just providing poor, out of date documentation
+because no one in their team knows how to properly deal with it.</p>
+<p>But setting up a documentation process at the beginning of the project and treating
+documents as if they were modules of code makes documenting easier. Writing can even be
+fun if you start following a few simple rules.</p>
+<div class="section" id="the-seven-rules-of-technical-writing">
+<h2>1. The seven rules of technical writing<a class="headerlink" href="#the-seven-rules-of-technical-writing" title="Permalink to this headline">¶</a></h2>
+<p>Writing good documentation is easier in many aspects than writing code, but many
+developers think otherwise. It will become easy once you start following a simple set of
+rules regarding technical writing.</p>
+<p>We are not talking here about writing a novel or poems, but a comprehensive piece of text
+that can be used to understand software design, an API, or anything that makes up the
+code base.</p>
+<p>Every developer can produce such material, and this section provides the following seven
+rules that can be applied in all cases:</p>
+<ul class="simple">
+<li><p><strong>Write in two steps</strong>: Focus on ideas, and then on reviewing and shaping your text.</p></li>
+<li><p><strong>Target the readership</strong>: Who is going to read it?</p></li>
+<li><p><strong>Use a simple style</strong>: Keep it straight and simple. Use good grammar.</p></li>
+<li><p><strong>Limit the scope of the information</strong>: Introduce one concept at a time.</p></li>
+<li><p><strong>Use realistic code examples</strong>: Foos and bars should be avoided.</p></li>
+<li><p><strong>Use a light but sufficient approach</strong>: You are not writing a book!</p></li>
+<li><p><strong>Use templates</strong>: Help the readers get used to the common structure of your
+documents.</p></li>
+</ul>
+<p>These rules are mostly inspired and adapted from “Agile Documentation: A Pattern Guide to
+Producing Lightweight Documents for Software Projects, Wiley”, a book by Andreas Rüping that
+focuses on producing the best documentation in software projects.</p>
+<div class="section" id="write-in-two-steps">
+<h3>1.1. Write in two steps<a class="headerlink" href="#write-in-two-steps" title="Permalink to this headline">¶</a></h3>
+<p>Peter Elbow, in “Writing With Power: Techniques for Mastering the Writing Process, Oxford
+University Press”, explains that it is almost impossible for any human being to produce a
+perfect text in one shot. The problem is that many developers write documentation and try
+to directly come up with some perfect text. The only way they succeed in this exercise is by
+stopping the writing after every two sentences to read them back, and do some corrections.
+This means that they are focusing both on the content and the style of the text.</p>
+<p>This is too hard for the brain, and the result is often not as good as it could be. A lot of time
+and energy is spent on polishing the style and shape of the text before its meaning is
+completely thought through.</p>
+<p>Another approach is to drop the style and organization of the text and at first focus on its
+content. All ideas are laid down on paper, no matter how they are written. You start to
+write a continuous stream of thoughts and do not pause, even if you know that you
+are making obvious grammatical mistakes, or know that what you just wrote may read
+silly. At this stage, it does not matter if the sentences are barely understandable, as long as
+the ideas are written down. You just write down what you want to say, and apply only
+minimal structuring to your text.</p>
+<p>By doing this, you focus only on what you want to say and will probably get more content
+out of your mind than you would initially expect.</p>
+<p>Another side effect of doing this <em>free writing</em> is that other ideas that are not directly related
+to the topic will easily go through your mind. A good practice is to write them down on the
+side as soon as they appear, so they are not lost, and then get back to the main writing.</p>
+<p>The second step obviously consists of reading back the draft of your document and
+polishing it so that it is comprehensible to everyone. Polishing a text means enhancing its
+style, correcting mistakes, reorganizing it a bit, and removing any redundant information it
+has.</p>
+<p>A rule of thumb is that both steps should take an equal amount of time. If your time for
+writing documentation is strictly limited, then plan it accordingly.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Focus on the content first, and then on style and cleanliness.</p>
+</div>
+</div>
+<div class="section" id="target-the-readership">
+<h3>1.2. Target the readership<a class="headerlink" href="#target-the-readership" title="Permalink to this headline">¶</a></h3>
+<p>When writing content, there is a simple, but important, question the writer should consider:
+Who is going to read it?</p>
+<p>This is not always obvious, as documentation is often written for every person that might
+get and use the code. The reader can be anyone from a researcher who is looking for an
+appropriate technical solution to their problem, or a developer who needs to implement a
+new feature in the documented software.</p>
+<p>Good documentation should follow a simple rule: each text should target one kind of
+reader. This philosophy makes the writing easier, as you will precisely know what kind of
+reader you’re dealing with.</p>
+<p>A good practice is to provide a small introductory document that explains in one sentence
+what the documentation is about, and guides different readers to the appropriate parts of
+documentation, for example:</p>
+<blockquote>
+<div><p><em>“Atomisator is a product that fetches RSS feeds and saves them in a database, with a</em>
+<em>filtering process.</em>
+<em>If you are a developer, you might want to look at the API description (api.txt).</em>
+<em>If you are a manager, you can read the features list and the FAQ (features.txt).</em>
+<em>If you are a designer, you can read the architecture and infrastructure notes (arch.txt).”</em></p>
+</div></blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Know your readership before you start to write.</p>
+</div>
+</div>
+<div class="section" id="use-a-simple-style">
+<h3>1.3. Use a simple style<a class="headerlink" href="#use-a-simple-style" title="Permalink to this headline">¶</a></h3>
+<p>Simple things are easier to understand. That’s a fact.</p>
+<p>By keeping sentences short and simple, your writing will require less cognitive effort for
+their content to be extracted, processed, and then understood. Writing technical
+documentation aims to provide a software guide to readers. It is not a fiction book, and
+should be closer to your microwave operation manual than to a Dickens novel.</p>
+<p>The following are a few tips to keep in mind:</p>
+<ul class="simple">
+<li><p>Use short sentences. They should be no longer than 100–120 characters (including
+spaces). This is the length of two lines in a typical paperback.</p></li>
+<li><p>Each paragraph should be composed of three to four sentences at most, which
+express one main idea. Let your text breathe.</p></li>
+<li><p>Don’t repeat yourself too much. Avoid journalistic styles where ideas are
+repeated again and again to make sure they are understood.</p></li>
+<li><p>Don’t use several tenses. The present tense is enough most of the time.</p></li>
+<li><p>Do not make jokes in the text if you are not a really fine writer. Being funny in a
+technical book is really hard, and few writers master it. If you really want to
+distill some humor, keep it in code examples and you will be fine.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You are not writing fiction; keep the style as simple as possible.</p>
+</div>
+</div>
+<div class="section" id="limit-the-scope-of-information">
+<h3>1.4. Limit the scope of information<a class="headerlink" href="#limit-the-scope-of-information" title="Permalink to this headline">¶</a></h3>
+<p>There’s a simple sign of bad documentation in software: you cannot find specific
+information in it, even if you’re sure that it is there. After spending some time reading the
+table of contents, you are starting to search through text files using <code class="docutils literal notranslate"><span class="pre">grep</span></code> with several word
+combinations and still cannot find what you are looking for. But you’re sure the
+information is there because you saw it once.</p>
+<p>This often happens when writers do not organize their texts well with meaningful titles and
+headings. They might provide tons of information, but it won’t be useful if the reader is not
+able to scan through all the documentation for a specific topic.</p>
+<p>In a good document, paragraphs should be gathered under a meaningful heading for a
+given section, and the document title should synthesize the content in a short phrase. A
+table of contents could be made of all the sections’ titles, in order to help the reader scan
+through the document.</p>
+<p>A simple yet effective practice to compose your titles and headings is to
+ask yourself, “What phrase would I type in Google to find this section?”</p>
+</div>
+<div class="section" id="use-realistic-code-examples">
+<h3>1.5. Use realistic code examples<a class="headerlink" href="#use-realistic-code-examples" title="Permalink to this headline">¶</a></h3>
+<p>Unrealistic code examples simply make your documentation harder to understand.</p>
+<p>For instance, if you have to provide some string literals, the Foos and bars are really bad
+choices. If you have to show your reader how to use your code, why not to use a real-world
+example? A common practice is to make sure that each code example can be cut and pasted
+into a real program.</p>
+<p>To show an example of bad usage, let’s assume we want to show how to use the
+<code class="docutils literal notranslate"><span class="pre">parse()</span></code> function from the <code class="docutils literal notranslate"><span class="pre">atomisator</span></code> project, which aims to parse RSS feeds. Here is the
+usage example using an unrealistic imaginary source:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">atomisator.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Let&#39;s use it:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stuff</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">&#39;some-feed.xml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">stuff</span><span class="p">)</span>
+<span class="go">{&#39;title&#39;: &#39;foo&#39;, &#39;content&#39;: &#39;blabla&#39;}</span>
+</pre></div>
+</div>
+<p>A better example, such as the following, would be using a data source that looks like a
+valid URL to RSS feed and shows output that resembles the real article:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">atomisator.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Let&#39;s use it:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_feed</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">&#39;http://tarekziade.wordpress.com/feed&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">my_feed</span><span class="p">)</span>
+<span class="go">{&#39;title&#39;: &#39;eight tips to start with python&#39;, &#39;content&#39;: &#39;The first tip is..., ...&#39;}</span>
+</pre></div>
+</div>
+<p>This slight difference might sound like overkill but, in fact, makes your documentation a lot
+more useful. A reader can copy those lines into a shell, understand that <code class="docutils literal notranslate"><span class="pre">parse()</span></code> expects a
+URL as a parameter, and that it returns an iterator that contains web articles.</p>
+<p>Of course, giving a realistic example is not always possible or viable. This is especially true
+for very generic code. Anyway, you should always strive to reduce the amount of such unrealistic
+examples to a minimum.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Code examples should be directly reusable in real programs.</p>
+</div>
+</div>
+<div class="section" id="use-a-light-but-sufficient-approach">
+<h3>1.6. Use a light but sufficient approach<a class="headerlink" href="#use-a-light-but-sufficient-approach" title="Permalink to this headline">¶</a></h3>
+<p>In most agile methodologies, documentation is not the first citizen. Making software that
+just works is more important than the detailed documentation. So, a good practice, as Scott
+Ambler explains in his book “Agile Modeling: Effective Practices for eXtreme Programming and
+the Unified Process, John Wiley &amp; Sons”, is to define the real documentation needs, rather than
+try to document everything possible.</p>
+<p>For instance, let’s look at some example documentation of a simple project that is available
+on GitHub. <code class="docutils literal notranslate"><span class="pre">ianitor</span></code> (available at <a class="reference external" href="https://github.com/ClearcodeH1/ianitor">https://github.com/ClearcodeH1/ianitor</a>) is a tool
+that helps to register processes in the Consul service discovery cluster, and it is mostly
+aimed at system administrators. If you take a look at its documentation, you will realize
+that this is just a single document (the <code class="docutils literal notranslate"><span class="pre">README.md</span></code> file). It explains only how it works and
+how to use it. From the administrator’s perspective, this is sufficient. They only need to
+know how to configure and run the tool, and there is no other group of people expected to
+use <code class="docutils literal notranslate"><span class="pre">ianitor</span></code>. This document limits its scope by answering one question, “How do I use
+ianitor on my server?”</p>
+</div>
+<div class="section" id="use-templates">
+<h3>1.7. Use templates<a class="headerlink" href="#use-templates" title="Permalink to this headline">¶</a></h3>
+<p>Many pages on Wikipedia look similar. There are boxes on the right-hand side that are
+used to summarize some information for documents belonging to the same area. The first
+section of the article usually contains a table of contents with links that refer to anchors in
+the same text. There is always a reference section at the end.</p>
+<p>Users get used to it. For instance, they know they can have a quick look at the table of
+contents, and if they do not find the information they are looking for, they will go directly
+to the reference section to see if they can find another website on the topic. This works for
+any page on Wikipedia. Once you learn the format of Wikipedia articles, you become more
+efficient in finding useful information.</p>
+<p>So, using templates forces a common pattern for documents, and therefore enables more
+efficient searching for information. Users get used to the common structure of information
+and know how to read it quickly.</p>
+<p>Providing a template for each kind of document also provides a quick start for writers.</p>
+</div>
+</div>
+<div class="section" id="documentation-as-code">
+<h2>2. Documentation as code<a class="headerlink" href="#documentation-as-code" title="Permalink to this headline">¶</a></h2>
+<p>The best way to keep the documentation of your project up to date is to treat it as code and
+store it in the same repository as the source code it documents. Keeping documentation
+sources with the source code has the following benefits:</p>
+<ul class="simple">
+<li><p>With a proper version control system, you can track all changes that were made
+to the documentation. If you ever wonder if a particular surprising code behavior
+is really a bug or just an old and forgotten feature, you can dive into the history
+of the documentation to trace how the documentation for the specific feature
+evolved over time.</p></li>
+<li><p>It is easier to develop different versions of the documentation if the project has to
+be maintained on several parallel branches (for example, for different clients). If
+the source code of the project diverges from the main development branch, so
+does the documentation for it.</p></li>
+<li><p>There are many tools that allow you to generate the reference documentation of
+software APIs straight from the comments included in the source code. This is
+one of the best ways to generate documentation for projects that provide APIs for
+other components (for example, in the form of reusable libraries and remote
+services).</p></li>
+</ul>
+<p>The Python language has some unique qualities that make documenting software
+extremely easy and fun. The Python community also provides a huge selection of tools that
+allow you to create beautiful and usable API reference documentation straight from Python
+sources. The foundation for these tools are so-called docstrings.</p>
+<div class="section" id="using-python-docstrings">
+<h3>2.1. Using Python docstrings<a class="headerlink" href="#using-python-docstrings" title="Permalink to this headline">¶</a></h3>
+<p>Docstrings are special Python string literals that are intended for documenting Python
+functions, methods, classes, and modules. If the first statement of the function, method,
+class, or module is a string literal, it will automatically become a docstring and be included
+as a value of the <code class="docutils literal notranslate"><span class="pre">__doc__</span></code> attribute of that related function, method, class, or module.</p>
+<p>Many of the code examples here already feature docstrings, but for the sake of
+consistency, let’s look at a general example of a module that contains all possible types of
+docstrings, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example module with doctrings.</span>
+
+<span class="sd">This is a module that shows all four types of docstrings:</span>
+<span class="sd">- module docstring</span>
+<span class="sd">- function docstring</span>
+<span class="sd">- method docstring</span>
+<span class="sd">- class docstring</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">show_module_documentation</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Prints module documentation.</span>
+<span class="sd">    Module documentation is available as global __doc__ attribute.</span>
+<span class="sd">    This attribute can be accessed and modified at any time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">DocumentedClass</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class that showcases method documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize class instance.</span>
+<span class="sd">        Interesting note: docstrings are valid statements.</span>
+<span class="sd">        It means that if function or method doesn&#39;t have to</span>
+<span class="sd">        do nothing and has docstring it doesn&#39;t have to</span>
+<span class="sd">        feature any other statements.</span>
+<span class="sd">        Such no-op functions are useful for defining abstract</span>
+<span class="sd">        methods or providing implementation stubs that have</span>
+<span class="sd">        to be implemented later.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Python also provides a <code class="docutils literal notranslate"><span class="pre">help()</span></code> function, which is an entry point for the built-in help
+system. It is intended for interactive use within the interactive interpreter session in a
+similar way as viewing system manual pages using the UNIX <code class="docutils literal notranslate"><span class="pre">man</span></code> command. If you provide
+a module instance as an input argument to the <code class="docutils literal notranslate"><span class="pre">help()</span></code> function, it will format all
+docstrings of that module’s objects in a tree-like structure. The following is an example of
+<code class="docutils literal notranslate"><span class="pre">help()</span></code> output for the module we presented in the previous code snippet:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Help on module docexample:
+
+NAME
+    docexample - Example module with doctrings.
+
+FILE
+    /Users/sbugallo/docexample.py
+
+DESCRIPTION
+    This is a module that shows all four types of docstrings:
+        - module docstring
+        - function docstring
+        - method docstring
+        - class docstring
+
+CLASSES
+    DocumentedClass
+
+    class DocumentedClass
+    |   Class that showcases method documentation.
+    |
+    |   Methods defined here:
+    |
+    |   __init__(self)
+    |       Initialize class instance.
+    |
+    |       Interesting note: docstrings are valid statements.
+    |       It means that if function or method doesn&#39;t have to
+    |       do nothing and has docstring it doesn&#39;t have to
+    |       feature any other statements.
+    |
+    |       Such no-op functions are useful for defining abstract
+    |       methods or providing implementation stubs that have
+    |       to be implemented later.
+
+FUNCTIONS
+    show_module_documentation()
+        Prints module documentation.
+
+        Module documentation is available as global __doc__ attribute.
+        This attribute can be accessed and modified at any time.
+</pre></div>
+</div>
+</div>
+<div class="section" id="popular-markup-languages-and-styles-for-documentation">
+<h3>2.2. Popular markup languages and styles for documentation<a class="headerlink" href="#popular-markup-languages-and-styles-for-documentation" title="Permalink to this headline">¶</a></h3>
+<p>Inside docstring, you can put whatever you like in any form you like. There is, of course,
+the official PEP 257 (Docstring Conventions) document, which is a general guideline for
+docstring conventions, but it concentrates mainly on normalized formatting of multiline
+string literals for documentation purposes and does not enforce any markup language.</p>
+<p>Anyway, if you want to have nice and usable documentation, it is a good thing to decide
+on some formalized markup language to use in your docstrings, especially if you plan to
+use some kind of documentation generation tool. Proper markup allows documentation
+generators to provide code highlighting, do advanced text formatting, include hyperlinks to
+other documents and functions, or even include non-textual assets like images of
+automatically generated class diagrams.</p>
+<p>The best markup language is easy to write and is also readable in raw textual form outside
+of the autogenerated reference documentation. It is best if it can be easily used to provide
+longer documentation sources for documents living outside of Python docstrings. One of
+the most common markup languages designed specifically for Python with these goals in
+mind is reStructuredText. It is used by the Sphinx documentation system and is a markup
+language used to create official Python language documentation.</p>
+<p>Other popular choices for lightweight text markup languages for docstrings are Markdown
+and AsciiDoc. The former is particularly popular within the community of GitHub users
+and is the most common documentation markup language in general. It is also often
+supported out of the box by various tools for self-documenting web APIs.</p>
+</div>
+</div>
+<div class="section" id="popular-documentation-generators">
+<h2>3. Popular documentation generators<a class="headerlink" href="#popular-documentation-generators" title="Permalink to this headline">¶</a></h2>
+<p>As stated previously, software documentation may have varied readership. Accessing
+documentation directly from project source code is often natural to users that are
+programmers developing a given project. But this way of accessing project documentation
+may not be the most convenient for others. Also, some companies may have requirements
+to deliver documentation to their clients in a printable form.</p>
+<p>This is why documentation generation tools are so important. They allow you to benefit
+from documentation being treated as code while still maintaining the ability to have a
+deliverable document that can be browsed, searched, and read without access to the
+original source code. The Python ecosystem comes with a variety of amazing open source
+tools that allow you to generate project documentation directly from your source code. The
+two most popular tools in the Python community for generating user-friendly
+documentations are Sphinx and MkDocs. We will discuss them briefly in the following
+sections.</p>
+<div class="section" id="sphinx">
+<h3>3.1. Sphinx<a class="headerlink" href="#sphinx" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx (<a class="reference external" href="http://sphinx.pocoo.org">http://sphinx.pocoo.org</a>) is a set of scripts and <code class="docutils literal notranslate"><span class="pre">docutils</span></code> extensions that can be
+used to generate an HTML structure from the tree of plain text documents that are created
+using the reStructuredText syntax language. Sphinx also supports multiple other
+documentation output formats, like man pages, PDF, or even LaTex. This tool is used (for
+instance) to build official Python documentation and is very popular among many open
+source Python projects. It provides a really nice browsing system, together with a light but
+sufficient client-side JavaScript search engine. It also uses <code class="docutils literal notranslate"><span class="pre">pygments</span></code> for rendering code
+examples, which produces really nice syntax highlights.</p>
+<p>Sphinx can be easily configured to stick with the document landscape we defined in the
+previous section. It can be easily installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code> as a <code class="docutils literal notranslate"><span class="pre">Sphinx</span></code> package.</p>
+<p>The easiest way to start working with Sphinx is to use the <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> script. This
+utility will generate a script together with <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>, which can be used to generate the
+web documentation every time it is needed. It will interactively ask you some questions
+and then bootstrap the whole initial documentation source tree and configuration file. Once
+it is done, you can easily tweak it whenever you want. Let’s assume we have already
+bootstrapped the whole Sphinx environment and we want to see its HTML representation.
+This can be easily done using the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> command, as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>project/docs $ make html
+sphinx-build -b html -d _build/doctrees
+. _build/html
+Running Sphinx v1.3.6
+making output directory...
+loading pickled environment... not yet created
+building <span class="o">[</span>mo<span class="o">]</span>: targets <span class="k">for</span> <span class="m">0</span> po files that are out of date
+building <span class="o">[</span>html<span class="o">]</span>: targets <span class="k">for</span> <span class="m">1</span> <span class="nb">source</span> files that are out of date
+updating environment: <span class="m">1</span> added, <span class="m">0</span> changed, <span class="m">0</span> removed
+reading sources... <span class="o">[</span><span class="m">100</span>%<span class="o">]</span> index
+looking <span class="k">for</span> now-outdated files... none found
+pickling environment... <span class="k">done</span>
+checking consistency... <span class="k">done</span>
+preparing documents... <span class="k">done</span>
+writing output... <span class="o">[</span><span class="m">100</span>%<span class="o">]</span> index
+generating indices... genindex
+writing additional pages... search
+copying static files... <span class="k">done</span>
+copying extra files... <span class="k">done</span>
+dumping search index in English <span class="o">(</span>code: en<span class="o">)</span> ... <span class="k">done</span>
+dumping object inventory... <span class="k">done</span>
+build succeeded.
+Build finished. The HTML pages are in _build/html.
+</pre></div>
+</div>
+<p>Besides the HTML versions of the documents, the tool also builds automatic pages, such as
+a module list and an index. Sphinx provides a few <code class="docutils literal notranslate"><span class="pre">docutils</span></code> extensions to drive these
+features. These are the main ones:</p>
+<ul class="simple">
+<li><p>A directive that builds a table of contents</p></li>
+<li><p>A marker that can be used to register a document as a module helper</p></li>
+<li><p>A marker to add an element in the index</p></li>
+</ul>
+<div class="section" id="working-with-the-index-pages">
+<h4>3.1.1. Working with the index pages<a class="headerlink" href="#working-with-the-index-pages" title="Permalink to this headline">¶</a></h4>
+<p>Sphinx provides a <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive that can be used to inject a table of contents in a
+document, with links to other documents. Each line must be a file with its relative path,
+starting from the current document. Glob-style names can also be provided to add several
+files that match the expression.</p>
+<p>For example, the index file in the <code class="docutils literal notranslate"><span class="pre">cookbook</span></code> folder, which we previously defined in the
+producer’s landscape, can look like this:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">========</span>
+<span class="gh">Cookbook</span>
+<span class="gh">========</span>
+
+Welcome to the Cookbook.
+
+Available recipes:
+
+<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+   <span class="nc">:glob:</span>
+   *
+</pre></div>
+</div>
+<p>With this syntax, the HTML page will display a list of all the reStructuredText documents
+available in the <code class="docutils literal notranslate"><span class="pre">cookbook</span></code> folder. This directive can be used in all the index files to build
+browsable documentation.</p>
+</div>
+<div class="section" id="registering-module-helpers">
+<h4>3.1.2. Registering module helpers<a class="headerlink" href="#registering-module-helpers" title="Permalink to this headline">¶</a></h4>
+<p>For module helpers, a marker can be added so that it is automatically listed and available in
+the module’s index page, as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">=======</span>
+<span class="gh">session</span>
+<span class="gh">=======</span>
+
+<span class="p">..</span> <span class="ow">module</span><span class="p">::</span> db.session
+
+The module session...
+</pre></div>
+</div>
+<p>Notice that the <code class="docutils literal notranslate"><span class="pre">db</span></code> prefix here can be used to avoid module collision. Sphinx will use it as a
+module category and will group all modules that start with <code class="docutils literal notranslate"><span class="pre">db.</span></code> in this category.</p>
+</div>
+<div class="section" id="adding-index-markers">
+<h4>3.1.3. Adding index markers<a class="headerlink" href="#adding-index-markers" title="Permalink to this headline">¶</a></h4>
+<p>Another option can be used to fill the index page by linking the document to an entry, as
+follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">=======</span>
+<span class="gh">session</span>
+<span class="gh">=======</span>
+
+<span class="p">..</span> <span class="ow">module</span><span class="p">::</span> db.session
+
+<span class="p">..</span> <span class="ow">index</span><span class="p">::</span>
+   Database Access
+   Session
+
+The module session...
+</pre></div>
+</div>
+<p>Two new entries, <code class="docutils literal notranslate"><span class="pre">Database</span> <span class="pre">Access</span></code> and <code class="docutils literal notranslate"><span class="pre">Session</span></code>, will be added in the index page.</p>
+</div>
+<div class="section" id="cross-references">
+<h4>3.1.4. Cross-references<a class="headerlink" href="#cross-references" title="Permalink to this headline">¶</a></h4>
+<p>Finally, Sphinx provides an inline markup to set cross-references. For instance, a link to a
+module can be done like this:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:mod:</span><span class="nv">`db.session`</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">:mod:</span></code> is the module marker’s prefix and <code class="docutils literal notranslate"><span class="pre">db.session</span></code> is the name of the module
+to be linked to (as registered previously). Keep in mind that <code class="docutils literal notranslate"><span class="pre">:mod:</span></code>, as well as the previous
+elements, are the specific directives that were introduced in reStructuredText by Sphinx.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Sphinx provides a lot more features that you can discover on its website.
+For instance, the <code class="docutils literal notranslate"><span class="pre">autodoc</span></code> feature is a great option to automatically extract
+your doctests to build the documentation. For more information, refer
+to <a class="reference external" href="http://sphinx.pocoo.org">http://sphinx.pocoo.org</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="mkdocs">
+<h3>3.2. MkDocs<a class="headerlink" href="#mkdocs" title="Permalink to this headline">¶</a></h3>
+<p>MkDocs (<a class="reference external" href="https://www.mkdocs.org/">https://www.mkdocs.org/</a>) is a very minimalistic static page generator that can
+be used to document your projects. It lacks built-in <code class="docutils literal notranslate"><span class="pre">autodoc</span></code> features, similar to those in
+Sphinx, but uses the lot simpler and readable Markdown markup language. It is also really
+extensible. It is definitely easier to write a MkDocs plugin than a docutils extension that
+could be used by Sphinx. So, if you have very specific documentation needs that cannot be
+satisfied by existing tools and their extensions are available at the moment, then MkDocs
+provides a very good foundation for building something custom-tailored.</p>
+</div>
+<div class="section" id="documentation-building-and-continuous-integration">
+<h3>3.3. Documentation building and continuous integration<a class="headerlink" href="#documentation-building-and-continuous-integration" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx and similar documentation generation tools really improve the readability and
+experience of reading the documentation from the consumer’s point of view. As we stated
+previously, it is especially helpful when some of the documentation parts are tightly
+coupled to the code, as in the form of docstrings. While this approach really makes it easier
+to ensure that the source version of the documentation matches with the code it documents,
+it does not guarantee that the documentation readership will have access to the latest and
+most up-to-date compiled version.</p>
+<p>Having only bare source representation is also not enough if the target readers of the
+documentation are not proficient enough with command-line tools and will not know how
+to build it into a browsable and readable form. This is why it is important to build your
+documentation into a consumer-friendly form automatically whenever any change to the
+code repository is committed/pushed.</p>
+<p>The best way to host the documentation built with Sphinx is to generate an HTML build
+and serve it as a static resource with your web server of choice. Sphinx provides a proper
+<code class="docutils literal notranslate"><span class="pre">Makefile</span></code> to build HTML files with the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> command. Because make is a
+very common utility, it should be very easy to integrate this process with any
+continuous integration system.</p>
+<p>If you are documenting an open source project with Sphinx, then you will make your life a
+lot easier by using <strong>Read the Docs</strong> (<a class="reference external" href="https://readthedocs.org/">https://readthedocs.org/</a> ). It is a free service for
+hosting the documentation of open source Python projects with Sphinx. The configuration
+is completely hassle-free, and it integrates very easily with two popular code hosting
+services: GitHub and Bitbucket. In practice, if you have your accounts properly connected
+and code repository properly set up, enabling documentation hosting on Read the Docs is a
+matter of just a few clicks.</p>
+</div>
+</div>
+<div class="section" id="documenting-web-apis">
+<h2>4. Documenting web APIs<a class="headerlink" href="#documenting-web-apis" title="Permalink to this headline">¶</a></h2>
+<p>The principles for documenting web APIs are almost the same as for other kinds of
+software. You want to properly target your readership, provide documentation in a way
+and form that is native for the usage environment (here, as a web page), and, most of all,
+make sure that readers have access to the up to date and relevant version of your
+documentation.</p>
+<p>Because of this, it is extremely important to have your documentation of web APIs
+generated from the sources of the code that provides these APIs. Unfortunately, due to the
+complex architecture of most web frameworks, classical documentation tools like Sphinx
+are rarely useful for documenting typical HTTP endpoints of web APIs. In this context, it is
+very common that auto-documentation capabilities are built into your web framework of
+choice. These kind of frameworks either serve user-readable documentation by themselves
+or serve a standardized API description in a machine-readable format that can be later
+processed with a specialized documentation browser.</p>
+<p>There is also another completely different philosophy for documenting web APIs, and it is
+based on the idea of API prototyping. Tools for API prototyping allow you to use
+documentation as a software contract that can be used as an API stub, even before service
+development starts. Often, this kind of tool allows you to automatically verify if the API
+structure matches the one actually implemented in the service. In this approach,
+documentation may serve the additional function of an API testing tool.</p>
+<div class="section" id="documentation-as-api-prototype-with-api-blueprint">
+<h3>4.1. Documentation as API prototype with API Blueprint<a class="headerlink" href="#documentation-as-api-prototype-with-api-blueprint" title="Permalink to this headline">¶</a></h3>
+<p>API Blueprint is a web API description language that is both human-readable and well-
+defined. You can think of it like a Markdown for web service description language. It
+allows documenting anything from the structure of URL paths, through body structures of
+HTTP request/responses and headers, to complex request-response exchanges. The
+following is an example of an imaginary Cat API described using API Blueprint:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FORMAT: 1A
+HOST: https://cats-api.example.com
+
+# Cat API
+This API Blueprint demonstrates example documentation of some imaginary Cat API.
+
+# Group Posts
+This section groups Cat resources.
+
+## Cat [/cats/{cat_id}]
+
+A Cat is central and only resource utilized by Cat API.
+
++ Parameters
+    + cat_id: `1` (string) - The id of the Cat.
+
++ Model (application/json)
+    ```js
+    {
+    &quot;data&quot;: {
+    &quot;id&quot;: &quot;1&quot;, // note this is a string
+    &quot;breed&quot;: &quot;Maine Coon&quot;,
+    &quot;name&quot;: &quot;Smokey&quot;
+    ```
+
+### Retrieve a Cat [GET]
+
+Returns a specific Cat.
+
++ Response 200
+
+    [Cat][]
+
+### Create a Cat [POST]
+
+Create a new Post object. Mentions and hashtags will be parsed out of the post text, as will bare URLs...
+
++ Request
+
+    [Cat][]
+
++ Response 201
+    [Cat][]
+</pre></div>
+</div>
+<p>API Blueprint alone is nothing more than a language. Its strength really comes from the fact
+that it can be easily written by hand and from the huge selection of tools supporting that
+language. At the time of writing this, the official API Blueprint page lists over 70 tools
+that support this language. Some of these tools can even generate functional API mock
+servers that are meant to shorten development cycles, as mock servers can be used, for
+instance, by frontend code, even before programmers start the development of backend
+API services.</p>
+</div>
+<div class="section" id="self-documenting-apis-with-swagger-openapi">
+<h3>4.2. Self-documenting APIs with Swagger/OpenAPI<a class="headerlink" href="#self-documenting-apis-with-swagger-openapi" title="Permalink to this headline">¶</a></h3>
+<p>While self-documenting APIs is a more traditional approach for documenting web APIs
+(compared to documenting through API prototypes), we can clearly see some interesting
+trends that appeared during the past few years. In the past, when API frameworks had to
+support auto-documentation capabilities, it almost always meant that the framework had a
+built-in API metadata structure with a custom documentation rendering engine. If someone
+wanted to have multiple services auto-documented, they had to use the same framework
+for every service, or decide to have very a inconsistent documentation landscape.</p>
+<p>With the advent of microservice architectures, this approach becomes extremely
+inconvenient and inefficient. Nowadays, it’s very common that services within the same
+projects are written using different frameworks, libraries, and even using completely
+different programming languages. Having different documentation libraries for every
+framework and language would produce very inconsistent documentation, as every tool
+would have different strengths and weaknesses.</p>
+<p>One approach that solves this problem requires splitting the documentation display
+(rendering and browsing) from the actual documentation definition. This
+approach is analogous to API prototyping because it requires a standardized API definition
+language. But here, the developer rarely uses this language explicitly. It is the framework’s
+responsibility to create a machine-readable API definition from the structure of the code
+written with this framework.</p>
+<p>One such machine-readable web API description languages is OpenAPI. The specification
+of OpenAPI is the result of the development of the popular Swagger documentation tool.
+At first, it was an internal metadata format of the Swagger tool, but once it became
+standardized, many tools around that specification appeared. With OpenAPI, many web
+frameworks can describe their API structure using the same metadata format, so their
+documentation can be rendered in the same consistent form by a single documentation
+browser.</p>
+</div>
+</div>
+<div class="section" id="building-a-well-organized-documentation-system">
+<h2>5. Building a well-organized documentation system<a class="headerlink" href="#building-a-well-organized-documentation-system" title="Permalink to this headline">¶</a></h2>
+<p>An easier way to guide your documentation readers and your writers is to provide each
+one of them with helpers and guidelines, as we have learned in the previous section of this
+chapter.</p>
+<p>From a writer’s point of view, this is done by having a set of reusable templates, together
+with a guide that describes how and when to use them in a project. This is called a
+<strong>documentation portfolio</strong>.</p>
+<p>From a reader’s point of view, it is important to be able to browse the documentation with
+no pain, and get used to finding the information efficiently. This is done by building a
+<strong>document landscape</strong>.</p>
+<p>Obviously, we need to start from guiding documentation writers, because without them,
+the readers would not have anything to read. Let’s see how such a portfolio looks and how
+to build a one.</p>
+<div class="section" id="building-documentation-portfolio">
+<h3>5.1. Building documentation portfolio<a class="headerlink" href="#building-documentation-portfolio" title="Permalink to this headline">¶</a></h3>
+<p>There are many kinds of documents a software project can have, from low-level documents
+that refer directly to the code, to design papers that provide a high-level overview of the
+application.</p>
+<p>For instance, Scott Ambler defines an extensive list of document types in his book “Agile
+Modeling: Effective Practices for eXtreme Programming and the Unified Process, John Wiley &amp;
+Sons”. He builds a portfolio from early specifications to operations documents. Even the
+project management documents are covered, so the whole documenting needs are built
+with a standardized set of templates.
+Since a complete portfolio is tightly related to the methodologies used to build the software,
+this chapter will only focus on a common subset that you can complete with your specific
+needs. Building an efficient portfolio takes a long time, as it captures your working habits.
+A common set of documents in software projects can be classified into the following three
+categories:</p>
+<ul class="simple">
+<li><p><strong>Design</strong>: This includes all the documents that provide architectural information
+and low-level design information, such as class diagrams or database diagrams</p></li>
+<li><p><strong>Usage</strong>: This includes all the documents on how to use the software; this can be in
+the shape of a cookbook and tutorials, or a module-level help</p></li>
+<li><p><strong>Operations</strong>: This provides guidelines on how to deploy, upgrade, or operate the
+software</p></li>
+</ul>
+<div class="section" id="design">
+<h4>5.1.1. Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h4>
+<p>The important point when creating such documents is to make sure the target readership is
+perfectly known, and that the content scope is limited. So, a generic template for design
+documents can provide a light structure with a little advice for the writer.
+Such a structure might include the following:</p>
+<ul class="simple">
+<li><p>Title</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (keywords)</p></li>
+<li><p>Description (abstract)</p></li>
+<li><p>Target (who should read this?)</p></li>
+<li><p>Content (with diagrams)</p></li>
+<li><p>References to other documents</p></li>
+</ul>
+<p>The content should be three or four pages at most when printed, so be sure to limit the
+scope. If it gets bigger, it should be split into several documents or summarized.
+The template also provides the author’s name and a list of tags to manage its evolutions and
+ease its classification. This will be covered later in this chapter.
+The example design document template written using reStructuredText markup could be
+as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">=========================================</span>
+<span class="gh">Design document title</span>
+<span class="gh">=========================================</span>
+
+<span class="nc">:Author:</span> Document Author
+<span class="nc">:Tags:</span> document tags separated with spaces
+
+<span class="nc">:abstract:</span>
+
+    Write here a small abstract about your design document.
+
+<span class="cp">.. contents ::</span>
+
+<span class="gh">Audience</span>
+<span class="gh">========</span>
+
+Explain here who is the target readership.
+
+<span class="gh">Content</span>
+<span class="gh">=======</span>
+
+Write your document here. Do not hesitate to split it in several
+sections.
+
+<span class="gh">References</span>
+<span class="gh">==========</span>
+
+Put here references, and links to other documents.
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h4>5.1.2. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h4>
+<p>The usage documentation describes how a particular part of the software works. This
+documentation can describe low-level parts, such as how a function works, but also high-
+level parts, such as command-line arguments for calling the program. This is the most
+important part of documentation in framework applications, since the target readership is
+mainly the developers that are going to reuse the code.</p>
+<p>The three main kinds of documents are as follows:</p>
+<ul class="simple">
+<li><p><strong>Recipe</strong>: This is a short document that explains how to do something. This kind of
+document targets one readership and focuses on one specific topic.</p></li>
+<li><p><strong>Tutorial</strong>: This is a step-by-step document that explains how to use a feature of
+the software. This document can refer to recipes, and each instance is intended
+for one readership.</p></li>
+<li><p><strong>Module helper</strong>: This is a low-level document that explains what a module
+contains. This document can be shown (for instance) by calling the help built
+into over a module.</p></li>
+</ul>
+<div class="section" id="recipe">
+<h5>5.1.2.1. Recipe<a class="headerlink" href="#recipe" title="Permalink to this headline">¶</a></h5>
+<p>A recipe answers a very specific problem and provides a solution to resolve it. For example,
+ActiveState provides a huge repository of Python recipes online, where developers can
+describe how to do something in Python (refer to
+<a class="reference external" href="http://code.activestate.com/recipes/langs/python/">http://code.activestate.com/recipes/langs/python/</a>). Such a set of recipes related to a
+single area/project is often called a <em>cookbook</em>.</p>
+<p>These recipes must be short and are structured, like this:</p>
+<ul class="simple">
+<li><p>Title</p></li>
+<li><p>Submitter</p></li>
+<li><p>Last updated</p></li>
+<li><p>Version</p></li>
+<li><p>Category</p></li>
+<li><p>Description</p></li>
+<li><p>Source (the source code)</p></li>
+<li><p>Discussion (the text explaining the code)</p></li>
+<li><p>Comments (from the web)</p></li>
+</ul>
+<p>Often, they are one screen long and do not go into great detail. This structure perfectly fits a
+software’s needs and can be adapted in a generic structure, where the target readership is
+added and the category is replaced by tags:</p>
+<ul class="simple">
+<li><p>Title (short sentence)</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (keywords)</p></li>
+<li><p>Who should read this?</p></li>
+<li><p>Prerequisites (other documents to read, for example)</p></li>
+<li><p>Problem (a short description)</p></li>
+<li><p>Solution (the main text, one or two screens)</p></li>
+<li><p>References (links to other documents)</p></li>
+</ul>
+<p>The date and version are not useful here, since project documentation should be managed
+like source code in the project. This means that the best way to handle the documentation is
+to manage it through the version control system. In most cases, this is exactly the same code
+repository as the one that’s used for the project’s code.</p>
+<p>A simple reusable template for the recipes could be as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">===========</span>
+<span class="gh">Recipe name</span>
+<span class="gh">===========</span>
+
+<span class="nc">:Author:</span> Recipe Author
+<span class="nc">:Tags:</span> document tags separated with spaces
+
+<span class="nc">:abstract:</span>
+
+    Write here a small abstract about your design document.
+
+<span class="cp">.. contents ::</span>
+
+<span class="gh">Audience</span>
+<span class="gh">========</span>
+
+Explain here who is the target readership.
+
+<span class="gh">Prerequisites</span>
+<span class="gh">=============</span>
+
+Write the list of prerequisites for implementing this recipe. This can be
+additional documents, software, specific libraries, environment settings or
+just anything that is required beyond the obvious language interpreter.
+
+<span class="gh">Problem</span>
+<span class="gh">=======</span>
+
+Explain the problem that this recipe is trying to solve.
+
+<span class="gh">Solution</span>
+<span class="gh">========</span>
+
+Give solution to problem explained earlier. This is the core of a recipe.
+
+<span class="gh">References</span>
+<span class="gh">==========</span>
+
+Put here references, and links to other documents.
+</pre></div>
+</div>
+</div>
+<div class="section" id="tutorial">
+<h5>5.1.2.2. Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h5>
+<p>A tutorial differs from a recipe in its purpose. It is not intended to resolve an isolated
+problem, but rather describes how to use a feature of the application, step by step. This can
+be longer than a recipe and can concern many parts of the application. For example, Django
+provides a list of tutorials on its website. Writing your first Django App, part 1 (refer to
+<a class="reference external" href="https://docs.djangoproject.com/en/1.9/intro/tutorial01/">https://docs.djangoproject.com/en/1.9/intro/tutorial01/</a>) explains in a few screens
+how to build an application with Django.</p>
+<p>A structure for such a document will be as follows:</p>
+<ul class="simple">
+<li><p>Title (short sentence)</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (words)</p></li>
+<li><p>Description (abstract)</p></li>
+<li><p>Who should read this?</p></li>
+<li><p>Prerequisites (other documents to read, for example)</p></li>
+<li><p>Tutorial (the main text)</p></li>
+<li><p>References (links to other documents)</p></li>
+</ul>
+</div>
+<div class="section" id="module-helper">
+<h5>5.1.2.3. Module helper<a class="headerlink" href="#module-helper" title="Permalink to this headline">¶</a></h5>
+<p>The last template that can be added in our collection is the module helper template. A
+module helper refers to a single module and provides a description of its contents, together
+with usage examples.</p>
+<p>Some tools can automatically build such documents by extracting the docstrings and
+computing module help using <code class="docutils literal notranslate"><span class="pre">pydoc</span></code>, such as Epydoc (refer to
+<a class="reference external" href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>). So, it is possible to generate extensive documentation
+based on API introspection. This kind of documentation is often provided in Python
+frameworks. For instance, Plone provides a server that keeps an up-to-date collection of
+module helpers. You can read more about it at <a class="reference external" href="http://api.plone.org">http://api.plone.org</a>.</p>
+<p>The following are the main problems with this approach:</p>
+<ul class="simple">
+<li><p>There is no smart selection performed over the modules that are really
+interesting to the document</p></li>
+<li><p>The code can be obfuscated by the documentation</p></li>
+</ul>
+<p>Furthermore, a module documentation provides examples that sometimes refer to several
+parts of the module, and are hard to split between the functions’ and classes’ docstrings.
+The module docstring could be used for that purpose by writing text at the top of the
+module. But this ends in having a hybrid file composed of a block of text, then a block of
+code. This is rather obfuscating when the code represents less than 50% of the total length.
+If you are the author, this is perfectly fine. But when people try to read the code (not the
+documentation), they will have to skip the docstrings part.</p>
+<p>Another approach is to separate the text in its own file. A manual selection can then be
+operated to decide which Python module will have its module helper file. The documents
+can then be separated from the code base and allowed to live their own life, as we will see
+in the next section. This is how Python is documented.</p>
+<p>Many developers will disagree on the fact that doc and code separation is better than
+docstrings. This approach means that the documentation process is fully integrated in the
+development cycle; otherwise, it will quickly become obsolete. The docstrings approach
+solves this problem by providing proximity between the code and its usage example, but
+doesn’t bring it to a higher level: a document that can be used as part of plain
+documentation.</p>
+<p>The following template for Module Helper is really simple as it contains just a little
+metadata before the content is written. The target is not defined since it is the developers
+who wish to use the module:</p>
+<ul class="simple">
+<li><p>Title (module name)</p></li>
+<li><p>Author</p></li>
+<li><p>Tags (words)</p></li>
+<li><p>Content</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="operations">
+<h4>5.1.3. Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h4>
+<p>Operation documents are used to describe how the software can be operated. Consider the
+following points:</p>
+<ul class="simple">
+<li><p>Installation and deployment documents</p></li>
+<li><p>Administration documents</p></li>
+<li><p>Frequently Asked Questions (FAQ) documents</p></li>
+<li><p>Documents that explain how people can contribute, ask for help, or provide
+feedback</p></li>
+</ul>
+<p>These documents are very specific, but they can probably use the tutorial template we
+defined in the earlier section.</p>
+</div>
+</div>
+<div class="section" id="your-very-own-documentation-portfolio">
+<h3>5.2. Your very own documentation portfolio<a class="headerlink" href="#your-very-own-documentation-portfolio" title="Permalink to this headline">¶</a></h3>
+<p>The templates that we discussed earlier are just a basis that you can use to document your
+software. With time, you will eventually develop your own templates and style for making
+documentation. But always keep in mind the light but sufficient approach for project
+documentation: each document that’s added should have a clearly defined target
+readership and should fill a real need. Documents that don’t add a real value should not be
+written.</p>
+<p>Each project is unique and has different documentation needs. For example, small terminal
+tools with simple usage can definitely live with only a single <code class="docutils literal notranslate"><span class="pre">README</span></code> file as its document
+landscape. Having such a minimal single-document approach is completely fine if the
+target readers are precisely defined and consistently grouped (system administrators, for
+instance).</p>
+<p>Also, do not take the provided templates too rigorously. Some additional metadata
+provided as an example is really useful in either big projects or in strictly formalized teams.
+Tags, for instance, are intended to improve textual searches in big documentations, but will
+not provide any value in a documentation landscape consisting only of a few documents.
+Also, including a document author is not always a good idea. Such an approach may be
+especially questionable in open source projects. In such projects, you will want the
+community to also contribute to the documentation. In most cases, such documents are
+continuously updated whenever there is such a need by whoever makes the contribution.
+People tend to treat the document author as the document owner. This may discourage
+people to update the documentation if every document has its author always specified.
+Usually, the version control software provides clearer and more transparent information
+about real document authors than explicitly provided metadata annotations. The situations
+where explicit authors are really recommended are various design documents, especially in
+projects where the design process is strictly formalized. The best example of this is the
+series of PEP documents provided with the Python language enhancement proposals.</p>
+</div>
+<div class="section" id="building-a-documentation-landscape">
+<h3>5.3. Building a documentation landscape<a class="headerlink" href="#building-a-documentation-landscape" title="Permalink to this headline">¶</a></h3>
+<p>The document portfolio we built in the previous section provides a structure at the
+document level, but does not provide a way to group and organize it to build the
+documentation the readers will have. This is what Andreas Rüping calls a document
+landscape, referring to the mental map the readers use when they browse the
+documentation. He came up with the conclusion that the best way to organize documents is
+to build a logical tree.</p>
+<p>In other words, the different kinds of documents composing the portfolio need to find a
+place to live within a tree of directories. This place must be obvious to the writers when
+they create the document and to the readers when they are looking for it.</p>
+<p>A great helper in browsing documentation is the index pages at each level that can drive
+writers and readers.</p>
+<p>Building a document landscape is done in the following two steps:</p>
+<ul class="simple">
+<li><p>Building a tree for the producers (the writers)</p></li>
+<li><p>Building a tree for the consumers (the readers), on top of the producers’ tree</p></li>
+</ul>
+<p>This distinction between producers and consumers is important since they access the
+documents in different places and different formats.</p>
+<div class="section" id="producer-s-layout">
+<h4>5.3.1. Producer’s layout<a class="headerlink" href="#producer-s-layout" title="Permalink to this headline">¶</a></h4>
+<p>From a producer’s point of view, each document is processed exactly like a Python module.
+It should be stored in the version control system and work like code. Writers do not care
+about the final appearance of their prose and where it is available; they just want to make
+sure that they are writing a document that is the single source of truth on the topic covered.
+reStructuredText files stored in a folder tree are available in the version control system,
+together with the software code, and are a convenient solution to build the documentation
+landscape for producers.</p>
+<p>By convention, the docs folder is used as a root of documentation tree, as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> my-project
+$ find docs
+docs
+docs/source
+docs/source/design
+docs/source/operations
+docs/source/usage
+docs/source/usage/cookbook
+docs/source/usage/modules
+docs/source/usage/tutorial
+</pre></div>
+</div>
+<p>Notice that the tree is located in a source folder because the docs folder will be used as a
+root folder to set up a special tool in the next section.</p>
+<p>From there, an <code class="docutils literal notranslate"><span class="pre">index.txt</span></code> file can be added at each level (besides the root), explaining
+what kind of documents the folder contains, or summarizing what each subfolder contains.
+These index files can define a listing of the documents they contain. For instance, the
+operations folder can contain a list of operations documents that are available, as follows:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">==========</span>
+<span class="gh">Operations</span>
+<span class="gh">==========</span>
+
+This section contains operations documents:
+
+<span class="m">-</span> How to install and run the project
+<span class="m">-</span> How to install and manage a database for the project
+</pre></div>
+</div>
+<p>It is important to know that people tend to forget to update such lists of documents and
+tables of contents. So, it is better to have them updated automatically.</p>
+</div>
+<div class="section" id="consumer-s-layout">
+<h4>5.3.2. Consumer’s layout<a class="headerlink" href="#consumer-s-layout" title="Permalink to this headline">¶</a></h4>
+<p>From a consumer’s point of view, it is important to work out the index files and to present
+the whole documentation in a format that is easy to read and looks good. Web pages are the
+best pick and are easy to generate from reStructuredText files.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../unit_testing/index.html" class="btn btn-neutral float-right" title="Unit testing and refactoring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../index.html" class="btn btn-neutral float-left" title="Code quality" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

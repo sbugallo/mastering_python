@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. The seven rules of technical writing &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                20/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. The seven rules of technical writing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/documenting_project/rules.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-seven-rules-of-technical-writing">
+<h1>1. The seven rules of technical writing<a class="headerlink" href="#the-seven-rules-of-technical-writing" title="Permalink to this headline">¶</a></h1>
+<p>Writing good documentation is easier in many aspects than writing code, but many
+developers think otherwise. It will become easy once you start following a simple set of
+rules regarding technical writing.</p>
+<p>We are not talking here about writing a novel or poems, but a comprehensive piece of text
+that can be used to understand software design, an API, or anything that makes up the
+code base.</p>
+<p>Every developer can produce such material, and this section provides the following seven
+rules that can be applied in all cases:</p>
+<ul class="simple">
+<li><p><strong>Write in two steps</strong>: Focus on ideas, and then on reviewing and shaping your text.</p></li>
+<li><p><strong>Target the readership</strong>: Who is going to read it?</p></li>
+<li><p><strong>Use a simple style</strong>: Keep it straight and simple. Use good grammar.</p></li>
+<li><p><strong>Limit the scope of the information</strong>: Introduce one concept at a time.</p></li>
+<li><p><strong>Use realistic code examples</strong>: Foos and bars should be avoided.</p></li>
+<li><p><strong>Use a light but sufficient approach</strong>: You are not writing a book!</p></li>
+<li><p><strong>Use templates</strong>: Help the readers get used to the common structure of your
+documents.</p></li>
+</ul>
+<p>These rules are mostly inspired and adapted from “Agile Documentation: A Pattern Guide to
+Producing Lightweight Documents for Software Projects, Wiley”, a book by Andreas Rüping that
+focuses on producing the best documentation in software projects.</p>
+<div class="section" id="write-in-two-steps">
+<h2>1.1. Write in two steps<a class="headerlink" href="#write-in-two-steps" title="Permalink to this headline">¶</a></h2>
+<p>Peter Elbow, in “Writing With Power: Techniques for Mastering the Writing Process, Oxford
+University Press”, explains that it is almost impossible for any human being to produce a
+perfect text in one shot. The problem is that many developers write documentation and try
+to directly come up with some perfect text. The only way they succeed in this exercise is by
+stopping the writing after every two sentences to read them back, and do some corrections.
+This means that they are focusing both on the content and the style of the text.</p>
+<p>This is too hard for the brain, and the result is often not as good as it could be. A lot of time
+and energy is spent on polishing the style and shape of the text before its meaning is
+completely thought through.</p>
+<p>Another approach is to drop the style and organization of the text and at first focus on its
+content. All ideas are laid down on paper, no matter how they are written. You start to
+write a continuous stream of thoughts and do not pause, even if you know that you
+are making obvious grammatical mistakes, or know that what you just wrote may read
+silly. At this stage, it does not matter if the sentences are barely understandable, as long as
+the ideas are written down. You just write down what you want to say, and apply only
+minimal structuring to your text.</p>
+<p>By doing this, you focus only on what you want to say and will probably get more content
+out of your mind than you would initially expect.</p>
+<p>Another side effect of doing this <em>free writing</em> is that other ideas that are not directly related
+to the topic will easily go through your mind. A good practice is to write them down on the
+side as soon as they appear, so they are not lost, and then get back to the main writing.</p>
+<p>The second step obviously consists of reading back the draft of your document and
+polishing it so that it is comprehensible to everyone. Polishing a text means enhancing its
+style, correcting mistakes, reorganizing it a bit, and removing any redundant information it
+has.</p>
+<p>A rule of thumb is that both steps should take an equal amount of time. If your time for
+writing documentation is strictly limited, then plan it accordingly.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Focus on the content first, and then on style and cleanliness.</p>
+</div>
+</div>
+<div class="section" id="target-the-readership">
+<h2>1.2. Target the readership<a class="headerlink" href="#target-the-readership" title="Permalink to this headline">¶</a></h2>
+<p>When writing content, there is a simple, but important, question the writer should consider:
+Who is going to read it?</p>
+<p>This is not always obvious, as documentation is often written for every person that might
+get and use the code. The reader can be anyone from a researcher who is looking for an
+appropriate technical solution to their problem, or a developer who needs to implement a
+new feature in the documented software.</p>
+<p>Good documentation should follow a simple rule: each text should target one kind of
+reader. This philosophy makes the writing easier, as you will precisely know what kind of
+reader you’re dealing with.</p>
+<p>A good practice is to provide a small introductory document that explains in one sentence
+what the documentation is about, and guides different readers to the appropriate parts of
+documentation, for example:</p>
+<blockquote>
+<div><p><em>“Atomisator is a product that fetches RSS feeds and saves them in a database, with a</em>
+<em>filtering process.</em>
+<em>If you are a developer, you might want to look at the API description (api.txt).</em>
+<em>If you are a manager, you can read the features list and the FAQ (features.txt).</em>
+<em>If you are a designer, you can read the architecture and infrastructure notes (arch.txt).”</em></p>
+</div></blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Know your readership before you start to write.</p>
+</div>
+</div>
+<div class="section" id="use-a-simple-style">
+<h2>1.3. Use a simple style<a class="headerlink" href="#use-a-simple-style" title="Permalink to this headline">¶</a></h2>
+<p>Simple things are easier to understand. That’s a fact.</p>
+<p>By keeping sentences short and simple, your writing will require less cognitive effort for
+their content to be extracted, processed, and then understood. Writing technical
+documentation aims to provide a software guide to readers. It is not a fiction book, and
+should be closer to your microwave operation manual than to a Dickens novel.</p>
+<p>The following are a few tips to keep in mind:</p>
+<ul class="simple">
+<li><p>Use short sentences. They should be no longer than 100–120 characters (including
+spaces). This is the length of two lines in a typical paperback.</p></li>
+<li><p>Each paragraph should be composed of three to four sentences at most, which
+express one main idea. Let your text breathe.</p></li>
+<li><p>Don’t repeat yourself too much. Avoid journalistic styles where ideas are
+repeated again and again to make sure they are understood.</p></li>
+<li><p>Don’t use several tenses. The present tense is enough most of the time.</p></li>
+<li><p>Do not make jokes in the text if you are not a really fine writer. Being funny in a
+technical book is really hard, and few writers master it. If you really want to
+distill some humor, keep it in code examples and you will be fine.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You are not writing fiction; keep the style as simple as possible.</p>
+</div>
+</div>
+<div class="section" id="limit-the-scope-of-information">
+<h2>1.4. Limit the scope of information<a class="headerlink" href="#limit-the-scope-of-information" title="Permalink to this headline">¶</a></h2>
+<p>There’s a simple sign of bad documentation in software: you cannot find specific
+information in it, even if you’re sure that it is there. After spending some time reading the
+table of contents, you are starting to search through text files using <code class="docutils literal notranslate"><span class="pre">grep</span></code> with several word
+combinations and still cannot find what you are looking for. But you’re sure the
+information is there because you saw it once.</p>
+<p>This often happens when writers do not organize their texts well with meaningful titles and
+headings. They might provide tons of information, but it won’t be useful if the reader is not
+able to scan through all the documentation for a specific topic.</p>
+<p>In a good document, paragraphs should be gathered under a meaningful heading for a
+given section, and the document title should synthesize the content in a short phrase. A
+table of contents could be made of all the sections’ titles, in order to help the reader scan
+through the document.</p>
+<p>A simple yet effective practice to compose your titles and headings is to
+ask yourself, “What phrase would I type in Google to find this section?”</p>
+</div>
+<div class="section" id="use-realistic-code-examples">
+<h2>1.5. Use realistic code examples<a class="headerlink" href="#use-realistic-code-examples" title="Permalink to this headline">¶</a></h2>
+<p>Unrealistic code examples simply make your documentation harder to understand.</p>
+<p>For instance, if you have to provide some string literals, the Foos and bars are really bad
+choices. If you have to show your reader how to use your code, why not to use a real-world
+example? A common practice is to make sure that each code example can be cut and pasted
+into a real program.</p>
+<p>To show an example of bad usage, let’s assume we want to show how to use the
+<code class="docutils literal notranslate"><span class="pre">parse()</span></code> function from the <code class="docutils literal notranslate"><span class="pre">atomisator</span></code> project, which aims to parse RSS feeds. Here is the
+usage example using an unrealistic imaginary source:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">atomisator.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Let&#39;s use it:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stuff</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">&#39;some-feed.xml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">stuff</span><span class="p">)</span>
+<span class="go">{&#39;title&#39;: &#39;foo&#39;, &#39;content&#39;: &#39;blabla&#39;}</span>
+</pre></div>
+</div>
+<p>A better example, such as the following, would be using a data source that looks like a
+valid URL to RSS feed and shows output that resembles the real article:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">atomisator.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Let&#39;s use it:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_feed</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">&#39;http://tarekziade.wordpress.com/feed&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">my_feed</span><span class="p">)</span>
+<span class="go">{&#39;title&#39;: &#39;eight tips to start with python&#39;, &#39;content&#39;: &#39;The first tip is..., ...&#39;}</span>
+</pre></div>
+</div>
+<p>This slight difference might sound like overkill but, in fact, makes your documentation a lot
+more useful. A reader can copy those lines into a shell, understand that <code class="docutils literal notranslate"><span class="pre">parse()</span></code> expects a
+URL as a parameter, and that it returns an iterator that contains web articles.</p>
+<p>Of course, giving a realistic example is not always possible or viable. This is especially true
+for very generic code. Anyway, you should always strive to reduce the amount of such unrealistic
+examples to a minimum.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Code examples should be directly reusable in real programs.</p>
+</div>
+</div>
+<div class="section" id="use-a-light-but-sufficient-approach">
+<h2>1.6. Use a light but sufficient approach<a class="headerlink" href="#use-a-light-but-sufficient-approach" title="Permalink to this headline">¶</a></h2>
+<p>In most agile methodologies, documentation is not the first citizen. Making software that
+just works is more important than the detailed documentation. So, a good practice, as Scott
+Ambler explains in his book “Agile Modeling: Effective Practices for eXtreme Programming and
+the Unified Process, John Wiley &amp; Sons”, is to define the real documentation needs, rather than
+try to document everything possible.</p>
+<p>For instance, let’s look at some example documentation of a simple project that is available
+on GitHub. <code class="docutils literal notranslate"><span class="pre">ianitor</span></code> (available at <a class="reference external" href="https://github.com/ClearcodeH1/ianitor">https://github.com/ClearcodeH1/ianitor</a>) is a tool
+that helps to register processes in the Consul service discovery cluster, and it is mostly
+aimed at system administrators. If you take a look at its documentation, you will realize
+that this is just a single document (the <code class="docutils literal notranslate"><span class="pre">README.md</span></code> file). It explains only how it works and
+how to use it. From the administrator’s perspective, this is sufficient. They only need to
+know how to configure and run the tool, and there is no other group of people expected to
+use <code class="docutils literal notranslate"><span class="pre">ianitor</span></code>. This document limits its scope by answering one question, “How do I use
+ianitor on my server?”</p>
+</div>
+<div class="section" id="use-templates">
+<h2>1.7. Use templates<a class="headerlink" href="#use-templates" title="Permalink to this headline">¶</a></h2>
+<p>Many pages on Wikipedia look similar. There are boxes on the right-hand side that are
+used to summarize some information for documents belonging to the same area. The first
+section of the article usually contains a table of contents with links that refer to anchors in
+the same text. There is always a reference section at the end.</p>
+<p>Users get used to it. For instance, they know they can have a quick look at the table of
+contents, and if they do not find the information they are looking for, they will go directly
+to the reference section to see if they can find another website on the topic. This works for
+any page on Wikipedia. Once you learn the format of Wikipedia articles, you become more
+efficient in finding useful information.</p>
+<p>So, using templates forces a common pattern for documents, and therefore enables more
+efficient searching for information. Users get used to the common structure of information
+and know how to read it quickly.</p>
+<p>Providing a template for each kind of document also provides a quick start for writers.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Documentation as code &mdash; Mastering Python</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/styles.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mastering Python
+          
+
+          
+            
+            <img src="../../../../_static/logo-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                20/03/2020
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../craftmanship/index.html">Craftmanship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structures_algorithms/index.html">Data structures and algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../optimization/index.html">Code optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_architecture/index.html">Technical architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../low_level/index.html">Low level Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../distribution/index.html">Code distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/index.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mastering Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Documentation as code</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/parts/quality/chapters/documenting_project/documentation_as_code.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="documentation-as-code">
+<h1>2. Documentation as code<a class="headerlink" href="#documentation-as-code" title="Permalink to this headline">¶</a></h1>
+<p>The best way to keep the documentation of your project up to date is to treat it as code and
+store it in the same repository as the source code it documents. Keeping documentation
+sources with the source code has the following benefits:</p>
+<ul class="simple">
+<li><p>With a proper version control system, you can track all changes that were made
+to the documentation. If you ever wonder if a particular surprising code behavior
+is really a bug or just an old and forgotten feature, you can dive into the history
+of the documentation to trace how the documentation for the specific feature
+evolved over time.</p></li>
+<li><p>It is easier to develop different versions of the documentation if the project has to
+be maintained on several parallel branches (for example, for different clients). If
+the source code of the project diverges from the main development branch, so
+does the documentation for it.</p></li>
+<li><p>There are many tools that allow you to generate the reference documentation of
+software APIs straight from the comments included in the source code. This is
+one of the best ways to generate documentation for projects that provide APIs for
+other components (for example, in the form of reusable libraries and remote
+services).</p></li>
+</ul>
+<p>The Python language has some unique qualities that make documenting software
+extremely easy and fun. The Python community also provides a huge selection of tools that
+allow you to create beautiful and usable API reference documentation straight from Python
+sources. The foundation for these tools are so-called docstrings.</p>
+<div class="section" id="using-python-docstrings">
+<h2>2.1. Using Python docstrings<a class="headerlink" href="#using-python-docstrings" title="Permalink to this headline">¶</a></h2>
+<p>Docstrings are special Python string literals that are intended for documenting Python
+functions, methods, classes, and modules. If the first statement of the function, method,
+class, or module is a string literal, it will automatically become a docstring and be included
+as a value of the <code class="docutils literal notranslate"><span class="pre">__doc__</span></code> attribute of that related function, method, class, or module.</p>
+<p>Many of the code examples here already feature docstrings, but for the sake of
+consistency, let’s look at a general example of a module that contains all possible types of
+docstrings, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example module with doctrings.</span>
+
+<span class="sd">This is a module that shows all four types of docstrings:</span>
+<span class="sd">- module docstring</span>
+<span class="sd">- function docstring</span>
+<span class="sd">- method docstring</span>
+<span class="sd">- class docstring</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">show_module_documentation</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Prints module documentation.</span>
+<span class="sd">    Module documentation is available as global __doc__ attribute.</span>
+<span class="sd">    This attribute can be accessed and modified at any time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">DocumentedClass</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class that showcases method documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize class instance.</span>
+<span class="sd">        Interesting note: docstrings are valid statements.</span>
+<span class="sd">        It means that if function or method doesn&#39;t have to</span>
+<span class="sd">        do nothing and has docstring it doesn&#39;t have to</span>
+<span class="sd">        feature any other statements.</span>
+<span class="sd">        Such no-op functions are useful for defining abstract</span>
+<span class="sd">        methods or providing implementation stubs that have</span>
+<span class="sd">        to be implemented later.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Python also provides a <code class="docutils literal notranslate"><span class="pre">help()</span></code> function, which is an entry point for the built-in help
+system. It is intended for interactive use within the interactive interpreter session in a
+similar way as viewing system manual pages using the UNIX <code class="docutils literal notranslate"><span class="pre">man</span></code> command. If you provide
+a module instance as an input argument to the <code class="docutils literal notranslate"><span class="pre">help()</span></code> function, it will format all
+docstrings of that module’s objects in a tree-like structure. The following is an example of
+<code class="docutils literal notranslate"><span class="pre">help()</span></code> output for the module we presented in the previous code snippet:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Help on module docexample:
+
+NAME
+    docexample - Example module with doctrings.
+
+FILE
+    /Users/sbugallo/docexample.py
+
+DESCRIPTION
+    This is a module that shows all four types of docstrings:
+        - module docstring
+        - function docstring
+        - method docstring
+        - class docstring
+
+CLASSES
+    DocumentedClass
+
+    class DocumentedClass
+    |   Class that showcases method documentation.
+    |
+    |   Methods defined here:
+    |
+    |   __init__(self)
+    |       Initialize class instance.
+    |
+    |       Interesting note: docstrings are valid statements.
+    |       It means that if function or method doesn&#39;t have to
+    |       do nothing and has docstring it doesn&#39;t have to
+    |       feature any other statements.
+    |
+    |       Such no-op functions are useful for defining abstract
+    |       methods or providing implementation stubs that have
+    |       to be implemented later.
+
+FUNCTIONS
+    show_module_documentation()
+        Prints module documentation.
+
+        Module documentation is available as global __doc__ attribute.
+        This attribute can be accessed and modified at any time.
+</pre></div>
+</div>
+</div>
+<div class="section" id="popular-markup-languages-and-styles-for-documentation">
+<h2>2.2. Popular markup languages and styles for documentation<a class="headerlink" href="#popular-markup-languages-and-styles-for-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Inside docstring, you can put whatever you like in any form you like. There is, of course,
+the official PEP 257 (Docstring Conventions) document, which is a general guideline for
+docstring conventions, but it concentrates mainly on normalized formatting of multiline
+string literals for documentation purposes and does not enforce any markup language.</p>
+<p>Anyway, if you want to have nice and usable documentation, it is a good thing to decide
+on some formalized markup language to use in your docstrings, especially if you plan to
+use some kind of documentation generation tool. Proper markup allows documentation
+generators to provide code highlighting, do advanced text formatting, include hyperlinks to
+other documents and functions, or even include non-textual assets like images of
+automatically generated class diagrams.</p>
+<p>The best markup language is easy to write and is also readable in raw textual form outside
+of the autogenerated reference documentation. It is best if it can be easily used to provide
+longer documentation sources for documents living outside of Python docstrings. One of
+the most common markup languages designed specifically for Python with these goals in
+mind is reStructuredText. It is used by the Sphinx documentation system and is a markup
+language used to create official Python language documentation.</p>
+<p>Other popular choices for lightweight text markup languages for docstrings are Markdown
+and AsciiDoc. The former is particularly popular within the community of GitHub users
+and is the most common documentation markup language in general. It is also often
+supported out of the box by various tools for self-documenting web APIs.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio Bugallo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
